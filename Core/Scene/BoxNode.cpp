@@ -1,26 +1,28 @@
-#include "Cuboid.h"
-#include "Globals.h"
+#include "BoxNode.h"
+#include "../Components/Transform.h"
+#include "Scene.h"
+#include <memory>
+#include "../Components/GameActor.h"
+#include "DebugCamera.h"
+#include "../Engine.h"
+#include "../Helpers.h"
 
 using namespace HipHop;
 
-
-Cuboid::Cuboid()
+BoxNode::BoxNode(ActorID actorID,BaseRenderComponent* renderComponent, ERenderPass renderPass)
 	:
-	GameObject()
+	BaseNode(actorID,renderComponent,renderPass)
 {
-	
+
 }
 
-Cuboid::~Cuboid()
+BoxNode::~BoxNode()
 {
+
 }
 
-
-bool Cuboid::Init()
+bool BoxNode::Init()
 {
-
-	GameObject::Init();
-
 	float vertices[] = {
 		// positions          // normals           // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
@@ -66,65 +68,56 @@ bool Cuboid::Init()
 		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
 	};
 
-	m_VAOConfig.Create(vertices, sizeof(vertices),0);
-	m_VAOConfig.SetPosPtr(3, 0, sizeof(float) * 8);
-	m_VAOConfig.SetNormalPtr(sizeof(float) * 3, sizeof(float) * 8);
-	m_VAOConfig.SetTexPtr(sizeof(float) * 6, sizeof(float) * 8);
+	m_VAOConfig.Create(vertices,sizeof(vertices),0);
+	m_VAOConfig.SetPosPtr(3,0,sizeof(float) * 8);
+	m_VAOConfig.SetNormalPtr(sizeof(float) * 3,sizeof(float) * 8);
+	m_VAOConfig.SetTexPtr(sizeof(float) * 6,sizeof(float) * 8);
 
+	m_ShaderProgram.AddAndCompile("assets/shaders/test_vs.glsl",EShaderType::VERTEX);
+	m_ShaderProgram.AddAndCompile("assets/shaders/test_fs.glsl", EShaderType::FRAGMENT);
+	m_ShaderProgram.Build();
 	
-	m_Shader.AddAndCompile("test_vs.glsl",EShaderType::VERTEX);
-	m_Shader.AddAndCompile("test_fs.glsl", EShaderType::FRAGMENT);
-	m_Shader.Build();
-
-	m_Shader.Use();
-	m_Shader.SetInt("floorTexture", 0);
-
-	
-		m_FloorTexture.CreateTexture("textures/floorTexture.png");
-
+	m_FloorTexture.CreateTexture("Assets/Textures/diffuse.png");
 
 	return true;
 }
 
-void Cuboid::Destroy()
+void BoxNode::Destroy()
 {
-
-	GameObject::Destroy();
-
+	m_FloorTexture.Delete();
 	m_VAOConfig.Destroy();
 }
 
-void Cuboid::Tick(float pDeltaTime)
+void BoxNode::Tick(Scene* scene,float deltaTime)
 {
-	
-	GameObject::Tick(pDeltaTime);
 }
 
-void Cuboid::PreRender()
+void BoxNode::PreRender(Scene* scene)
 {
-	m_Shader.Use();
-	glm::mat4 model = GetWorldMatrix();
-	glm::mat4 view = Globals::gTestScene->GetCamera()->GetView();
-	glm::mat4 projection = Globals::gTestScene->GetProjection();
+	m_ShaderProgram.Use();
 
-	m_Shader.SetMat4("projection", projection);
-	m_Shader.SetMat4("view", view);
-	m_Shader.SetMat4("model",model);
-}
+	glm::mat4 projection = scene->GetProjection();
 
-void Cuboid::Render()
-{
-	GameObject::Render();
+	glm::mat4 view = scene->GetCamera()->GetView();
+	glm::mat4 model = glm::mat4(1.0f);
 
-	m_Shader.Use();
+	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
+	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
+	if (transform)
+	{
+		model = transform->GetModelMatrix();
+	}
+
+	m_ShaderProgram.SetMat4("projection",projection);
+	m_ShaderProgram.SetMat4("view",view);
+	m_ShaderProgram.SetMat4("model",model);
+
+	m_ShaderProgram.SetInt("floorTexture",0);
 	m_FloorTexture.BindToUnit(GL_TEXTURE0);
+}
+
+void BoxNode::Render(Scene* scene)
+{
 	m_VAOConfig.Bind();
 	glDrawArrays(GL_TRIANGLES,0,36);
-	m_VAOConfig.Unbind();
-}
-
-
-void Cuboid::PostRender()
-{
-
 }

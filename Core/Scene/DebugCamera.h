@@ -1,11 +1,10 @@
-#ifndef _INC_CAMERA_H_
-#define _INC_CAMERA_H_
+#ifndef _INC_DEBUG_CAMERA_H_
+#define _INC_DEBUG_CAMERA_H_
 
 #include<glm/glm.hpp>
-#include "UserInputListener.h"
-#include "GameObject.h"
+#include "../UserInputListener.h"
 
-class Camera : public UserInputListener
+class DebugCamera : public UserInputListener
 {
 public:
 
@@ -17,7 +16,7 @@ public:
 		DOWN
 	};
 
-	Camera(std::shared_ptr<GameObject> pTarget);
+	DebugCamera();
 
 	void OnCursorMove(double x, double y) override;
 	void PollKeyAction() override;
@@ -42,7 +41,6 @@ private:
 	float m_LastCursorX;
 	float m_LastCursorY;
 	float m_Speed;
-	std::shared_ptr<GameObject> m_Target;
 	
 };
 

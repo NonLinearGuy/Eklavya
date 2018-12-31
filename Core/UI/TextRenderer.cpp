@@ -50,8 +50,8 @@ namespace HipHop
 
 		fclose(file);
 
-		m_Shader.AddAndCompile("shaders/text_vs.glsl", EShaderType::VERTEX);
-		m_Shader.AddAndCompile("shaders/text_fs.glsl", EShaderType::FRAGMENT);
+		m_Shader.AddAndCompile("assets/shaders/text_vs.glsl", EShaderType::VERTEX);
+		m_Shader.AddAndCompile("assets/shaders/text_fs.glsl", EShaderType::FRAGMENT);
 		m_Shader.Build();
 
 		glm::mat4 projection = glm::ortho(0.0f,1024.0f,640.0f,0.0f,0.0f,1.0f);

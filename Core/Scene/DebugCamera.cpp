@@ -1,14 +1,14 @@
-#include "Camera.h"
+#include "DebugCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
-#include "Timer.h"
+#include "../Timer.h"
 #include <GLFW/glfw3.h>
 
-using namespace HipHop;
 
-Camera::Camera(std::shared_ptr<GameObject> pTarget)
+
+
+DebugCamera::DebugCamera()
 	: 
 	UserInputListener(),
-	m_Target(pTarget),
 	m_Senstivity(.005),
 	m_Pitch(-90.0f),
 	m_Yaw(0.0f),
@@ -21,7 +21,7 @@ Camera::Camera(std::shared_ptr<GameObject> pTarget)
 }
 
 
-void Camera::OnCursorMove(double x, double y)
+void DebugCamera::OnCursorMove(double x, double y)
 {
 	if (m_CursorStartedMoving)
 	{
@@ -49,9 +49,9 @@ void Camera::OnCursorMove(double x, double y)
 	m_Front = glm::normalize(m_Front);
 }
 
-void Camera::PollKeyAction()
+void DebugCamera::PollKeyAction()
 {
-	float dt = Timer::GetInstance()->GetDeltaTimeInSeconds();
+	float dt = HipHop::Timer::GetInstance()->GetDeltaTimeInSeconds();
 	
 	if (IsKeyPressed(GLFW_KEY_W))
 		Move(EDirection::UP,dt);
@@ -63,7 +63,7 @@ void Camera::PollKeyAction()
 		Move(EDirection::RIGHT, dt);
 }
 
-void Camera::Move(EDirection direction,float dt)
+void DebugCamera::Move(EDirection direction,float dt)
 {
 	float speed = m_Speed * dt;
 
@@ -86,15 +86,7 @@ void Camera::Move(EDirection direction,float dt)
 
 
 
-glm::mat4 Camera::GetView()
+glm::mat4 DebugCamera::GetView()
 {
-	if(!m_Target)
-		return glm::lookAt(m_Position,m_Position + m_Front,glm::vec3(0.0f,1.0f,0.0f));
-	else
-	{
-		glm::mat4 model = m_Target->GetWorldMatrix();
-		glm::vec3 origin = glm::vec3(model[3]);
-		glm::vec4 offset = glm::vec4(0.0f, 1.0f, 1.0f,1.0f) * model;
-		return glm::lookAt(origin + glm::vec3(offset),origin,glm::vec3(0.0f, 1.0f, 0.0f));
-	}
+	return glm::lookAt(m_Position,m_Position + m_Front,glm::vec3(0.0f,1.0f,0.0f));
 }

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "GLFWGame.h"
-#include "BaseScene.h"
+
 #include <map>
 #include <string>
 
-#include "TestScene.h"
-class Renderer;
-class PhysicsEngine;
+#include "Components/GameActor.h"
+#include <glm/glm.hpp>
 
+class Scene;
 namespace HipHop
 {
 	class Engine final : public HipHop::GLFWGame
@@ -28,11 +28,19 @@ namespace HipHop
 		inline const GLWindowContext* GetWindowContext() { return m_CurrentContext; }
 	//	inline const PhysicsEngine* GetPhysicsEngine() { return m_PhysicsEngine; }
 		//inline const Renderer* GetRenderer() { return m_Renderer; }
+
+		std::shared_ptr<GameActor> GetActor(ActorID id);
+
+		//temps
+
+		
+		void CreateActor(int id,const std::string& name,const std::string& renderCompName,glm::vec3 pos,glm::vec3 scale);
+
+		void PrepareScene();
 	private:
 
-		TestScene * m_CurrentScene;
-		//PhysicsEngine* m_PhysicsEngine;
-		//Renderer* m_Renderer;
+		Scene * m_Scene;
+		std::vector< std::shared_ptr<GameActor> > m_Actors;
 	};
 }
 

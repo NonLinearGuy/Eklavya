@@ -2,28 +2,29 @@
 
 #include<memory>
 #include<string>
-#include"../GameActor.h"
+#include "../Utils/Logger.h"
 
 using ComponentID = unsigned int;
+
+class GameActor;
 
 class BaseComponent
 {
 public:
-
-
-	BaseComponent(const std::string& name);
+	explicit BaseComponent();
 	virtual ~BaseComponent();
 
-	virtual void Init() = 0;
-	virtual void Destroy() = 0;
-	virtual void Tick(float deltaTime) = 0;
+	virtual ComponentID GetID() = 0;
+
+	virtual void Init() {}
+	virtual void Destroy() 
+	{
+		HipHop::Logger::GetInstance()->Log("\nDestroying " + std::string(std::to_string(GetID())));
+	}
+	virtual void Tick(float deltaTime) {}
 
 	inline void SetOwner(std::shared_ptr<GameActor> pOwner) { m_Owner = pOwner; }
-	inline ComponentID GetID() { return m_ID; }
+
 protected:
 	std::shared_ptr<GameActor> m_Owner;
-	ComponentID m_ID;
-	std::string m_Name;
-private:
-	static unsigned int sCompCounter;
 };

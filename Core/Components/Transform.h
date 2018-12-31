@@ -10,7 +10,7 @@
 class Transform : public BaseComponent
 {
 public:
-	Transform(const glm::vec3& pPosition = glm::vec3(0.0f),const glm::vec3& pEulerAngles = glm::vec3(0.0f),const glm::vec3& pScale = glm::vec3(1.0f));
+	Transform(const glm::vec3& position = glm::vec3(0.0f),const glm::vec3& scale = glm::vec3(1.0f),const glm::vec3& pEulerAngles = glm::vec3(0.0f));
 	~Transform();
 	void SetRotation(const glm::vec3& pNewYawPitchRoll);
 
@@ -29,9 +29,9 @@ public:
 
 	glm::mat4 GetModelMatrix();
 
+	ComponentID GetID()override { return s_ID; }
+	static ComponentID s_ID;
 private:
-	
-	glm::vec3 m_Model;
 	glm::vec3 m_Position;
 	glm::quat m_Rotation;
 	glm::vec3 m_Scale;

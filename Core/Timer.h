@@ -2,8 +2,8 @@
 // Created by Ankit Singh on 11-11-2018.
 //
 
-#ifndef BURNOUTENGINE_Timer_HPP
-#define BURNOUTENGINE_Timer_HPP
+#ifndef _INC_TIMER_HPP
+#define _INC_TIMER_HPP
 
 #include<chrono>
 

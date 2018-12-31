@@ -149,7 +149,7 @@ namespace HipHop
 
 	void GLFWGame::CloseWindow()
 	{
-		glfwSetWindowShouldClose(m_CurrentContext->GetWindow(), true);
+		glfwSetWindowShouldClose(m_CurrentContext->GetWindow(), GL_TRUE);
 	}
 
 	void GLFWGame::SwapBuffers()

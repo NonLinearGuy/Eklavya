@@ -1,12 +1,14 @@
 #include "Transform.h"
 
 
-Transform::Transform(const glm::vec3 & pPosition, const glm::vec3 & pEulerAngles, const glm::vec3 & pScale)
+ComponentID Transform::s_ID = 0;
+
+Transform::Transform(const glm::vec3& position, const glm::vec3& scale, const glm::vec3& pEulerAngles)
 	:
-	BaseComponent("Transform"),
-	m_Position(pPosition),
+	BaseComponent(),
+	m_Position(position),
 	m_Rotation(pEulerAngles),
-	m_Scale(pScale)
+	m_Scale(scale)
 {
 }
 

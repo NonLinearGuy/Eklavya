@@ -70,20 +70,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)/Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)/Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)/Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)/Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)/Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\admin\Documents\GitHub\HipHopEngine\Core\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -91,6 +91,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -102,6 +103,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -115,6 +117,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -130,6 +133,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -138,6 +142,71 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Components\BaseComponent.cpp" />
+    <ClCompile Include="Components\BaseRenderComponent.cpp" />
+    <ClCompile Include="Components\GameActor.cpp" />
+    <ClCompile Include="Components\Transform.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="GLFWGame.cpp" />
+    <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Renderer\Cubemap.cpp" />
+    <ClCompile Include="Renderer\ShaderProgram.cpp" />
+    <ClCompile Include="Renderer\Texture2D.cpp" />
+    <ClCompile Include="Renderer\VertexArrayObject.cpp" />
+    <ClCompile Include="Scene\BaseNode.cpp" />
+    <ClCompile Include="Scene\BoxNode.cpp" />
+    <ClCompile Include="Scene\CameraNode.cpp" />
+    <ClCompile Include="Scene\DebugCamera.cpp" />
+    <ClCompile Include="Scene\RootNode.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\SkyNode.cpp" />
+    <ClCompile Include="Scene\SphereNode.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UI\TextRenderer.cpp" />
+    <ClCompile Include="Utils\Logger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Components\BaseComponent.h" />
+    <ClInclude Include="Components\GameActor.h" />
+    <ClInclude Include="Components\BaseRenderComponent.h" />
+    <ClInclude Include="Components\Transform.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="GLFWGame.h" />
+    <ClInclude Include="Helpers.h" />
+    <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="Renderer\Cubemap.h" />
+    <ClInclude Include="Renderer\ShaderProgram.h" />
+    <ClInclude Include="Renderer\Texture2D.h" />
+    <ClInclude Include="Renderer\VertexArrayObject.h" />
+    <ClInclude Include="Scene\BaseNode.h" />
+    <ClInclude Include="Scene\BoxNode.h" />
+    <ClInclude Include="Scene\RootNode.h" />
+    <ClInclude Include="Scene\CameraNode.h" />
+    <ClInclude Include="Scene\DebugCamera.h" />
+    <ClInclude Include="Scene\defines.h" />
+    <ClInclude Include="Scene\Scene.h" />
+    <ClInclude Include="Scene\SkyNode.h" />
+    <ClInclude Include="Scene\SphereNode.h" />
+    <ClInclude Include="TextContainer.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="UI\TextRenderer.hpp" />
+    <ClInclude Include="UserInputListener.h" />
+    <ClInclude Include="Utils\Logger.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="log.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\cubemap_fs.glsl" />
+    <None Include="Assets\Shaders\cubemap_vs.glsl" />
+    <None Include="Assets\Shaders\LitVertices_FS.GLSL" />
+    <None Include="Assets\Shaders\LitVertices_VS.GLSL" />
+    <None Include="Assets\Shaders\test_fs.glsl" />
+    <None Include="Assets\Shaders\test_vs.glsl" />
+    <None Include="Assets\Shaders\text_fs.glsl" />
+    <None Include="Assets\Shaders\text_vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

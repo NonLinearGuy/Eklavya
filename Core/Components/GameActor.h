@@ -4,9 +4,12 @@
 #include <map>
 #include <memory>
 #include <string>
-#include "Components/BaseComponent.h"
+
 
 using ActorID = unsigned int;
+using ComponentID = unsigned int;
+
+class BaseComponent;
 
 class GameActor
 {
@@ -28,14 +31,16 @@ public:
 		auto iter = m_Components.find(id);
 		if (iter != m_Components.end())
 		{
-			std::shared_ptr<IComponent> baseType = iter->second;
-			std::shared_ptr<ComponentType> subType = static_pointer_cast<ComponentType>(baseType);
+			std::shared_ptr<BaseComponent> baseType = iter->second;
+			std::shared_ptr<ComponentType> subType = std::static_pointer_cast<ComponentType>(baseType);
 			std::weak_ptr<ComponentType> weakPtr(subType);
 			return weakPtr;
 		}
 		else
 			return std::weak_ptr<ComponentType>();
 	}
+
+	inline ActorID GetID() { return m_ID; }
 
 protected:
 	std::string m_Name;

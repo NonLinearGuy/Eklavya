@@ -1,7 +1,10 @@
 #include "GameActor.h"
+#include "BaseComponent.h"
+#include "../Utils/Logger.h"
 
-GameActor::GameActor(const std::string& name,ActorID id)
-	: m_Name("name"),m_ID(id)
+GameActor::GameActor(const std::string& name, ActorID id)
+	:
+	m_Name(name),m_ID(id)
 {
 
 }
@@ -21,10 +24,13 @@ bool GameActor::Init()
 
 void GameActor::Destroy()
 {
+	HipHop::Logger::GetInstance()->Log("\nDestroying " + m_Name + "...");
 	for (ComponentMap::iterator iter = m_Components.begin(); iter != m_Components.end(); ++iter)
 	{
 		iter->second->Destroy();
 	}
+
+	m_Components.clear();
 }
 
 void GameActor::Tick(float deltaTime)

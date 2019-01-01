@@ -10,7 +10,7 @@ class Scene;
 class SphereNode : public BaseNode
 {
 public:
-	SphereNode(ActorID id, BaseRenderComponent* renderComponent, ERenderPass renderPass);
+	SphereNode(ActorID id, BaseRenderComponent* renderComponent, ERenderGroup renderPass);
 	~SphereNode();
 	bool Init()override;
 	void Destroy()override;

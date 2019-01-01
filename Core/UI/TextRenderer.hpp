@@ -28,13 +28,13 @@ namespace HipHop
 	public:
 		//Constructors
 		TextRenderer();
-		TextRenderer(const Texture2D& texture, const std::string& pathToFNT);
+		TextRenderer(const std::string& fontName);
 		//Destructor
 		~TextRenderer();
 		/*
 			initializes essential data for rendering text
 		*/
-		void Init(const Texture2D& texture, const std::string& pathToFNT);
+		void Init(const std::string& fontName);
 
 		/*
 			Renders text with a color

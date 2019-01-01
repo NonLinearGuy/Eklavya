@@ -6,13 +6,14 @@
 #include "../Helpers.h"
 #include "DebugCamera.h"
 #include "../Engine.h"
+#include "../Renderer/GLRenderer.h"
 
 #include "Scene.h"
 
 const float PI = 3.1415926535f;
 using namespace HipHop;
 
-SphereNode::SphereNode(ActorID id, BaseRenderComponent * renderComponent, ERenderPass renderPass)
+SphereNode::SphereNode(ActorID id, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
 	:
 	BaseNode(id,renderComponent,renderPass)
 {
@@ -124,7 +125,7 @@ bool SphereNode::Init()
 	m_ShaderProgram.AddAndCompile("assets/shaders/test_fs.glsl", EShaderType::FRAGMENT);
 	m_ShaderProgram.Build();
 
-	m_FloorTexture.CreateTexture("Assets/Textures/diffuse.png");
+	m_FloorTexture.CreateTexture("Assets/Textures/floor_albedo.png");
 
 	return true;
 }
@@ -136,26 +137,33 @@ void SphereNode::Destroy()
 
 void SphereNode::PreRender(Scene * scene)
 {
-	m_ShaderProgram.Use();
-
-	glm::mat4 projection = scene->GetProjection();
-
-	glm::mat4 view = scene->GetCamera()->GetView();
-	glm::mat4 model = glm::mat4(1.0f);
-
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
-	if (transform)
+	glm::mat4 model = transform->GetModelMatrix();
+
+	auto currentRenderPass = scene->GetRenderer()->GetCurrentRenderPass();
+
+	if (ERenderPass::SHADOW_PASS == currentRenderPass)
 	{
-		model = transform->GetModelMatrix();
+		auto shadowShader = static_cast<ShadowMapPass*>(scene->GetRenderer()->GetRenderPass(ERenderPass::SHADOW_PASS))->GetShader();
+		shadowShader.Use();
+		shadowShader.SetMat4("model",model);
 	}
-
-	m_ShaderProgram.SetMat4("projection", projection);
-	m_ShaderProgram.SetMat4("view", view);
-	m_ShaderProgram.SetMat4("model", model);
-
-	m_ShaderProgram.SetInt("floorTexture", 0);
-	m_FloorTexture.BindToUnit(GL_TEXTURE0);
+/*	else
+	{
+		m_ShaderProgram.Use();
+		glm::mat4 projection = scene->GetProjection();
+		glm::mat4 view = scene->GetCamera()->GetView();
+		if (transform)
+		{
+			model = transform->GetModelMatrix();
+		}
+		m_ShaderProgram.SetMat4("projection", projection);
+		m_ShaderProgram.SetMat4("view", view);
+		m_ShaderProgram.SetMat4("model", model);
+		m_ShaderProgram.SetInt("floorTexture", 0);
+		m_FloorTexture.BindToUnit(GL_TEXTURE0);
+	}*/
 }
 
 void SphereNode::Render(Scene * scene)

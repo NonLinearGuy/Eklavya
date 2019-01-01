@@ -9,7 +9,7 @@
 class BoxNode : public BaseNode
 {
 public:
-	BoxNode(ActorID pActorID, BaseRenderComponent* renderComponent,ERenderPass renderPass);
+	BoxNode(ActorID pActorID, BaseRenderComponent* renderComponent,ERenderGroup renderPass);
 	~BoxNode();
 	bool Init()override;
 	void Destroy()override;

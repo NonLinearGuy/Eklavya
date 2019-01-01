@@ -22,7 +22,7 @@ namespace HipHop
 		}
 		inline double GetDeltaTimeInMS() { return m_DeltaTime; }
 		inline double GetDeltaTimeInSeconds() { return m_DeltaTime * .001f; }
-		inline int GetFramesPerSecond() { return m_FPSCounter; }
+		inline int GetFramesPerSecond() { return m_FPS; }
 		void Update();
 		void Reset();
 	private:
@@ -39,6 +39,7 @@ namespace HipHop
 		//for fps
 		double m_ElapsedTime;
 		int m_FPSCounter;
+		int m_FPS;
 	};
 }
 

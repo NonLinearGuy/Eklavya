@@ -10,7 +10,7 @@
 
 using namespace HipHop;
 
-SkyNode::SkyNode(ActorID id, BaseRenderComponent * renderComponent, ERenderPass renderPass)
+SkyNode::SkyNode(ActorID id, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
 	:
 	BaseNode(id,renderComponent,renderPass)
 {
@@ -118,11 +118,9 @@ void SkyNode::PreRender(Scene * scene)
 
 void SkyNode::Render(Scene * scene)
 {
-	glDepthFunc(GL_LEQUAL);
 	m_VAO.Bind();
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
-	glDepthFunc(GL_LESS);
 }
 
 void SkyNode::PostRender(Scene * scene)

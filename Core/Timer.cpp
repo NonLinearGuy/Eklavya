@@ -32,6 +32,7 @@ namespace HipHop
 		m_FPSCounter++;
 		if ( m_ElapsedTime > 1.0f)
 		{
+			m_FPS = m_FPSCounter;
 			m_ElapsedTime = 0.0f;
 			m_FPSCounter = 0;
 		}

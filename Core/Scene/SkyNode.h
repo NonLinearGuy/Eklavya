@@ -10,7 +10,7 @@ class Scene;
 class SkyNode : public BaseNode
 {
 public:
-	SkyNode(ActorID id, BaseRenderComponent* renderComponent, ERenderPass renderPass);
+	SkyNode(ActorID id, BaseRenderComponent* renderComponent, ERenderGroup renderPass);
 	~SkyNode();
 	bool Init()override;
 	void Destroy()override;

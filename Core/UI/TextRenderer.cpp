@@ -12,21 +12,21 @@ namespace HipHop
 
 	}
 
-	TextRenderer::TextRenderer(const Texture2D& texture, const std::string& pathToFNT)
+	TextRenderer::TextRenderer(const std::string& fontName)
 	{
-		Init(texture, pathToFNT);
+		Init(fontName);
 	}
 
 	TextRenderer::~TextRenderer()
 	{
 	}
 
-	void TextRenderer::Init(const Texture2D& texture, const std::string& pathToFNT)
+	void TextRenderer::Init(const std::string& fontName)
 	{
-		mTextureAtlas = texture;
+		mTextureAtlas.CreateTexture("Assets/Fonts/" + fontName + ".png");
 
 		FILE *file = nullptr;
-		file = fopen(pathToFNT.c_str(), "r");
+		file = fopen(("Assets/Fonts/" + fontName + ".fnt").c_str(), "r");
 
 		while (true)
 		{

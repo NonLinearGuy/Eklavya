@@ -51,7 +51,7 @@ std::shared_ptr<BaseNode> BoxRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			auto boxNode = std::make_shared<BoxNode>(m_Owner->GetID(),weakThis,ERenderPass::DYNAMIC);
+			auto boxNode = std::make_shared<BoxNode>(m_Owner->GetID(),weakThis,ERenderGroup::DYNAMIC);
 			return boxNode;
 		}
 		else
@@ -87,7 +87,7 @@ std::shared_ptr<BaseNode> SphereRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			auto boxNode = std::make_shared<SphereNode>(m_Owner->GetID(), weakThis, ERenderPass::DYNAMIC);
+			auto boxNode = std::make_shared<SphereNode>(m_Owner->GetID(), weakThis, ERenderGroup::DYNAMIC);
 			return boxNode;
 		}
 		else
@@ -121,7 +121,7 @@ std::shared_ptr<BaseNode> SkyRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			auto boxNode = std::make_shared<SkyNode>(m_Owner->GetID(), weakThis, ERenderPass::SKYBOX);
+			auto boxNode = std::make_shared<SkyNode>(m_Owner->GetID(), weakThis, ERenderGroup::SKYBOX);
 			return boxNode;
 		}
 		else

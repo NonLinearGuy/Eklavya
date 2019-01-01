@@ -6,9 +6,14 @@
 #include <string>
 
 #include "Components/GameActor.h"
+#include "Components/PawnActor.h"
 #include <glm/glm.hpp>
+#include "UI/TextRenderer.hpp"
+#include "Scene/DebugCamera.h"
+#include "Scene/Scene.h"
 
-class Scene;
+class GLRenderer;
+
 namespace HipHop
 {
 	class Engine final : public HipHop::GLFWGame
@@ -25,7 +30,7 @@ namespace HipHop
 		void OnMouseAction(int key, int action)override;
 		void OnCursorMoved(double x, double y)override;
 
-		inline const GLWindowContext* GetWindowContext() { return m_CurrentContext; }
+		inline GLWindowContext* GetWindowContext() { return m_CurrentContext; }
 	//	inline const PhysicsEngine* GetPhysicsEngine() { return m_PhysicsEngine; }
 		//inline const Renderer* GetRenderer() { return m_Renderer; }
 
@@ -34,13 +39,18 @@ namespace HipHop
 		//temps
 
 		
-		void CreateActor(int id,const std::string& name,const std::string& renderCompName,glm::vec3 pos,glm::vec3 scale);
+		std::shared_ptr<GameActor> CreateActor(int id,const std::string& name,const std::string& renderCompName,glm::vec3 pos,glm::vec3 scale,float radius = 1.0f);
+		std::shared_ptr<PawnActor> CreatePawnActor(int id, const std::string& name, const std::string& renderCompName, glm::vec3 pos, glm::vec3 scale, float radius = 1.0f);
 
 		void PrepareScene();
+
+		inline glm::vec3 GetCameraPosition() { return m_Scene->GetCamera()->GetPosition(); }
 	private:
 
+		std::shared_ptr<GLRenderer> m_Renderer;
 		Scene * m_Scene;
 		std::vector< std::shared_ptr<GameActor> > m_Actors;
+		HipHop::TextRenderer* m_Text;
 	};
 }
 

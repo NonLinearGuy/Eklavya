@@ -6,10 +6,11 @@
 #include "DebugCamera.h"
 #include "../Engine.h"
 #include "../Helpers.h"
+#include "../Renderer/GLRenderer.h"
 
 using namespace HipHop;
 
-BoxNode::BoxNode(ActorID actorID,BaseRenderComponent* renderComponent, ERenderPass renderPass)
+BoxNode::BoxNode(ActorID actorID,BaseRenderComponent* renderComponent, ERenderGroup renderPass)
 	:
 	BaseNode(actorID,renderComponent,renderPass)
 {
@@ -77,7 +78,7 @@ bool BoxNode::Init()
 	m_ShaderProgram.AddAndCompile("assets/shaders/test_fs.glsl", EShaderType::FRAGMENT);
 	m_ShaderProgram.Build();
 	
-	m_FloorTexture.CreateTexture("Assets/Textures/diffuse.png");
+	m_FloorTexture.CreateTexture("Assets/Textures/albedo.jpg");
 
 	return true;
 }
@@ -94,26 +95,33 @@ void BoxNode::Tick(Scene* scene,float deltaTime)
 
 void BoxNode::PreRender(Scene* scene)
 {
-	m_ShaderProgram.Use();
-
-	glm::mat4 projection = scene->GetProjection();
-
-	glm::mat4 view = scene->GetCamera()->GetView();
-	glm::mat4 model = glm::mat4(1.0f);
-
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
+	glm::mat4 model = glm::mat4(1.0f);
 	if (transform)
 	{
 		model = transform->GetModelMatrix();
 	}
 
-	m_ShaderProgram.SetMat4("projection",projection);
-	m_ShaderProgram.SetMat4("view",view);
-	m_ShaderProgram.SetMat4("model",model);
+	auto currentRenderPass = scene->GetRenderer()->GetCurrentRenderPass();
 
-	m_ShaderProgram.SetInt("floorTexture",0);
-	m_FloorTexture.BindToUnit(GL_TEXTURE0);
+	if (ERenderPass::SHADOW_PASS == currentRenderPass)
+	{
+		auto shadowShader = static_cast<ShadowMapPass*>(scene->GetRenderer()->GetRenderPass(ERenderPass::SHADOW_PASS))->GetShader();
+		shadowShader.Use();
+		shadowShader.SetMat4("model", model);
+	}
+	/*else
+	{
+		m_ShaderProgram.Use();
+		glm::mat4 projection = scene->GetProjection();
+		glm::mat4 view = scene->GetCamera()->GetView();
+		m_ShaderProgram.SetMat4("projection", projection);
+		m_ShaderProgram.SetMat4("view", view);
+		m_ShaderProgram.SetMat4("model", model);
+		m_ShaderProgram.SetInt("floorTexture", 0);
+		m_FloorTexture.BindToUnit(GL_TEXTURE0);
+	}*/
 }
 
 void BoxNode::Render(Scene* scene)

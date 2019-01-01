@@ -6,7 +6,7 @@
 #include "../Components/GameActor.h"
 #include "../Engine.h"
 
-BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderPass renderPass)
+BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderGroup renderPass)
 	:
 	m_ActorID(actorID),
 	m_RenderPass(renderPass),

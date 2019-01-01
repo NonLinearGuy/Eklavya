@@ -8,7 +8,7 @@ class Scene;
 class BaseRenderComponent;
 class BaseNode;
 
-enum ERenderPass
+enum ERenderGroup
 {
 	MIN = 0,
 	STATIC = MIN,
@@ -22,7 +22,7 @@ class BaseNode
 public:
 	using ActorID = unsigned int;
 
-	BaseNode(ActorID actorID, BaseRenderComponent* renderComponent, ERenderPass renderPasss);
+	BaseNode(ActorID actorID, BaseRenderComponent* renderComponent, ERenderGroup renderPasss);
 	~BaseNode();
 
 	virtual bool Init();
@@ -38,14 +38,14 @@ public:
 	virtual void AddChild(std::shared_ptr<BaseNode> pChild);
 	virtual bool RemoveChild(std::shared_ptr<BaseNode> pChild);
 
-	inline ERenderPass GetRenderPass()
+	inline ERenderGroup GetRenderPass()
 	{
 		return m_RenderPass;
 	}
 
 	void SetParent(std::shared_ptr<BaseNode> parent) { m_Parent = parent; }
 protected:
-	ERenderPass m_RenderPass;
+	ERenderGroup m_RenderPass;
 	BaseRenderComponent* m_WeakRenderComponent;
 	std::shared_ptr<BaseNode> m_Parent;
 	std::vector<std::shared_ptr<BaseNode>> m_Children;

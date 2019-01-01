@@ -4,6 +4,7 @@
 #include "DebugCamera.h"
 #include "../Engine.h"
 #include "RootNode.h"
+#include "../Renderer/GLRenderer.h"
 
 
 Scene::Scene(HipHop::Engine* engineRef,const std::string& pName) : m_Name(pName), m_EngineRef(engineRef)
@@ -14,8 +15,9 @@ Scene::~Scene()
 {
 }
 
-void Scene::Init()
+void Scene::Init(std::shared_ptr<GLRenderer> renderer)
 {
+	m_Renderer = renderer;
 	m_Camera = std::make_shared<DebugCamera>();
 	m_Root = std::make_shared<RootNode>();
 

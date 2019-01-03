@@ -4,18 +4,19 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-class Scene;
-class BaseRenderComponent;
-class BaseNode;
 
 enum ERenderGroup
 {
 	MIN = 0,
-	STATIC = MIN,
-	DYNAMIC,
+	SOLID = MIN,
+	OUTLINED,
 	SKYBOX,
 	MAX
 };
+
+
+class BaseRenderComponent;
+class Scene;
 
 class BaseNode
 {
@@ -38,14 +39,14 @@ public:
 	virtual void AddChild(std::shared_ptr<BaseNode> pChild);
 	virtual bool RemoveChild(std::shared_ptr<BaseNode> pChild);
 
-	inline ERenderGroup GetRenderPass()
+	inline ERenderGroup GetRenderGroup()
 	{
-		return m_RenderPass;
+		return m_RenderGroup;
 	}
 
 	void SetParent(std::shared_ptr<BaseNode> parent) { m_Parent = parent; }
 protected:
-	ERenderGroup m_RenderPass;
+	ERenderGroup m_RenderGroup;
 	BaseRenderComponent* m_WeakRenderComponent;
 	std::shared_ptr<BaseNode> m_Parent;
 	std::vector<std::shared_ptr<BaseNode>> m_Children;

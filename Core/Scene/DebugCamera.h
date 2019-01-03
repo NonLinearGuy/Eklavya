@@ -3,6 +3,9 @@
 
 #include<glm/glm.hpp>
 #include "../UserInputListener.h"
+#include <memory>
+#include <glad/glad.h>
+class GLRenderer;
 
 class DebugCamera : public UserInputListener
 {
@@ -41,7 +44,6 @@ private:
 	float m_LastCursorX;
 	float m_LastCursorY;
 	float m_Speed;
-	
 };
 
 #endif

@@ -3,13 +3,14 @@
 
 
 //blend state
-void BlendState::Enter()
+
+void AlphaRenderState::Enter()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void BlendState::Exit()
+void AlphaRenderState::Exit()
 {
 	glDisable(GL_BLEND);
 }
@@ -17,17 +18,17 @@ void BlendState::Exit()
 
 //skybox
 
+
 void SkyBoxState::Enter()
 {
-	if(glIsEnabled(GL_DEPTH_TEST))
-		glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_LEQUAL);
 }
 
 
 void SkyBoxState::Exit()
 {
-	if(glIsEnabled(GL_DEPTH_TEST))
-		glDepthFunc(GL_LESS);
+	
+	glDepthFunc(GL_LESS);
 }
 
 //defualt 

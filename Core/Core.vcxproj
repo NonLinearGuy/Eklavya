@@ -163,7 +163,6 @@
     <ClCompile Include="Scene\BoxNode.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\DebugCamera.cpp" />
-    <ClCompile Include="Scene\RootNode.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SkyNode.cpp" />
     <ClCompile Include="Scene\SphereNode.cpp" />
@@ -191,7 +190,6 @@
     <ClInclude Include="Renderer\VertexArrayObject.h" />
     <ClInclude Include="Scene\BaseNode.h" />
     <ClInclude Include="Scene\BoxNode.h" />
-    <ClInclude Include="Scene\RootNode.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\DebugCamera.h" />
     <ClInclude Include="Scene\defines.h" />
@@ -208,16 +206,14 @@
     <Text Include="log.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\cubemap_fs.glsl" />
-    <None Include="Assets\Shaders\cubemap_vs.glsl" />
-    <None Include="Assets\Shaders\LitVertices_FS.GLSL" />
-    <None Include="Assets\Shaders\LitVertices_VS.GLSL" />
+    <None Include="Assets\Shaders\skybox_fs.glsl" />
+    <None Include="Assets\Shaders\skybox_vs.glsl" />
     <None Include="Assets\Shaders\main_output_fs.glsl" />
     <None Include="Assets\Shaders\main_output_vs.glsl" />
     <None Include="Assets\Shaders\shadow_map_fs.glsl" />
     <None Include="Assets\Shaders\shadow_map_vs.glsl" />
-    <None Include="Assets\Shaders\test_fs.glsl" />
-    <None Include="Assets\Shaders\test_vs.glsl" />
+    <None Include="Assets\Shaders\solids_fs.glsl" />
+    <None Include="Assets\Shaders\solids_vs.glsl" />
     <None Include="Assets\Shaders\text_fs.glsl" />
     <None Include="Assets\Shaders\text_vs.glsl" />
   </ItemGroup>

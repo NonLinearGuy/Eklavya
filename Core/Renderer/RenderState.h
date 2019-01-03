@@ -1,5 +1,8 @@
 #pragma once
 
+#include "ShaderProgram.h"
+#include <memory>
+
 class IRenderState
 {
 public:
@@ -8,7 +11,7 @@ public:
 protected:
 };
 
-class BlendState : public IRenderState
+class AlphaRenderState : public IRenderState
 {
 public:
 	void Enter()override;
@@ -23,6 +26,7 @@ public:
 	void Enter()override;
 	void Exit()override;
 };
+
 
 class DefaultState : public IRenderState
 {

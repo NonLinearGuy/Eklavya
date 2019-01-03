@@ -16,7 +16,7 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{9877ad1d-84ff-4d85-ae54-c6bbf38132e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
+    <Filter Include="ZShaders">
       <UniqueIdentifier>{e89178ad-38f1-4d01-8fbe-afa5f13a3dbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -65,9 +65,6 @@
     </ClCompile>
     <ClCompile Include="Components\BaseRenderComponent.cpp">
       <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\RootNode.cpp">
-      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\BoxNode.cpp">
       <Filter>Scene</Filter>
@@ -145,9 +142,6 @@
     <ClInclude Include="Scene\BoxNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\RootNode.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SphereNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -177,41 +171,35 @@
     <Text Include="log.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\cubemap_fs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\cubemap_vs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\LitVertices_FS.GLSL">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\LitVertices_VS.GLSL">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\test_fs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\test_vs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Assets\Shaders\text_fs.glsl">
-      <Filter>Shaders</Filter>
+      <Filter>ZShaders</Filter>
     </None>
     <None Include="Assets\Shaders\text_vs.glsl">
-      <Filter>Shaders</Filter>
+      <Filter>ZShaders</Filter>
     </None>
     <None Include="Assets\Shaders\main_output_fs.glsl">
-      <Filter>Shaders</Filter>
+      <Filter>ZShaders</Filter>
     </None>
     <None Include="Assets\Shaders\main_output_vs.glsl">
-      <Filter>Shaders</Filter>
+      <Filter>ZShaders</Filter>
     </None>
     <None Include="Assets\Shaders\shadow_map_vs.glsl">
-      <Filter>Shaders</Filter>
+      <Filter>ZShaders</Filter>
     </None>
     <None Include="Assets\Shaders\shadow_map_fs.glsl">
-      <Filter>Shaders</Filter>
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\solids_fs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\solids_vs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\skybox_vs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\skybox_fs.glsl">
+      <Filter>ZShaders</Filter>
     </None>
   </ItemGroup>
 </Project>

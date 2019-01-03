@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseNode.h"
-#include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Cubemap.h"
 #include "../Renderer/VertexArrayObject.h"
 
@@ -18,7 +17,6 @@ public:
 	void Render(Scene* scene)override;
 	void PostRender(Scene* scene)override;
 private:
-	HipHop::ShaderProgram m_ShaderProgram;
 	VertexArrayObject m_VAO;
 	int m_IndicesSize;
 	Cubemap m_Cubemap;

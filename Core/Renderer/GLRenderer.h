@@ -1,11 +1,9 @@
 #pragma once
 
-
 #include <vector>
 
 #include "Framebuffer.h"
 #include "RenderState.h"
-#include "ShaderProgram.h"
 #include "../Engine.h"
 
 class IFramebuffer;
@@ -15,51 +13,57 @@ class IRenderPass;
 
 namespace HipHop
 {
+	class GLWindowContext;
+	class GLFWGame;
 	class ShaderProgram;
 	class Engine;
 }
 
 
+enum class EShaderProgram
+{
+	SOLID,
+	SKYBOX
+};
+
 enum class ERenderPass
 {
 	MIN = 0,
 	SHADOW_PASS = MIN,
-	FINAL_OUTPUT_PASS,
 	MAX
 };
 
 class GLRenderer
 {
 public:
-	GLRenderer(int width, int height);
+	GLRenderer(HipHop::GLWindowContext* context);
 	~GLRenderer();
-	bool Initialize(HipHop::Engine* pEngineRef);
+	bool Initialize();
 	void Destroy();
-	IRenderPass* GetRenderPass(ERenderPass type);
-
-	void RunAllPasses(Scene* scene);
-	void RenderOutput();
-	void SetViewport(int, int, int, int);
-	void ClearBuffers();
-	void SetClearColor(float r, float g, float b, float a);
+	void RenderWorld(Scene* scene);
 	void ChangeState(IRenderState* NewRenderState);
-	void SwapBuffers();
-	inline int GetWidth() { return m_Width; }
-	inline int GetHeight() { return m_Height; }
-	inline ERenderPass GetCurrentRenderPass() { return m_CurrentRenderPass; }
-	inline glm::vec3 GetCameraPosition() { return m_EngineRef->GetCameraPosition(); }
+	void SetShaderProgram(EShaderProgram program);
+	std::shared_ptr<HipHop::ShaderProgram> GetActiveProgram() { return m_ActiveProgram; }
+	void SetWorldMatrix(glm::mat4& worldTransform);
+	void SetViewMatrix(glm::mat4& view);
+	void SetProjectionMatrix(glm::mat4& projection);
+
 protected:
+
+	void SetViewport(int, int, int, int);
+	void SetClearColor(float r, float g, float b, float a);
+	void SwapBuffers();
+
+	std::shared_ptr<HipHop::ShaderProgram> LoadShaderProgram(const std::string& name);
+
 	IRenderState* m_CurrentState;
-	std::vector<IRenderPass*> m_RenderPasses;
-	int m_Width;
-	int m_Height;
-	HipHop::ShaderProgram m_MainOutputShader;
 	GLuint m_VAO;
-	HipHop::Engine* m_EngineRef;
-	ERenderPass m_CurrentRenderPass;
+	HipHop::GLWindowContext* m_Context;
+	std::map<EShaderProgram, std::shared_ptr<HipHop::ShaderProgram>> m_Programs;
+	std::shared_ptr < HipHop::ShaderProgram > m_ActiveProgram;
 };
 
-class IRenderPass
+/*class IRenderPass
 {
 public:
 	IRenderPass(ERenderPass type,GLRenderer* renderer);
@@ -83,23 +87,6 @@ protected:
 	ERenderPass m_Type;
 };
 
-class FinalOutputPass : public IRenderPass
-{
-public:
-	
-	FinalOutputPass(GLRenderer* renderer);
-	~FinalOutputPass();
-
-	bool Init()override;
-	void Destroy()override;
-	void PreRun()override;
-	void Run(Scene* scene)override;
-	void PostRun()override;
-
-	GLuint GetColorAttachment() { return (static_cast<FinalOutputFB*>(m_Framebuffer))->GetColorAttachment(); }
-};
-
-
 class ShadowMapPass : public IRenderPass
 {
 public:
@@ -120,7 +107,7 @@ private:
 
 	HipHop::ShaderProgram m_ShadowShader;
 };
-
+*/
 
 
 

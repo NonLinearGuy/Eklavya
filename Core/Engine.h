@@ -29,22 +29,15 @@ namespace HipHop
 		void OnKeyAction(int key, int action)override;
 		void OnMouseAction(int key, int action)override;
 		void OnCursorMoved(double x, double y)override;
-
 		inline GLWindowContext* GetWindowContext() { return m_CurrentContext; }
-	//	inline const PhysicsEngine* GetPhysicsEngine() { return m_PhysicsEngine; }
-		//inline const Renderer* GetRenderer() { return m_Renderer; }
-
 		std::shared_ptr<GameActor> GetActor(ActorID id);
 
 		//temps
-
-		
 		std::shared_ptr<GameActor> CreateActor(int id,const std::string& name,const std::string& renderCompName,glm::vec3 pos,glm::vec3 scale,float radius = 1.0f);
 		std::shared_ptr<PawnActor> CreatePawnActor(int id, const std::string& name, const std::string& renderCompName, glm::vec3 pos, glm::vec3 scale, float radius = 1.0f);
+		std::shared_ptr<BaseNode> GetBaseNode(std::shared_ptr<GameActor> actor);
 
 		void PrepareScene();
-
-		inline glm::vec3 GetCameraPosition() { return m_Scene->GetCamera()->GetPosition(); }
 	private:
 
 		std::shared_ptr<GLRenderer> m_Renderer;

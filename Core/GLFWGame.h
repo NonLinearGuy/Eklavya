@@ -31,6 +31,7 @@ namespace HipHop
 		inline std::string GetName() { return m_Name; }
 		inline GLFWwindow* GetWindow() { return m_Window; }
 		inline float GetAspectRatio() { return m_Width / float(m_Height); }
+		void SwapBuffers();
 		
 	private:
 		int m_X;
@@ -75,7 +76,6 @@ namespace HipHop
 
 		void CloseWindow();
 		void HideMouse();
-		void SwapBuffers();
 	};
 
 	class CallbackManager

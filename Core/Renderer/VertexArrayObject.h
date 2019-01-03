@@ -3,7 +3,6 @@
 
 #include<glad/glad.h>
 
-
 class VertexArrayObject
 {
 public:

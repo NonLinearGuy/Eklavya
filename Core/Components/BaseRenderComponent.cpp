@@ -5,6 +5,8 @@
 #include "Transform.h"
 #include "GameActor.h"
 #include "../Helpers.h"
+#include "../Scene/Scene.h"
+#include "../Helpers.h"
 
 ComponentID BaseRenderComponent::s_ID = 1;
 ComponentID BoxRenderComponent::s_ID = 2;
@@ -51,7 +53,21 @@ std::shared_ptr<BaseNode> BoxRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			auto boxNode = std::make_shared<BoxNode>(m_Owner->GetID(),weakThis,ERenderGroup::DYNAMIC);
+			auto boxNode = std::make_shared<BoxNode>(m_Owner->GetID(),weakThis,ERenderGroup::SOLID);
+			boxNode->Init();
+			auto childActors = m_Owner->GetChildren();
+			if (!childActors.empty())
+			{
+				for (auto child : childActors)
+				{
+					auto component = MakeSharedPtr(child->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID));
+					if (component)
+					{
+						auto node = component->CreateBaseNode();
+						boxNode->AddChild(node);
+					}
+				}
+			}
 			return boxNode;
 		}
 		else
@@ -87,7 +103,21 @@ std::shared_ptr<BaseNode> SphereRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			auto boxNode = std::make_shared<SphereNode>(m_Owner->GetID(), weakThis, ERenderGroup::DYNAMIC);
+			auto boxNode = std::make_shared<SphereNode>(m_Owner->GetID(), weakThis, ERenderGroup::SOLID);
+			boxNode->Init();
+			auto childActors = m_Owner->GetChildren();
+			if (!childActors.empty())
+			{
+				for (auto child : childActors)
+				{
+					auto component = MakeSharedPtr(child->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID));
+					if (component)
+					{
+						auto node = component->CreateBaseNode();
+						boxNode->AddChild(node);
+					}
+				}
+			}
 			return boxNode;
 		}
 		else

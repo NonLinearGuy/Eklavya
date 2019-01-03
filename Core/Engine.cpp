@@ -30,15 +30,14 @@ namespace HipHop
 		GLFWGame::HideMouse();
 		
 
-		//INITIALIZE : TIMER, LOGGER , PHYSICS ENGINE , RENDERER, CURRENT_SCENE
-
 		Logger::GetInstance()->Init("HIPHOP TEST");
 		Timer::GetInstance()->Reset();
 
 		m_Text = new TextRenderer("gothic");
 
-		m_Renderer = std::make_shared<GLRenderer>(width,height);
-		m_Renderer->Initialize(this);
+		m_Renderer = std::make_shared<GLRenderer>(m_CurrentContext);
+		m_Renderer->Initialize();
+
 		PrepareScene();
 
 		return true;
@@ -46,15 +45,22 @@ namespace HipHop
 
 	void Engine::PrepareScene()
 	{
-		m_Scene = new Scene(this,"TestScene");
-		m_Scene->Init(m_Renderer);
+		m_Scene = new Scene(this,m_Renderer,"TestScene");
+		m_Scene->Init();
 
-		CreateActor(0,"Floor","Box",glm::vec3(0.0f,0.0f,-2.0f),glm::vec3(300.0f,3.0f,300.0f));
-		CreateActor(1, "wall0", "Box", glm::vec3(-50.0f, 11, 10.0f), glm::vec3(20.0f, 100.0f, 10.0f));
-		CreateActor(2, "wall1", "Box", glm::vec3(50.0f, 11.0f, -2.0f), glm::vec3(20.0f, 50.0f, 50.0f));
-		CreatePawnActor(3, "Light", "Sphere", glm::vec3(100.0f), glm::vec3(1),10);
-		auto newActor = CreateActor(4, "Ball", "Sphere", glm::vec3(15.0f, 20.0f, -2.0f), glm::vec3(1),20);
-		CreateActor(5, "Sky", "Sky", glm::vec3(0.0f), glm::vec3(1));
+		auto floor = CreateActor(0,"Floor","Box",glm::vec3(0.0f,0.0f,-2.0f),glm::vec3(100.0f,3.0f,100.0f));
+
+
+		auto wall1 = CreateActor(1, "wall0", "Box", glm::vec3(2,5,0), glm::vec3(10.0f, 20.0f, 10.0f));
+		m_Scene->AddChild(GetBaseNode(wall1));
+		auto wall2 = CreateActor(2, "wall2", "Box", glm::vec3(50.0f, 11.0f, -2.0f), glm::vec3(20.0f, 50.0f, 50.0f));
+		m_Scene->AddChild(GetBaseNode(wall2));
+		auto child = CreatePawnActor(3, "Light", "Sphere", glm::vec3(0.0f,0.0f,-2.0f), glm::vec3(1),5);
+		auto newActor = CreateActor(4, "Ball", "Sphere", glm::vec3(0.0f,0.0f,10.0f), glm::vec3(1),5);
+		newActor->AddChild(child);
+		m_Scene->AddChild(GetBaseNode(newActor));
+		auto sky = CreateActor(5, "Sky", "Sky", glm::vec3(0.0f), glm::vec3(1));
+		m_Scene->AddChild(GetBaseNode(sky));
 
 		auto movement = std::make_shared<MovementComponent>();
 		movement->SetOwner(newActor);
@@ -74,27 +80,18 @@ namespace HipHop
 			auto renderComponent = std::make_shared<BoxRenderComponent>();
 			renderComponent->SetOwner(newActor);
 			newActor->AddComponent(renderComponent);
-			auto sceneNode = renderComponent->CreateBaseNode();
-			if(sceneNode)
-				m_Scene->AddChild(sceneNode);
 		}
 		if (renderComponentName == "Sphere")
 		{
 			auto renderComponent = std::make_shared<SphereRenderComponent>(radius,20,20);
 			renderComponent->SetOwner(newActor);
 			newActor->AddComponent(renderComponent);
-			auto sceneNode = renderComponent->CreateBaseNode();
-			if (sceneNode)
-				m_Scene->AddChild(sceneNode);
 		}
 		if (renderComponentName == "Sky")
 		{
 			auto renderComponent = std::make_shared<SkyRenderComponent>();
 			renderComponent->SetOwner(newActor);
 			newActor->AddComponent(renderComponent);
-			auto sceneNode = renderComponent->CreateBaseNode();
-			if (sceneNode)
-				m_Scene->AddChild(sceneNode);
 		}
 
 		m_Actors.push_back(newActor);
@@ -141,6 +138,12 @@ namespace HipHop
 		return newPawnActor;
 	}
 
+	std::shared_ptr<BaseNode> Engine::GetBaseNode(std::shared_ptr<GameActor> actor)
+	{
+		auto renderComponent = MakeSharedPtr(actor->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID));
+		return renderComponent->CreateBaseNode();
+	}
+
 
 	std::shared_ptr<GameActor> Engine::GetActor(ActorID id)
 	{
@@ -167,16 +170,8 @@ namespace HipHop
 		
 		for (auto actor : m_Actors)
 			actor->Tick(dt);
-		
-		
-		m_Renderer->RunAllPasses(m_Scene);
-		m_Renderer->RenderOutput();
-	/*	m_Renderer->ChangeState(new BlendState());
-		m_Text->Text(glm::vec2(50.0f), 20, glm::vec3(0.0f), "FPS : %d", Timer::GetInstance()->GetFramesPerSecond());
-		m_Renderer->ChangeState(new DefaultState());*/
-
-		SwapBuffers();
-
+	
+		m_Renderer->RenderWorld(m_Scene);
 	}
 
 

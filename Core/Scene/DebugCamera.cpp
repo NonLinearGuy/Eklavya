@@ -2,7 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "../Timer.h"
 #include <GLFW/glfw3.h>
-
+#include "../Renderer/GLRenderer.h"
 
 
 
@@ -83,7 +83,6 @@ void DebugCamera::Move(EDirection direction,float dt)
 		break;
 	}
 }
-
 
 
 glm::mat4 DebugCamera::GetView()

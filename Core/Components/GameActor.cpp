@@ -6,7 +6,7 @@ GameActor::GameActor(const std::string& name, ActorID id)
 	:
 	m_Name(name),m_ID(id)
 {
-
+	m_Children.reserve(10);
 }
 
 GameActor::~GameActor()
@@ -51,4 +51,16 @@ void GameActor::RemoveComponent(ComponentID id)
 {
 	ComponentMap::iterator position = m_Components.find(id);
 	m_Components.erase(position);
+}
+
+void GameActor::AddChild(std::shared_ptr<GameActor> pChild)
+{
+	m_Children.push_back(pChild);
+}
+
+void GameActor::RemoveChild(std::shared_ptr<GameActor> pChild)
+{
+	auto iter = std::find(m_Children.begin() , m_Children.end() , pChild);
+	if (iter != m_Children.end())
+		m_Children.erase(iter);
 }

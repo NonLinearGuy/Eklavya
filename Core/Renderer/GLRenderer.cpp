@@ -4,26 +4,26 @@
 #include "ShaderProgram.h"
 #include <glad/glad.h>
 #include "../Scene/Scene.h"
+#include "../GLFWGame.h"
 
 using namespace HipHop;
 
-GLRenderer::GLRenderer(int width,int height)
+GLRenderer::GLRenderer(GLWindowContext* context)
 	:
 	m_CurrentState(new DefaultState()),
-	m_Width(width),m_Height(height)
+	m_Context(context)
 {
-	glEnable(GL_DEPTH_TEST);
+
 }
 
 GLRenderer::~GLRenderer()
 {
 }
 
-bool GLRenderer::Initialize(Engine* engine)
+bool GLRenderer::Initialize()
 {
-	m_EngineRef = engine;
 
-	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+/*	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 	  // positions   // texCoords
 	  -1.0f,  1.0f,  0.0f, 1.0f,
 	  -1.0f, -1.0f,  0.0f, 0.0f,
@@ -52,20 +52,19 @@ bool GLRenderer::Initialize(Engine* engine)
 
 	m_MainOutputShader.AddAndCompile("Assets/Shaders/main_output_vs.glsl", EShaderType::VERTEX);
 	m_MainOutputShader.AddAndCompile("Assets/Shaders/main_output_fs.glsl", EShaderType::FRAGMENT);
-	m_MainOutputShader.Build();
+	m_MainOutputShader.Build();*/
 
-	auto shadowMapPass = new ShadowMapPass(this);
-	shadowMapPass->Init();
-	m_RenderPasses.push_back(shadowMapPass);
+	//Load all the shaders
 
-	auto finalOutputPass = new FinalOutputPass(this);
-	finalOutputPass->Init();
-	m_RenderPasses.push_back(finalOutputPass);
+	m_Programs[EShaderProgram::SOLID] = LoadShaderProgram("solids");
+	m_Programs[EShaderProgram::SKYBOX] = LoadShaderProgram("skybox");
+	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
+	m_ActiveProgram->Use();
 
 	SetClearColor(0.0f,0.0f,0.0f,1.0f);
+
 	glEnable(GL_DEPTH_TEST);
 
-	m_CurrentRenderPass = ERenderPass::MIN;
 	return true;
 }
 
@@ -74,14 +73,30 @@ void GLRenderer::Destroy()
 
 }
 
+std::shared_ptr<ShaderProgram> GLRenderer::LoadShaderProgram(const std::string& name)
+{
+	std::shared_ptr<ShaderProgram> newShader(new ShaderProgram());
+	newShader->AddAndCompile("Assets/Shaders/" + name + "_vs.glsl", EShaderType::VERTEX);
+	newShader->AddAndCompile("Assets/Shaders/" + name + "_fs.glsl", EShaderType::FRAGMENT);
+	if (newShader->Build())
+		return newShader;
+	else
+		return std::shared_ptr<ShaderProgram>();
+}
+
+void GLRenderer::RenderWorld(Scene * scene)
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+	scene->Render();
+
+	SwapBuffers();
+}
+
 void GLRenderer::SetViewport(int x,int y,int w,int h)
 {
 	glViewport(x,y,w,h);
-}
-
-void GLRenderer::ClearBuffers()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GLRenderer::SetClearColor(float r, float g, float b, float a)
@@ -97,25 +112,47 @@ void GLRenderer::ChangeState(IRenderState * NewRenderState)
 	m_CurrentState->Enter();
 }
 
+void GLRenderer::SetShaderProgram(EShaderProgram program)
+{
+	m_ActiveProgram = m_Programs[program];
+	m_ActiveProgram->Use();
+}
+
+void GLRenderer::SetWorldMatrix(glm::mat4 & worldTransform)
+{
+	m_ActiveProgram->SetMat4("model",worldTransform);
+}
+
+void GLRenderer::SetViewMatrix(glm::mat4 & view)
+{
+	m_ActiveProgram->SetMat4("view", view);
+}
+
+void GLRenderer::SetProjectionMatrix(glm::mat4 & projection)
+{
+	m_ActiveProgram->SetMat4("projection", projection);
+}
+
 void GLRenderer::SwapBuffers()
 {
-	m_EngineRef->SwapBuffers();
+	m_Context->SwapBuffers();
 }
+/*
 
 void GLRenderer::RunAllPasses(Scene* scene)
 {
-	for (int i = 0; i < m_RenderPasses.size(); ++i)
+	for (int i = 0; i < m_RenderGroupes.size(); ++i)
 	{
 		m_CurrentRenderPass = (ERenderPass)i;
-		m_RenderPasses[i]->PreRun();
-		m_RenderPasses[i]->Run(scene);
-		m_RenderPasses[i]->PostRun();
+		m_RenderGroupes[i]->PreRun();
+		m_RenderGroupes[i]->Run(scene);
+		m_RenderGroupes[i]->PostRun();
 	}
 }
 
-IRenderPass* GLRenderer::GetRenderPass(ERenderPass type)
+IRenderPass* GLRenderer::GetRenderGroup(ERenderPass type)
 {
-	return m_RenderPasses[(unsigned int)type];
+	return m_RenderGroupes[(unsigned int)type];
 }
 
 void GLRenderer::RenderOutput()
@@ -127,7 +164,7 @@ void GLRenderer::RenderOutput()
 	glBindVertexArray(m_VAO);
 	m_MainOutputShader.Use();
 
-	GLuint mainPassOutput = (static_cast<ShadowMapPass*>(m_RenderPasses[(int)ERenderPass::SHADOW_PASS])->GetDepthAttachment());
+	GLuint mainPassOutput = (static_cast<ShadowMapPass*>(m_RenderGroupes[(int)ERenderPass::SHADOW_PASS])->GetDepthAttachment());
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mainPassOutput);
 	m_MainOutputShader.SetInt("mainPassOutput", 0);
@@ -137,6 +174,7 @@ void GLRenderer::RenderOutput()
 }
 
 
+/*
 
 
 // RENDER PASSES
@@ -149,45 +187,8 @@ IRenderPass::~IRenderPass()
 {
 }
 
-FinalOutputPass::FinalOutputPass(GLRenderer* renderer)
-	:
-	IRenderPass(ERenderPass::FINAL_OUTPUT_PASS,renderer)
-{
-}
 
-FinalOutputPass::~FinalOutputPass()
-{
 
-}
-
-bool FinalOutputPass::Init()
-{
-	m_Framebuffer = new FinalOutputFB(4,16,m_Renderer->GetWidth(),m_Renderer->GetHeight());
-	m_Framebuffer->Setup();
-	return true;
-}
-
-void FinalOutputPass::Destroy()
-{
-	m_Framebuffer->Destroy();
-}
-
-void FinalOutputPass::PreRun()
-{
-	m_Framebuffer->Bind();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glViewport(0,0,m_Renderer->GetWidth(),m_Renderer->GetHeight());
-}
-
-void FinalOutputPass::Run(Scene* scene)
-{
-	scene->Render();
-}
-
-void FinalOutputPass::PostRun()
-{
-	m_Framebuffer->Unbind();
-}
 
 ShadowMapPass::ShadowMapPass(GLRenderer * renderer)
 	:
@@ -223,9 +224,9 @@ void ShadowMapPass::PreRun()
 	glViewport(0, 0, 1024, 1024);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	
-	glm::vec3 lightPosition = m_Renderer->GetCameraPosition();
-	glm::mat4 projection = glm::ortho(-100.0f,100.0f,-100.0f,100.0f,-1000.0f,1000.0f);
-	glm::mat4 view = glm::lookAt(lightPosition,glm::vec3(0.0f),glm::vec3(0.0f,1.0f,0.0f));
+	glm::vec3 lightPosition = glm::vec3(100.0f);
+	glm::mat4 projection = glm::ortho(-100.0f,100.0f,-100.0f,100.0f,-100.0f,200.0f);
+	glm::mat4 view = m_Renderer->GetCameraPosition();
 
 	glm::mat4 lightProjectionView = projection * view;
 	
@@ -242,3 +243,4 @@ void ShadowMapPass::PostRun()
 {
 	m_Framebuffer->Unbind();
 }
+*/

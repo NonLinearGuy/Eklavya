@@ -12,7 +12,7 @@ namespace HipHop
 
 	ShaderProgram::~ShaderProgram()
 	{
-		glDeleteProgram(m_ID);
+		
 	}
 
 	std::string ShaderProgram::Load(const std::string& path)

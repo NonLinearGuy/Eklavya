@@ -1,29 +1,28 @@
 #pragma once
 
-
 #include <memory>
 #include <glm/glm.hpp>
 #include <vector>
+#include <stack>
 
 namespace HipHop
 {
 	class Engine;
 }
 
-class RootNode;
+
 class DebugCamera;
 class BaseNode;
 class GLRenderer;
-
 
 class Scene
 {
 public:
 
-	Scene(HipHop::Engine* engineRef,const std::string& pName);
+	Scene(HipHop::Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName);
 	~Scene();
 
-	void Init(std::shared_ptr<GLRenderer> renderer);
+	void Init();
 	void Destroy();
 	void Tick(float deltaTime);
 	void AddChild(std::shared_ptr<BaseNode> pNewNode);
@@ -50,12 +49,22 @@ public:
 		m_Renderer = renderer;
 	}
 
+	void PushMatrix(const glm::mat4& model);
+
+	void PopMatrix()
+	{
+		m_MatrixStack.pop();
+	}
+
 private:
+
 	std::shared_ptr<DebugCamera> m_Camera;
 	glm::mat4 m_Projection;
 	std::string m_Name;
 	HipHop::Engine* m_EngineRef;
-	std::shared_ptr<RootNode> m_Root;
+	std::vector<std::shared_ptr<BaseNode>> m_Groups;
 	std::shared_ptr<GLRenderer> m_Renderer;
+	std::stack<glm::mat4> m_MatrixStack;
+	
 };
 

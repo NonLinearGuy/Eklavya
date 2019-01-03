@@ -2,14 +2,13 @@
 #include "../Components/BaseComponent.h"
 #include "../Components/BaseRenderComponent.h"
 #include "../Components/Transform.h"
-#include "../Scene/Scene.h"
 #include "../Components/GameActor.h"
 #include "../Engine.h"
 
 BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderGroup renderPass)
 	:
 	m_ActorID(actorID),
-	m_RenderPass(renderPass),
+	m_RenderGroup(renderPass),
 	m_WeakRenderComponent(renderComponent)
 {
 	
@@ -98,5 +97,3 @@ bool BaseNode::RemoveChild(std::shared_ptr<BaseNode> pChild)
 
 	return childRemoved;
 }
-
-

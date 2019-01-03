@@ -4,7 +4,7 @@
 #include <map>
 #include <memory>
 #include <string>
-
+#include <vector>
 
 using ActorID = unsigned int;
 using ComponentID = unsigned int;
@@ -24,6 +24,9 @@ public:
 	void Tick(float deltaTime);
 	void AddComponent(std::shared_ptr<BaseComponent> NewComponent);
 	void RemoveComponent(ComponentID id);
+	void AddChild(std::shared_ptr<GameActor> pChild);
+	void RemoveChild(std::shared_ptr<GameActor> pChild);
+	std::vector<std::shared_ptr<GameActor>> GetChildren() { return m_Children; }
 	
 	template<typename ComponentType>
 	std::weak_ptr<ComponentType> GetComponent(ComponentID id)
@@ -46,6 +49,7 @@ protected:
 	std::string m_Name;
 	ActorID m_ID;
 	ComponentMap m_Components;	
+	std::vector< std::shared_ptr<GameActor> > m_Children;
 };
 
 #endif

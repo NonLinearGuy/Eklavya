@@ -81,10 +81,6 @@ bool SkyNode::Init()
 
 	m_Cubemap.Create(faceNames);
 
-	m_ShaderProgram.AddAndCompile("Assets/Shaders/cubemap_vs.glsl",EShaderType::VERTEX);
-	m_ShaderProgram.AddAndCompile("Assets/Shaders/cubemap_fs.glsl", EShaderType::FRAGMENT);
-	m_ShaderProgram.Build();
-
 	return true;
 }
 
@@ -95,24 +91,12 @@ void SkyNode::Destroy()
 
 void SkyNode::PreRender(Scene * scene)
 {
-	m_ShaderProgram.Use();
-
-	glm::mat4 projection = scene->GetProjection();
-
-	glm::mat4 view = scene->GetCamera()->GetView();
-	glm::mat4 model = glm::mat4(1.0f);
-
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
+	glm::mat4 model = glm::mat4(1.0f);
 	if (transform)
-	{
 		model = transform->GetModelMatrix();
-	}
-
-	m_ShaderProgram.SetMat4("projection", projection);
-	m_ShaderProgram.SetMat4("view", view);
-	m_ShaderProgram.SetMat4("model", model);
-
+	scene->PushMatrix(model);
 	m_Cubemap.BindToUnit(GL_TEXTURE0);
 }
 
@@ -125,5 +109,5 @@ void SkyNode::Render(Scene * scene)
 
 void SkyNode::PostRender(Scene * scene)
 {
-	
+	scene->PopMatrix();
 }

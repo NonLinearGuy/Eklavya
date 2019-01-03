@@ -18,7 +18,6 @@ public:
 	void Render(Scene* scene)override;
 	void PostRender(Scene* scene)override;
 private:
-	HipHop::ShaderProgram m_ShaderProgram;
 	VertexArrayObject m_VAO;
 	int m_IndicesSize;
 	HipHop::Texture2D m_FloorTexture;

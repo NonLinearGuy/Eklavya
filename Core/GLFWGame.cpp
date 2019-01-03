@@ -70,6 +70,11 @@ namespace HipHop
 		}
 	}
 
+	void GLWindowContext::SwapBuffers()
+	{
+		glfwSwapBuffers(m_Window);
+	}
+
 
 	GLFWGame::GLFWGame() 
 	{
@@ -150,11 +155,6 @@ namespace HipHop
 	void GLFWGame::CloseWindow()
 	{
 		glfwSetWindowShouldClose(m_CurrentContext->GetWindow(), GL_TRUE);
-	}
-
-	void GLFWGame::SwapBuffers()
-	{
-		glfwSwapBuffers(m_CurrentContext->GetWindow());
 	}
 
 	void GLFWGame::Start()

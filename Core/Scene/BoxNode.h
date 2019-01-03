@@ -2,7 +2,6 @@
 
 #include "BaseNode.h"
 
-#include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/VertexArrayObject.h"
 
@@ -16,8 +15,8 @@ public:
 	void Tick(Scene* scene,float deltaTime)override;
 	void PreRender(Scene* scene)override;
 	void Render(Scene* scene)override;
+	void PostRender(Scene* scene);
 private:
-	HipHop::ShaderProgram m_ShaderProgram;
 	VertexArrayObject m_VAOConfig;
 	HipHop::Texture2D m_FloorTexture;
 };

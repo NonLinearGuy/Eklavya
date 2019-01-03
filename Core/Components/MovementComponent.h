@@ -32,8 +32,9 @@ public:
 		if (transform)
 		{
 			glm::vec3 OldPosition = transform->GetPosition();
-			OldPosition.y +=  sin(angle);
+			OldPosition.y +=  deltaTime * sin(angle);
 			transform->SetPosition(OldPosition);
+			transform->SetRotation(glm::vec3(angle,0.0f,0.0f));
 		}
 	}
 

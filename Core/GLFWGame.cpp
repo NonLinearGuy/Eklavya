@@ -4,8 +4,6 @@
 #include "Utils/Logger.h"
 
 
-namespace HipHop
-{
 
 	//GLWindowContext
 	GLWindowContext::GLWindowContext() : m_Window(nullptr)
@@ -226,7 +224,3 @@ namespace HipHop
 	}
 
 	GLFWGame* CallbackManager::mApp = nullptr;
-
-
-
-}

@@ -7,17 +7,19 @@
 #include "DebugCamera.h"
 #include "../Engine.h"
 #include "../Renderer/GLRenderer.h"
+#include "../Renderer/Material.h"
 
 #include "Scene.h"
+#include "FrustumNode.h"
 
 const float PI = 3.1415926535f;
-using namespace HipHop;
+
 
 SphereNode::SphereNode(ActorID id, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
 	:
 	BaseNode(id,renderComponent,renderPass)
 {
-	// clear memory of prev arrays
+	
 }
 
 SphereNode::~SphereNode()
@@ -28,6 +30,7 @@ SphereNode::~SphereNode()
 bool SphereNode::Init()
 {
 	float radius = (static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetRadius();
+	m_Radius = radius;
 	float sectorCount = (float)(static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetSectors();
 	float stackCount = (float)(static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetStacks();
 
@@ -120,35 +123,40 @@ bool SphereNode::Init()
 	m_VAO.SetTexPtr(sizeof(float) * (vertices.size() + normals.size()), 0);
 
 	m_IndicesSize = indices.size();
-
-	m_FloorTexture.CreateTexture("Assets/Textures/floor_albedo.png");
+	
+	m_Material = new Material();
+	m_FloorTexture = std::make_shared<Texture2D>();
+	m_FloorTexture->CreateTexture("Assets/Textures/floor_albedo.png");
+	m_Material->SetAlbedoMap(m_FloorTexture);
+	m_Material->SetDiffuse(glm::vec3(1.0f,0.0f,0.0f));
+	m_Material->SetAmbient(glm::vec3(.5f,0.0f,0.0f));
+	m_Material->SetUseColor(true);
 
 	return true;
 }
 
 void SphereNode::Destroy()
 {
+	delete m_Material;
 	m_VAO.Destroy();
 }
 
-void SphereNode::PreRender(Scene * scene)
-{
-	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
-	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
-	glm::mat4 model = transform->GetModelMatrix();
-
-	scene->PushMatrix(model);
-	scene->GetRenderer()->GetActiveProgram()->SetInt("floorTexture", 0);
-	m_FloorTexture.BindToUnit(GL_TEXTURE0);
-}
 
 void SphereNode::Render(Scene * scene)
 {
+	auto actor = scene->GetEngineRef()->GetActor(m_ActorID);
+	auto transform = MakeSharedPtr(actor->GetComponent<Transform>(Transform::s_ID));
+	if (scene->GetFrustum()->SphereInsideFrustum(transform->GetPosition(), m_Radius))
+	{
+		m_Material->SetDiffuse(glm::vec3(0.0f, 1.0f, 0.0f));
+		m_Material->SetAmbient(glm::vec3(0.0f, 0.5f, 0.0f));
+	}
+	else
+	{
+		m_Material->SetDiffuse(glm::vec3(1.0f, 0.0f, 0.0f));
+		m_Material->SetAmbient(glm::vec3(.5f, 0.0f, 0.0f));
+	}
 	m_VAO.Bind();
 	glDrawElements(GL_TRIANGLES,m_IndicesSize,GL_UNSIGNED_INT,0);
-}
-
-void SphereNode::PostRender(Scene * scene)
-{
-	scene->PopMatrix();
+	RenderChildren(scene);
 }

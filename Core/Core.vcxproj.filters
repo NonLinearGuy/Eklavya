@@ -90,6 +90,18 @@
     <ClCompile Include="Components\PawnActor.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer\RenderPass.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Material.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\FrustumNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\WaterNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -117,7 +129,6 @@
     <ClInclude Include="GLFWGame.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="TextContainer.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UserInputListener.h" />
     <ClInclude Include="Scene\Scene.h">
@@ -166,6 +177,21 @@
     <ClInclude Include="Components\PawnActor.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\RenderPass.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\Material.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SunNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\FrustumNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\WaterNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt" />
@@ -199,6 +225,20 @@
       <Filter>ZShaders</Filter>
     </None>
     <None Include="Assets\Shaders\skybox_fs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="frustum_vs.glsl" />
+    <None Include="frustum_fs.glsl" />
+    <None Include="Assets\Shaders\water_fs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\water_vs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\water_pass_vs.glsl">
+      <Filter>ZShaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\water_pass_fs.glsl">
       <Filter>ZShaders</Filter>
     </None>
   </ItemGroup>

@@ -8,6 +8,7 @@
 
 DebugCamera::DebugCamera()
 	: 
+	BaseNode(2000,nullptr,ERenderGroup::OUTLINED),
 	UserInputListener(),
 	m_Senstivity(.005),
 	m_Pitch(-90.0f),
@@ -51,7 +52,7 @@ void DebugCamera::OnCursorMove(double x, double y)
 
 void DebugCamera::PollKeyAction()
 {
-	float dt = HipHop::Timer::GetInstance()->GetDeltaTimeInSeconds();
+	float dt = Timer::GetInstance()->GetDeltaTimeInSeconds();
 	
 	if (IsKeyPressed(GLFW_KEY_W))
 		Move(EDirection::UP,dt);
@@ -61,6 +62,11 @@ void DebugCamera::PollKeyAction()
 		Move(EDirection::LEFT, dt);
 	if (IsKeyPressed(GLFW_KEY_D))
 		Move(EDirection::RIGHT, dt);
+}
+
+void DebugCamera::Invert(bool invert)
+{
+	m_InvertCamera = invert;
 }
 
 void DebugCamera::Move(EDirection direction,float dt)
@@ -87,5 +93,13 @@ void DebugCamera::Move(EDirection direction,float dt)
 
 glm::mat4 DebugCamera::GetView()
 {
-	return glm::lookAt(m_Position,m_Position + m_Front,glm::vec3(0.0f,1.0f,0.0f));
+	glm::vec3 position(m_Position);
+	if (m_InvertCamera)
+	{
+		position.y = -2.0 * m_Position.y;
+		m_Front.y = -m_Front.y;
+	}
+	return glm::lookAt(position,position + m_Front,glm::vec3(0.0f,1.0f,0.0f));
 }
+
+

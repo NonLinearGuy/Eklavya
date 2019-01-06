@@ -5,8 +5,7 @@
 #include "TextRenderer.hpp"
 #include <cstdio>
 
-namespace HipHop
-{
+
 	TextRenderer::TextRenderer()
 	{
 
@@ -238,4 +237,3 @@ namespace HipHop
 		mTexCoords.clear();
 
 	}
-}

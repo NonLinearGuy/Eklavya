@@ -3,8 +3,6 @@
 #include <cstdio>
 #include<glm/gtc/type_ptr.hpp>
 
-namespace HipHop
-{
 	ShaderProgram::ShaderProgram() : m_IsReadyToUse(false), m_ErrorInfo("N/A")
 	{
 		m_ShaderIDs.reserve(4);
@@ -113,7 +111,7 @@ namespace HipHop
 
 	void ShaderProgram::Use()
 	{
-		if(m_IsReadyToUse)
+		if (m_IsReadyToUse)
 			glUseProgram(m_ID);
 	}
 
@@ -153,4 +151,3 @@ namespace HipHop
 		glUniformMatrix4fv(glGetUniformLocation(m_ID, pName.c_str()),
 			1, GL_FALSE, glm::value_ptr(pMat));
 	}
-}

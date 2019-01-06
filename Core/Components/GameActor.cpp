@@ -24,7 +24,7 @@ bool GameActor::Init()
 
 void GameActor::Destroy()
 {
-	HipHop::Logger::GetInstance()->Log("\nDestroying " + m_Name + "...");
+	Logger::GetInstance()->Log("\nDestroying " + m_Name + "...");
 	for (ComponentMap::iterator iter = m_Components.begin(); iter != m_Components.end(); ++iter)
 	{
 		iter->second->Destroy();

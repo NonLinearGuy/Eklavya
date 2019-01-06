@@ -5,8 +5,6 @@
 #include<glm/glm.hpp>
 #include<glad/glad.h>
 
-namespace HipHop
-{
 	class Texture2D
 	{
 	public:
@@ -45,6 +43,5 @@ namespace HipHop
 		unsigned char* mImage;
 
 	};
-}
 
 #endif

@@ -1,11 +1,11 @@
 #include"Engine.h"
 
-using namespace HipHop;
+
 
 int main()
 {
 	GLFWGame* engine = new Engine();
-	if (engine->Initialize("HipHop v1.0", 1024, 640, false))
+	if (engine->Initialize("HipHop v1.0", 1366, 768, true))
 		engine->Start();
 	//engine->Destroy();
 	delete engine;

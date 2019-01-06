@@ -6,8 +6,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include<stb_image.h>
 
-namespace HipHop
-{
 	Texture2D::Texture2D()
 	{
 
@@ -70,5 +68,4 @@ namespace HipHop
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-}
 

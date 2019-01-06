@@ -2,7 +2,7 @@
 #include "../Utils/Logger.h"
 #include <glad/glad.h>
 
-using namespace HipHop;
+
 
 //SHADOW PASS
 ShadowPassFB::ShadowPassFB(int depthPrecision,int width,int height) : m_DepthSize(depthPrecision), m_Width(width),m_Height(height)
@@ -27,11 +27,19 @@ bool ShadowPassFB::Setup()
 	glGenTextures(1, &m_DepthTexture);
 	glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	GLenum depthFormat = GL_DEPTH_COMPONENT24;
+	if (16 == m_DepthSize)
+		depthFormat = GL_DEPTH_COMPONENT16;
+	else if (32 == m_DepthSize)
+		depthFormat = GL_DEPTH_COMPONENT32;
+
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_DEPTH_COMPONENT32, m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
 
@@ -66,23 +74,24 @@ void ShadowPassFB::Destroy()
 
 //FOR MAIN PASS
 
-FinalOutputFB::FinalOutputFB(int channelsCount, int depthSize,float width,float height)
+GeneralFB::GeneralFB(int channelsCount, int depthSize,float width,float height)
 	:
 	m_Channels(channelsCount), m_DepthSize(depthSize), m_Width(width), m_Height(height)
 {
 }
 
-FinalOutputFB::~FinalOutputFB()
+GeneralFB::~GeneralFB()
 {
 }
 
-bool FinalOutputFB::Setup()
+bool GeneralFB::Setup()
 {
 	if (m_DepthSize != 24 && m_DepthSize != 16 && m_DepthSize != 32)
 	{
 		Logger::GetInstance()->Log("Main Pass FB error : depth size is invalid");
 		return false;
 	}
+
 	glGenFramebuffers(1,&m_ID);
 	glBindFramebuffer(GL_FRAMEBUFFER,m_ID);
 
@@ -94,6 +103,8 @@ bool FinalOutputFB::Setup()
 	glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,m_Width,m_Height,0,GL_RGB,GL_UNSIGNED_BYTE,0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	
 	glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D,m_ColorTexture,0);
 
@@ -107,7 +118,7 @@ bool FinalOutputFB::Setup()
 	else if (32 == m_DepthSize)
 		depthFormat = GL_DEPTH_COMPONENT32;
 
-	glRenderbufferStorage(GL_RENDERBUFFER,depthFormat, m_Width, m_Height);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT32, m_Width, m_Height);
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthRBO);
 	
@@ -122,17 +133,17 @@ bool FinalOutputFB::Setup()
 
 }
 
-void FinalOutputFB::Bind()
+void GeneralFB::Bind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER,m_ID);
 }
 
-void FinalOutputFB::Unbind()
+void GeneralFB::Unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void FinalOutputFB::Destroy()
+void GeneralFB::Destroy()
 {
 	glDeleteTextures(1, &m_ColorTexture);
 	glDeleteRenderbuffers(1, &m_DepthRBO);

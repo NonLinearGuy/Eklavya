@@ -2,8 +2,6 @@
 #include"Logger.h"
 #include<cstdio>
 
-namespace HipHop
-{
 	Logger::Logger(): m_File(nullptr)
 	{
 
@@ -57,7 +55,3 @@ namespace HipHop
 	{
 		fprintf(stderr,pFormat);
 	}
-}
-
-
-

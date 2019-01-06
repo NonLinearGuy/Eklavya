@@ -15,7 +15,6 @@ public:
 	void Destroy()override;
 	void PreRender(Scene* scene)override;
 	void Render(Scene* scene)override;
-	void PostRender(Scene* scene)override;
 private:
 	VertexArrayObject m_VAO;
 	int m_IndicesSize;

@@ -37,11 +37,11 @@ private:
 	int m_Height;
 };
 
-class FinalOutputFB : public IFramebuffer
+class GeneralFB : public IFramebuffer
 {
 public:
-	FinalOutputFB(int channelsCount,int depthSize,float width,float height);
-	~FinalOutputFB();
+	GeneralFB(int channelsCount,int depthSize,float width,float height);
+	~GeneralFB();
 	
 	bool Setup()override;
 	void Bind()override;

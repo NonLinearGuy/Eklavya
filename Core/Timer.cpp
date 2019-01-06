@@ -4,8 +4,6 @@
 #include "Timer.h"
 
 
-namespace HipHop
-{
 	using namespace std;
 
 	Timer::Timer() : m_DeltaTime(0.0), m_ElapsedTime(0.0f)
@@ -42,4 +40,3 @@ namespace HipHop
 	{
 		mLastTime = mCurrentTime = Clock::now();
 	}
-}

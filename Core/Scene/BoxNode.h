@@ -12,11 +12,9 @@ public:
 	~BoxNode();
 	bool Init()override;
 	void Destroy()override;
-	void Tick(Scene* scene,float deltaTime)override;
-	void PreRender(Scene* scene)override;
+	void Tick(Scene* scene,float deltaTime)override;;
 	void Render(Scene* scene)override;
-	void PostRender(Scene* scene);
 private:
 	VertexArrayObject m_VAOConfig;
-	HipHop::Texture2D m_FloorTexture;
+	std::shared_ptr<Texture2D> m_FloorTexture;
 };

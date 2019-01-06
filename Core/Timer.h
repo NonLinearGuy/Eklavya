@@ -7,8 +7,6 @@
 
 #include<chrono>
 
-namespace HipHop
-{
 	using Clock = std::chrono::steady_clock;
 	using TimeStamp = std::chrono::steady_clock::time_point;
 
@@ -41,7 +39,7 @@ namespace HipHop
 		int m_FPSCounter;
 		int m_FPS;
 	};
-}
+
 
 
 #endif //BURNOUTENGINE_Timer_HPP

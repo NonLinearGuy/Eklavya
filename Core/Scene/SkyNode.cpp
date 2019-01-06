@@ -8,7 +8,7 @@
 #include "../Engine.h"
 #include "Scene.h"
 
-using namespace HipHop;
+
 
 SkyNode::SkyNode(ActorID id, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
 	:
@@ -107,7 +107,3 @@ void SkyNode::Render(Scene * scene)
 	glBindVertexArray(0);
 }
 
-void SkyNode::PostRender(Scene * scene)
-{
-	scene->PopMatrix();
-}

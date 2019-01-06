@@ -7,8 +7,6 @@
 #include<glad/glad.h>
 
 
-namespace HipHop
-{
 	enum class EShaderType : std::uint16_t
 	{
 		VERTEX = 0,
@@ -32,17 +30,20 @@ namespace HipHop
 		void SetVec3(const std::string& name, const glm::vec3& value);
 		void SetVec4(const std::string& name, const glm::vec4& value);
 		void SetMat4(const std::string& name, glm::mat4& value);
+
+		inline bool IsCurrentlyActive() { return m_IsCurrentlyActive; }
+		/*Sets whether this shader is currently in use or not*/
+		inline void SetStatus(bool pIsCurrentlyActive) { m_IsCurrentlyActive = pIsCurrentlyActive; }
 	protected:
 		GLuint m_ID;
 		bool m_IsReadyToUse;
+		bool m_IsCurrentlyActive;
 	private:
-		inline bool IsReadyToUse() { return m_IsReadyToUse; }
 		std::string Load(const std::string& path);
 		bool ErrorOccured(GLuint id, bool linking);
 	private:
 		std::vector<GLuint> m_ShaderIDs;
 		std::string m_ErrorInfo;
 	};
-}
 
 #endif

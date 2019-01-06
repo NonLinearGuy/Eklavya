@@ -20,8 +20,7 @@
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Texture2D.h"
 
-namespace HipHop
-{
+
 	class TextRenderer
 	{
 	
@@ -85,6 +84,5 @@ namespace HipHop
 		}
 
 	};
-}
 
 #endif 

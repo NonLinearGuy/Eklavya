@@ -6,8 +6,6 @@
 #include <cstdarg>
 #include <string>
 
-namespace HipHop
-{
 	class Logger
 	{
 	public:
@@ -27,6 +25,5 @@ namespace HipHop
 		FILE* m_File;
 		Logger();
 	};
-}
 
 #endif

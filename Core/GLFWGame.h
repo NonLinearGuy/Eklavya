@@ -11,8 +11,6 @@
 #include <vector>
 
 
-namespace HipHop
-{
 	class GLWindowContext
 	{
 	public:
@@ -98,7 +96,6 @@ namespace HipHop
 		static void CursorPositionCallback(GLFWwindow* window,double xPos,double yPos);
 	};
 
-}
 
 
 

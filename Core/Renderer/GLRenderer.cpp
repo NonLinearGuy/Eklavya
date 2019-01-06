@@ -1,12 +1,13 @@
 #include "GLRenderer.h"
-#include "../Engine.h"
-#include "Framebuffer.h"
 #include "ShaderProgram.h"
+#include "RenderPass.h"
 #include <glad/glad.h>
 #include "../Scene/Scene.h"
 #include "../GLFWGame.h"
+#include "../Engine.h"
+#include "VertexArrayObject.h"
 
-using namespace HipHop;
+
 
 GLRenderer::GLRenderer(GLWindowContext* context)
 	:
@@ -23,7 +24,7 @@ GLRenderer::~GLRenderer()
 bool GLRenderer::Initialize()
 {
 
-/*	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 	  // positions   // texCoords
 	  -1.0f,  1.0f,  0.0f, 1.0f,
 	  -1.0f, -1.0f,  0.0f, 0.0f,
@@ -50,16 +51,31 @@ bool GLRenderer::Initialize()
 
 	glBindVertexArray(0);
 
-	m_MainOutputShader.AddAndCompile("Assets/Shaders/main_output_vs.glsl", EShaderType::VERTEX);
-	m_MainOutputShader.AddAndCompile("Assets/Shaders/main_output_fs.glsl", EShaderType::FRAGMENT);
-	m_MainOutputShader.Build();*/
+	m_MainOutputShader = std::make_shared<ShaderProgram>();
+	m_MainOutputShader->AddAndCompile("Assets/Shaders/main_output_vs.glsl", EShaderType::VERTEX);
+	m_MainOutputShader->AddAndCompile("Assets/Shaders/main_output_fs.glsl", EShaderType::FRAGMENT);
+	m_MainOutputShader->Build();
 
 	//Load all the shaders
 
 	m_Programs[EShaderProgram::SOLID] = LoadShaderProgram("solids");
 	m_Programs[EShaderProgram::SKYBOX] = LoadShaderProgram("skybox");
+	m_Programs[EShaderProgram::SHADOW] = LoadShaderProgram("shadow_map");
+	m_Programs[EShaderProgram::WATER_PASS] = LoadShaderProgram("water_pass");
 	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
 	m_ActiveProgram->Use();
+
+
+	auto shadowPass = new ShadowMapPass(this,32,1024 * 2.0f, 1024 * 2.0f);
+	shadowPass->Init();
+	auto refractionPass = new WaterTexturePass(this,false,glm::vec4(0.0f,-1.0f,0.0f,10.0f),m_Context->GetWidth(),m_Context->GetHeight());
+	refractionPass->Init();
+	////auto reflectionPass = new WaterTexturePass(this, true, glm::vec4(0.0f, 1.0f, 0.0f, 20.0f), m_Context->GetWidth(), m_Context->GetHeight());
+	//reflectionPass->Init();
+	
+	m_RenderPasses.push_back(shadowPass);
+	m_RenderPasses.push_back(refractionPass);
+	//m_RenderPasses.push_back(reflectionPass);
 
 	SetClearColor(0.0f,0.0f,0.0f,1.0f);
 
@@ -84,14 +100,33 @@ std::shared_ptr<ShaderProgram> GLRenderer::LoadShaderProgram(const std::string& 
 		return std::shared_ptr<ShaderProgram>();
 }
 
-void GLRenderer::RenderWorld(Scene * scene)
+
+void GLRenderer::RunAllPasses(Scene* scene)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	for (auto pass : m_RenderPasses)
+	{
+		pass->PreRun();
+		pass->Run(scene);
+		pass->PostRun();
+	}
+}
 
-
-	scene->Render();
-
-	SwapBuffers();
+void GLRenderer::RenderOutput()
+{
+	glm::mat4 projection = glm::ortho(0.0f,float(m_Context->GetWidth()),float(m_Context->GetHeight()),0.0f,-1.0f,1.0f);
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f,200.0f,0.0f));
+	model = glm::scale(model,glm::vec3(150,100,1.0f));
+	
+	m_MainOutputShader->Use();
+	GLuint texture = static_cast<WaterTexturePass*>(m_RenderPasses[2])->GetColorAttachment();
+	m_MainOutputShader->SetInt("mainOutputPass", 0);
+	m_MainOutputShader->SetMat4("model",model);
+	m_MainOutputShader->SetMat4("projection", projection);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,texture);
+	glBindVertexArray(m_VAO);
+	glDrawArrays(GL_TRIANGLES,0,6);
+	glBindVertexArray(0);
 }
 
 void GLRenderer::SetViewport(int x,int y,int w,int h)
@@ -114,8 +149,10 @@ void GLRenderer::ChangeState(IRenderState * NewRenderState)
 
 void GLRenderer::SetShaderProgram(EShaderProgram program)
 {
+	m_ActiveProgram->SetStatus(false);
 	m_ActiveProgram = m_Programs[program];
 	m_ActiveProgram->Use();
+	m_ActiveProgram->SetStatus(true);
 }
 
 void GLRenderer::SetWorldMatrix(glm::mat4 & worldTransform)
@@ -137,110 +174,34 @@ void GLRenderer::SwapBuffers()
 {
 	m_Context->SwapBuffers();
 }
-/*
 
-void GLRenderer::RunAllPasses(Scene* scene)
+void GLRenderer::SetShadowPassValues()
 {
-	for (int i = 0; i < m_RenderGroupes.size(); ++i)
-	{
-		m_CurrentRenderPass = (ERenderPass)i;
-		m_RenderGroupes[i]->PreRun();
-		m_RenderGroupes[i]->Run(scene);
-		m_RenderGroupes[i]->PostRun();
-	}
+	glm::mat4 lightSpace = static_cast<ShadowMapPass*>(m_RenderPasses[0])->GetLightSpaceMatrix();
+	m_ActiveProgram->SetMat4("lightProjectionView",lightSpace);
+	m_ActiveProgram->SetInt("shadowPassOutput",1);
+	glActiveTexture(GL_TEXTURE1);
+	GLuint texture = static_cast<ShadowMapPass*>(m_RenderPasses[0])->GetDepthAttachment();
+	glBindTexture(GL_TEXTURE_2D,texture);
 }
 
-IRenderPass* GLRenderer::GetRenderGroup(ERenderPass type)
+void GLRenderer::SetWaterPassValues(ShaderProgram shader)
 {
-	return m_RenderGroupes[(unsigned int)type];
+	GLuint refractionTexture = static_cast<WaterTexturePass*>(m_RenderPasses[1])->GetColorAttachment();
+	//GLuint reflectionTexture = static_cast<WaterTexturePass*>(m_RenderPasses[2])->GetColorAttachment();
+	shader.SetInt("refractionTexture",2);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D,refractionTexture);
+//	shader.SetInt("reflectionTexture", 3);
+//	glActiveTexture(GL_TEXTURE3);
+	//glBindTexture(GL_TEXTURE_2D, reflectionTexture);
 }
 
-void GLRenderer::RenderOutput()
+void GLRenderer::SetLightValues(glm::vec3 viewSpacePos, LightSource* light)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	m_ActiveProgram->SetVec3("light.position",viewSpacePos);
+	m_ActiveProgram->SetVec3("light.diffuse", light->m_Diffuse);
+	m_ActiveProgram->SetVec3("light.specular", light->m_Specular);
+	m_ActiveProgram->SetVec3("light.ambient", light->m_Ambient);
 
-	SetViewport(0, 0, m_Width, m_Height);
-
-	glBindVertexArray(m_VAO);
-	m_MainOutputShader.Use();
-
-	GLuint mainPassOutput = (static_cast<ShadowMapPass*>(m_RenderGroupes[(int)ERenderPass::SHADOW_PASS])->GetDepthAttachment());
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mainPassOutput);
-	m_MainOutputShader.SetInt("mainPassOutput", 0);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-	
 }
-
-
-/*
-
-
-// RENDER PASSES
-
-IRenderPass::IRenderPass(ERenderPass type,GLRenderer* renderer) : m_Type(type), m_Renderer(renderer)
-{
-}
-
-IRenderPass::~IRenderPass()
-{
-}
-
-
-
-
-ShadowMapPass::ShadowMapPass(GLRenderer * renderer)
-	:
-	IRenderPass(ERenderPass::SHADOW_PASS,renderer)
-{
-}
-
-ShadowMapPass::~ShadowMapPass()
-{
-	
-}
-
-bool ShadowMapPass::Init()
-{
-	m_Framebuffer = new ShadowPassFB(24,1024,1024);
-	m_Framebuffer->Setup();
-
-	m_ShadowShader.AddAndCompile("Assets/Shaders/shadow_map_vs.glsl",EShaderType::VERTEX);
-	m_ShadowShader.AddAndCompile("Assets/Shaders/shadow_map_fs.glsl", EShaderType::FRAGMENT);
-	m_ShadowShader.Build();
-
-	return true;
-}
-
-void ShadowMapPass::Destroy()
-{
-	m_Framebuffer->Destroy();
-}
-
-void ShadowMapPass::PreRun()
-{
-	m_Framebuffer->Bind();
-	glViewport(0, 0, 1024, 1024);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	
-	glm::vec3 lightPosition = glm::vec3(100.0f);
-	glm::mat4 projection = glm::ortho(-100.0f,100.0f,-100.0f,100.0f,-100.0f,200.0f);
-	glm::mat4 view = m_Renderer->GetCameraPosition();
-
-	glm::mat4 lightProjectionView = projection * view;
-	
-	m_ShadowShader.Use();
-	m_ShadowShader.SetMat4("lightProjectionView",lightProjectionView);
-}
-
-void ShadowMapPass::Run(Scene * scene)
-{
-	scene->Render();
-}
-
-void ShadowMapPass::PostRun()
-{
-	m_Framebuffer->Unbind();
-}
-*/

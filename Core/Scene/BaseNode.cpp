@@ -4,6 +4,10 @@
 #include "../Components/Transform.h"
 #include "../Components/GameActor.h"
 #include "../Engine.h"
+#include "../Helpers.h"
+#include "../Renderer/Material.h"
+#include "../Renderer/GLRenderer.h"
+
 
 BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderGroup renderPass)
 	:
@@ -42,6 +46,18 @@ void BaseNode::Tick(Scene* scene,float deltaTime)
 
 void BaseNode::PreRender(Scene *scene)
 {
+	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
+	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
+	glm::mat4 model = glm::mat4(1.0f);
+	if (transform)
+		model = transform->GetModelMatrix();
+	scene->PushMatrix(model);
+
+	if (scene->ShouldSetMaterialProps() && m_Material)
+	{
+		auto shader = scene->GetRenderer()->GetActiveProgram();
+		m_Material->SetPropsInShader(shader);
+	}
 	
 }
 
@@ -54,18 +70,15 @@ void BaseNode::RenderChildren(Scene* scene)
 {
 	for (auto child : m_Children)
 	{
-		if (child->IsInsideFrustum(scene))
-		{
-			child->PreRender(scene);
-			child->Render(scene);
-			child->PostRender(scene);
-		}
+		child->PreRender(scene);
+		child->Render(scene);
+		child->PostRender(scene);
 	}
 }
 
 void BaseNode::PostRender(Scene* scene)
 {
-	
+	scene->PopMatrix();
 }
 
 void BaseNode::AddChild(std::shared_ptr<BaseNode> pChild)

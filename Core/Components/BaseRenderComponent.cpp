@@ -151,8 +151,9 @@ std::shared_ptr<BaseNode> SkyRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			auto boxNode = std::make_shared<SkyNode>(m_Owner->GetID(), weakThis, ERenderGroup::SKYBOX);
-			return boxNode;
+			auto skyNode = std::make_shared<SkyNode>(m_Owner->GetID(), weakThis, ERenderGroup::SKYBOX);
+			skyNode->Init();
+			return skyNode;
 		}
 		else
 			return std::shared_ptr<BaseNode>();

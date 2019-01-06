@@ -11,10 +11,6 @@
 #include "Renderer/GLRenderer.h"
 
 
-using namespace HipHop;
-
-namespace HipHop
-{
 	Engine::Engine()
 	{
 	}
@@ -48,23 +44,47 @@ namespace HipHop
 		m_Scene = new Scene(this,m_Renderer,"TestScene");
 		m_Scene->Init();
 
-		auto floor = CreateActor(0,"Floor","Box",glm::vec3(0.0f,0.0f,-2.0f),glm::vec3(100.0f,3.0f,100.0f));
+		auto floor = CreateActor(0,"Floor","Box",glm::vec3(0.0f,0.0f,0.0f),glm::vec3(300.0f,10.0f,300.0f));
+		m_Scene->AddChild(GetBaseNode(floor));
+		auto ground = CreateActor(1, "ground", "Box", glm::vec3(0.0f, -40.0f, 0.0f), glm::vec3(1000.0f, 2.0f, 1000.0f));
+		m_Scene->AddChild(GetBaseNode(ground));
 
+		float sphereDiameter = 4;
+		int id = 4;
+		
+		for (float angle = 0; angle <= 360; angle += (sphereDiameter + 4), id++)
+		{
+			float y = 20.0f;
+			float x = 40.0f * cos(toPIE * angle);
+			float z = 40.0f * sin(toPIE * angle);
 
-		auto wall1 = CreateActor(1, "wall0", "Box", glm::vec3(2,5,0), glm::vec3(10.0f, 20.0f, 10.0f));
-		m_Scene->AddChild(GetBaseNode(wall1));
-		auto wall2 = CreateActor(2, "wall2", "Box", glm::vec3(50.0f, 11.0f, -2.0f), glm::vec3(20.0f, 50.0f, 50.0f));
-		m_Scene->AddChild(GetBaseNode(wall2));
-		auto child = CreatePawnActor(3, "Light", "Sphere", glm::vec3(0.0f,0.0f,-2.0f), glm::vec3(1),5);
-		auto newActor = CreateActor(4, "Ball", "Sphere", glm::vec3(0.0f,0.0f,10.0f), glm::vec3(1),5);
-		newActor->AddChild(child);
-		m_Scene->AddChild(GetBaseNode(newActor));
-		auto sky = CreateActor(5, "Sky", "Sky", glm::vec3(0.0f), glm::vec3(1));
+			auto newActor = CreateActor(id, "sphere", "Sphere", glm::vec3(x, y, z), glm::vec3(1), sphereDiameter / 2.0f);
+			auto rotate = std::make_shared<RotateXZComponent>();
+			rotate->SetOwner(newActor);
+			rotate->SetStartAngle(angle);
+			newActor->AddComponent(rotate);
+			m_Scene->AddChild(GetBaseNode(newActor));
+		}
+
+		id = 10000;
+		sphereDiameter = 10;
+		for (float angle = 0; angle <= 360; angle += (sphereDiameter + 4), id++)
+		{
+			float x = 0.0f;
+			float y = 20 + 60.0f * sin(toPIE * angle);
+			float z = 60.0f * cos(toPIE * angle);
+
+			auto newActor = CreateActor(id, "sphere", "Sphere", glm::vec3(x, y, z), glm::vec3(1), sphereDiameter / 2.0f);
+			auto rotate = std::make_shared<RotateYZComponent>();
+			rotate->SetOwner(newActor);
+			rotate->SetStartAngle(angle);
+			newActor->AddComponent(rotate);
+			m_Scene->AddChild(GetBaseNode(newActor));
+		}
+
+		auto sky = CreateActor(100, "Sky", "Sky", glm::vec3(0.0f), glm::vec3(1));
 		m_Scene->AddChild(GetBaseNode(sky));
 
-		auto movement = std::make_shared<MovementComponent>();
-		movement->SetOwner(newActor);
-		newActor->AddComponent(movement);
 	}
 
 
@@ -83,7 +103,7 @@ namespace HipHop
 		}
 		if (renderComponentName == "Sphere")
 		{
-			auto renderComponent = std::make_shared<SphereRenderComponent>(radius,20,20);
+			auto renderComponent = std::make_shared<SphereRenderComponent>(radius,30,30);
 			renderComponent->SetOwner(newActor);
 			newActor->AddComponent(renderComponent);
 		}
@@ -111,27 +131,18 @@ namespace HipHop
 			auto renderComponent = std::make_shared<BoxRenderComponent>();
 			renderComponent->SetOwner(newPawnActor);
 			newPawnActor->AddComponent(renderComponent);
-			auto sceneNode = renderComponent->CreateBaseNode();
-			if (sceneNode)
-				m_Scene->AddChild(sceneNode);
 		}
 		if (renderComponentName == "Sphere")
 		{
 			auto renderComponent = std::make_shared<SphereRenderComponent>(radius, 20, 20);
 			renderComponent->SetOwner(newPawnActor);
 			newPawnActor->AddComponent(renderComponent);
-			auto sceneNode = renderComponent->CreateBaseNode();
-			if (sceneNode)
-				m_Scene->AddChild(sceneNode);
 		}
 		if (renderComponentName == "Sky")
 		{
 			auto renderComponent = std::make_shared<SkyRenderComponent>();
 			renderComponent->SetOwner(newPawnActor);
 			newPawnActor->AddComponent(renderComponent);
-			auto sceneNode = renderComponent->CreateBaseNode();
-			if (sceneNode)
-				m_Scene->AddChild(sceneNode);
 		}
 
 		m_Actors.push_back(newPawnActor);
@@ -171,7 +182,17 @@ namespace HipHop
 		for (auto actor : m_Actors)
 			actor->Tick(dt);
 	
-		m_Renderer->RenderWorld(m_Scene);
+		m_Renderer->RunAllPasses(m_Scene);
+		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		
+		m_Renderer->SetViewport(0.0f,0.0f,m_CurrentContext->GetWidth(),m_CurrentContext->GetHeight());
+
+		m_Scene->Tick(dt);
+		m_Scene->Render(ERenderPass::MAIN_PASS);
+
+		m_CurrentContext->SwapBuffers();
 	}
 
 
@@ -194,6 +215,4 @@ namespace HipHop
 	{
 		InputHandler::GetInstance()->OnCursorMove(x, y);
 	}
-}
-
 

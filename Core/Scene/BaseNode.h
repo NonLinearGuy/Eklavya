@@ -10,6 +10,7 @@ enum ERenderGroup
 	MIN = 0,
 	SOLID = MIN,
 	OUTLINED,
+	WATER,
 	SKYBOX,
 	MAX
 };
@@ -17,6 +18,7 @@ enum ERenderGroup
 
 class BaseRenderComponent;
 class Scene;
+class Material;
 
 class BaseNode
 {
@@ -51,5 +53,6 @@ protected:
 	std::shared_ptr<BaseNode> m_Parent;
 	std::vector<std::shared_ptr<BaseNode>> m_Children;
 	ActorID m_ActorID;
+	Material* m_Material;
 };
 

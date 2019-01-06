@@ -14,9 +14,8 @@
 
 class GLRenderer;
 
-namespace HipHop
-{
-	class Engine final : public HipHop::GLFWGame
+
+	class Engine final : public GLFWGame
 	{
 	public:
 		Engine();
@@ -43,7 +42,5 @@ namespace HipHop
 		std::shared_ptr<GLRenderer> m_Renderer;
 		Scene * m_Scene;
 		std::vector< std::shared_ptr<GameActor> > m_Actors;
-		HipHop::TextRenderer* m_Text;
+		TextRenderer* m_Text;
 	};
-}
-

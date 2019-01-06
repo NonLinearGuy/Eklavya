@@ -155,6 +155,8 @@
     <ClCompile Include="Renderer\Cubemap.cpp" />
     <ClCompile Include="Renderer\Framebuffer.cpp" />
     <ClCompile Include="Renderer\GLRenderer.cpp" />
+    <ClCompile Include="Renderer\Material.cpp" />
+    <ClCompile Include="Renderer\RenderPass.cpp" />
     <ClCompile Include="Renderer\RenderState.cpp" />
     <ClCompile Include="Renderer\ShaderProgram.cpp" />
     <ClCompile Include="Renderer\Texture2D.cpp" />
@@ -163,9 +165,11 @@
     <ClCompile Include="Scene\BoxNode.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\DebugCamera.cpp" />
+    <ClCompile Include="Scene\FrustumNode.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SkyNode.cpp" />
     <ClCompile Include="Scene\SphereNode.cpp" />
+    <ClCompile Include="Scene\WaterNode.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="UI\TextRenderer.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
@@ -184,6 +188,8 @@
     <ClInclude Include="Renderer\Cubemap.h" />
     <ClInclude Include="Renderer\Framebuffer.h" />
     <ClInclude Include="Renderer\GLRenderer.h" />
+    <ClInclude Include="Renderer\Material.h" />
+    <ClInclude Include="Renderer\RenderPass.h" />
     <ClInclude Include="Renderer\RenderState.h" />
     <ClInclude Include="Renderer\ShaderProgram.h" />
     <ClInclude Include="Renderer\Texture2D.h" />
@@ -193,10 +199,12 @@
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\DebugCamera.h" />
     <ClInclude Include="Scene\defines.h" />
+    <ClInclude Include="Scene\FrustumNode.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SkyNode.h" />
     <ClInclude Include="Scene\SphereNode.h" />
-    <ClInclude Include="TextContainer.h" />
+    <ClInclude Include="Scene\SunNode.h" />
+    <ClInclude Include="Scene\WaterNode.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="UI\TextRenderer.hpp" />
     <ClInclude Include="UserInputListener.h" />
@@ -216,6 +224,12 @@
     <None Include="Assets\Shaders\solids_vs.glsl" />
     <None Include="Assets\Shaders\text_fs.glsl" />
     <None Include="Assets\Shaders\text_vs.glsl" />
+    <None Include="Assets\Shaders\water_fs.glsl" />
+    <None Include="Assets\Shaders\water_pass_fs.glsl" />
+    <None Include="Assets\Shaders\water_pass_vs.glsl" />
+    <None Include="Assets\Shaders\water_vs.glsl" />
+    <None Include="frustum_fs.glsl" />
+    <None Include="frustum_vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

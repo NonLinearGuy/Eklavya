@@ -19,7 +19,7 @@ public:
 	virtual void Init() {}
 	virtual void Destroy() 
 	{
-		HipHop::Logger::GetInstance()->Log("\nDestroying " + std::string(std::to_string(GetID())));
+		Logger::GetInstance()->Log("\nDestroying " + std::string(std::to_string(GetID())));
 	}
 	virtual void Tick(float deltaTime) {}
 

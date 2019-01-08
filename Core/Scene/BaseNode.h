@@ -9,8 +9,8 @@ enum ERenderGroup
 {
 	MIN = 0,
 	SOLID = MIN,
-	OUTLINED,
 	WATER,
+	OUTLINED,
 	SKYBOX,
 	MAX
 };
@@ -19,6 +19,8 @@ enum ERenderGroup
 class BaseRenderComponent;
 class Scene;
 class Material;
+class IBoundVolume;
+
 
 class BaseNode
 {
@@ -45,14 +47,19 @@ public:
 	{
 		return m_RenderGroup;
 	}
+	
+	void SetTransform(const glm::mat4& toWorld);
 
 	void SetParent(std::shared_ptr<BaseNode> parent) { m_Parent = parent; }
 protected:
+	
+	glm::mat4 m_ToWorld;
 	ERenderGroup m_RenderGroup;
 	BaseRenderComponent* m_WeakRenderComponent;
 	std::shared_ptr<BaseNode> m_Parent;
 	std::vector<std::shared_ptr<BaseNode>> m_Children;
 	ActorID m_ActorID;
 	Material* m_Material;
+	IBoundVolume* m_BoundVolume;
 };
 

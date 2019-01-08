@@ -192,6 +192,13 @@
 		m_Scene->Tick(dt);
 		m_Scene->Render(ERenderPass::MAIN_PASS);
 
+		//Render UI
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+		m_Text->Text(glm::vec2(30.0f),5.0f,glm::vec3(1.0f),"Objects in the scene %d\nObjects Culled %d",m_Scene->GetTotalCount(),m_Scene->GetCulledCount());
+		glDisable(GL_BLEND);
+		
 		m_CurrentContext->SwapBuffers();
 	}
 
@@ -202,6 +209,9 @@
 		{
 			CloseWindow();
 		}
+
+		if (key == GLFW_KEY_DELETE && action == GLFW_PRESS)
+			m_Scene->RemoveAnObject();
 
 		InputHandler::GetInstance()->OnKeyAction(key, action);
 	}

@@ -72,7 +72,7 @@ void WaterNode::Tick(Scene * scene, float deltaTime)
 
 void WaterNode::PreRender(Scene * scene)
 {
-	glm::mat4 projection = scene->GetProjection();
+	glm::mat4 projection = scene->GetCamera()->GetProjection();
 	glm::mat4 view = scene->GetCamera()->GetView();
 
 	m_Shader.Use();

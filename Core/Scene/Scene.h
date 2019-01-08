@@ -10,7 +10,6 @@ class Engine;
 class DebugCamera;
 class BaseNode;
 class GLRenderer;
-class FrustumNode;
 
 struct LightSource
 {
@@ -36,7 +35,7 @@ public:
 
 
 	inline std::shared_ptr<DebugCamera> GetCamera() { return m_Camera; }
-	
+
 	inline Engine* GetEngineRef() { return m_EngineRef; }
 	
 	inline std::shared_ptr<GLRenderer> GetRenderer() { return m_Renderer; }
@@ -45,32 +44,72 @@ public:
 	
 	inline bool ShouldSetMaterialProps() { return m_ShouldSetMaterial; }
 	
-	inline glm::mat4 GetProjection() { return m_Projection; }
 	
 	void PushMatrix(const glm::mat4& model);
 	void PopMatrix() { m_MatrixStack.pop(); }
 
 	inline LightSource& GetLightSource() { return m_LightSource; }
 
-	inline std::shared_ptr<FrustumNode> GetFrustum() { return m_Frustum; }
+	//for debugging
+	inline int GetCulledCount() { return m_CulledNodesCount; }
+	inline int GetTotalCount() { return m_TotalNodesCount; }
+	
+	inline void ScaleCullNotCount(int value) { m_CulledNodesCount += value; }
+
+	void RemoveAnObject();
 
 private:
+	/* 
+	This calls decides which groups will 
+	be renderered for particular render pass
+	and with what configuration
+	*/
+
+	/* 
+	will render solids which should show shadows,
+	avoid : light calculations
+	avoid : Frustum culling
+	avoid : Setting shader values
+	*/
 	void ShadowPassRender();
+
+	/* 
+	will render all groups 
+	- will do frustum culling
+	- wil do lighting calculation
+	- will set values in shaders for different groups
+	*/
 	void MainPassRender();
+
+	/* 
+	will render solids and skybox with materials
+	- lighting calculation will be avoided
+	- fructum culling will be avoided
+	*/
 	void WaterPassRender();
 private:
+	std::string m_Name;
 
 	std::shared_ptr<DebugCamera> m_Camera;
-	glm::mat4 m_Projection;
-	std::string m_Name;
+
 	Engine* m_EngineRef;
+
 	std::vector<std::shared_ptr<BaseNode>> m_Groups;
+	
 	std::shared_ptr<GLRenderer> m_Renderer;
+	
 	std::stack<glm::mat4> m_MatrixStack;
+	
 	bool m_ShouldSetMaterial;
+	
 	LightSource m_LightSource;
-	std::shared_ptr<FrustumNode>  m_Frustum;
+	
 	std::shared_ptr<class WaterNode> m_WaterNode;
 	
+	std::vector< std::shared_ptr<BaseNode> > m_Nodes;
+	
+	//for debugging
+	int m_TotalNodesCount;
+	int m_CulledNodesCount;
 };
 

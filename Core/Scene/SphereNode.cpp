@@ -10,7 +10,8 @@
 #include "../Renderer/Material.h"
 
 #include "Scene.h"
-#include "FrustumNode.h"
+#include "Frustum.h"
+#include "BoundingVolume.h"
 
 const float PI = 3.1415926535f;
 
@@ -132,6 +133,7 @@ bool SphereNode::Init()
 	m_Material->SetAmbient(glm::vec3(.5f,0.0f,0.0f));
 	m_Material->SetUseColor(true);
 
+	m_BoundVolume = new SphereBound(glm::vec3(0.0f),m_Radius);
 	return true;
 }
 
@@ -143,18 +145,18 @@ void SphereNode::Destroy()
 
 
 void SphereNode::Render(Scene * scene)
-{
-	auto actor = scene->GetEngineRef()->GetActor(m_ActorID);
-	auto transform = MakeSharedPtr(actor->GetComponent<Transform>(Transform::s_ID));
-	if (scene->GetFrustum()->SphereInsideFrustum(transform->GetPosition(), m_Radius))
+{	
+	if (scene->GetCamera()->GetFrustum()->IsInside(m_BoundVolume))
 	{
-		m_Material->SetDiffuse(glm::vec3(0.0f, 1.0f, 0.0f));
-		m_Material->SetAmbient(glm::vec3(0.0f, 0.5f, 0.0f));
+		m_Material->SetDiffuse(glm::vec3(0.0f,1.0f,0.0f));
+		m_Material->SetAmbient(glm::vec3(0.0f, .4f, 0.0f));
 	}
 	else
 	{
-		m_Material->SetDiffuse(glm::vec3(1.0f, 0.0f, 0.0f));
-		m_Material->SetAmbient(glm::vec3(.5f, 0.0f, 0.0f));
+		return;
+		scene->ScaleCullNotCount(1);
+		//m_Material->SetDiffuse(glm::vec3(1.0f, 0.0f, 0.0f));
+		//m_Material->SetAmbient(glm::vec3(.4f, 0.0f, 0.0f));
 	}
 	m_VAO.Bind();
 	glDrawElements(GL_TRIANGLES,m_IndicesSize,GL_UNSIGNED_INT,0);

@@ -62,6 +62,7 @@ bool GLRenderer::Initialize()
 	m_Programs[EShaderProgram::SKYBOX] = LoadShaderProgram("skybox");
 	m_Programs[EShaderProgram::SHADOW] = LoadShaderProgram("shadow_map");
 	m_Programs[EShaderProgram::WATER_PASS] = LoadShaderProgram("water_pass");
+	m_Programs[EShaderProgram::OUTLINED] = LoadShaderProgram("outlined");
 	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
 	m_ActiveProgram->Use();
 

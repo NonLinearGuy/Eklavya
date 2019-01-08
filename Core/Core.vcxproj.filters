@@ -16,7 +16,7 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{9877ad1d-84ff-4d85-ae54-c6bbf38132e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ZShaders">
+    <Filter Include="Shaders">
       <UniqueIdentifier>{e89178ad-38f1-4d01-8fbe-afa5f13a3dbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -96,10 +96,13 @@
     <ClCompile Include="Renderer\Material.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\FrustumNode.cpp">
+    <ClCompile Include="Scene\WaterNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\WaterNode.cpp">
+    <ClCompile Include="Scene\BoundingVolume.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Frustum.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -186,10 +189,13 @@
     <ClInclude Include="Scene\SunNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\FrustumNode.h">
+    <ClInclude Include="Scene\WaterNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\WaterNode.h">
+    <ClInclude Include="Scene\BoundingVolume.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Frustum.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
@@ -198,48 +204,60 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\text_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\text_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\main_output_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\main_output_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\shadow_map_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\shadow_map_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\solids_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\solids_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\skybox_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\skybox_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="frustum_vs.glsl" />
     <None Include="frustum_fs.glsl" />
     <None Include="Assets\Shaders\water_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\water_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\water_pass_vs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\water_pass_fs.glsl">
-      <Filter>ZShaders</Filter>
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\outlined_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\outlined_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Scene\Assets\Shaders\unlit_solids_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Scene\Assets\Shaders\unlit_solids_fs.glsl">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

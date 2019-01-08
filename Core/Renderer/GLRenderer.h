@@ -16,6 +16,7 @@ enum class EShaderProgram
 	SOLID,
 	SKYBOX,
 	SHADOW,
+	OUTLINED,
 	WATER_PASS
 };
 

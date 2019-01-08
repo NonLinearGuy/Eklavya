@@ -7,15 +7,20 @@
 #include "../Helpers.h"
 #include "../Renderer/Material.h"
 #include "../Renderer/GLRenderer.h"
+#include "DebugCamera.h"
+#include "Frustum.h"
+#include "BoundingVolume.h"
 
 
 BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderGroup renderPass)
 	:
 	m_ActorID(actorID),
 	m_RenderGroup(renderPass),
-	m_WeakRenderComponent(renderComponent)
+	m_WeakRenderComponent(renderComponent),
+	m_ToWorld(1.0f),
+	m_BoundVolume(nullptr)
 {
-	
+
 }
 
 
@@ -44,16 +49,24 @@ void BaseNode::Tick(Scene* scene,float deltaTime)
 		child->Tick(scene,deltaTime);
 }
 
+void BaseNode::SetTransform(const glm::mat4& toWorld)
+{
+	m_ToWorld = toWorld;
+}
+
 void BaseNode::PreRender(Scene *scene)
 {
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
-	glm::mat4 model = glm::mat4(1.0f);
 	if (transform)
-		model = transform->GetModelMatrix();
-	scene->PushMatrix(model);
+		m_ToWorld = transform->GetModelMatrix();
+	if (m_BoundVolume)
+	{
+		static_cast<SphereBound*>(m_BoundVolume)->SetCenter(transform->GetPosition());
+	}
+	scene->PushMatrix(m_ToWorld);
 
-	if (scene->ShouldSetMaterialProps() && m_Material)
+	if (m_Material && scene->ShouldSetMaterialProps())
 	{
 		auto shader = scene->GetRenderer()->GetActiveProgram();
 		m_Material->SetPropsInShader(shader);
@@ -70,9 +83,9 @@ void BaseNode::RenderChildren(Scene* scene)
 {
 	for (auto child : m_Children)
 	{
-		child->PreRender(scene);
-		child->Render(scene);
-		child->PostRender(scene);
+			child->PreRender(scene);
+			child->Render(scene);
+			child->PostRender(scene);
 	}
 }
 
@@ -91,6 +104,7 @@ bool BaseNode::RemoveChild(std::shared_ptr<BaseNode> pChild)
 	bool childRemoved = false;
 
 	auto iter = std::find(m_Children.begin(), m_Children.end(),pChild);
+
 	if (iter != m_Children.end())
 	{
 		iter = m_Children.erase(iter);

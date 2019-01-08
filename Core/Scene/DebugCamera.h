@@ -1,14 +1,14 @@
 #ifndef _INC_DEBUG_CAMERA_H_
 #define _INC_DEBUG_CAMERA_H_
 
-#include<glm/glm.hpp>
-#include "../UserInputListener.h"
 #include <memory>
-#include <glad/glad.h>
+#include<glm/glm.hpp>
 #include "BaseNode.h"
-#include <glm/glm.hpp>
+#include "../UserInputListener.h"
 
 class GLRenderer;
+class Scene;
+class Frustum;
 
 class DebugCamera : public BaseNode,public UserInputListener
 {
@@ -22,23 +22,29 @@ public:
 		DOWN
 	};
 
-	DebugCamera();
+	DebugCamera(float fov,float ratio,float nearDist,float farDist);
+	~DebugCamera();
 
 	void OnCursorMove(double x, double y) override;
 	void PollKeyAction() override;
-	void Invert(bool invert);
+	void OnKeyAction(int key,int action)override;
+
+	void PreRender(Scene* scene)override;
+	void Render(Scene* scene)override;
+	void PostRender(Scene* scene)override;
 
 	glm::mat4 GetView();
-	inline glm::vec3 GetPosition()
-	{
-		return m_Position;
-	}
+	glm::mat4 GetProjection();
+	glm::mat4 GetClipMatrix();
 
-	bool IsDebugEnabled() { return m_Debug; }
+	void UpdateCamera();
+
+	inline glm::vec3 GetPosition(){return m_Position;}
+	inline bool IsDebugEnabled() { return m_Debug; }
+	inline Frustum* GetFrustum() { return m_Frustum; }
 
 private:
 	void Move(EDirection direction, float dt);
-
 private:
 	float m_Pitch;
 	float m_Yaw;
@@ -50,9 +56,9 @@ private:
 	float m_LastCursorY;
 	float m_Speed;
 	bool m_Debug;
-	bool m_InvertCamera;
 	glm::mat4 m_View;
 	glm::mat4 m_Projection;
+	Frustum* m_Frustum;
 };
 
 #endif

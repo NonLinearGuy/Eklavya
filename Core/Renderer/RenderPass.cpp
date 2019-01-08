@@ -110,11 +110,11 @@ void WaterTexturePass::PreRun()
 
 void WaterTexturePass::Run(Scene * scene)
 {
-	scene->GetCamera()->Invert(m_InvertCamera);
+
 	m_Renderer->SetShaderProgram(EShaderProgram::WATER_PASS);
 	m_Renderer->GetActiveProgram()->SetVec4("clipPlane", m_ClipPlane);
 	scene->Render(ERenderPass::WATER_TEXTURE_PASS);
-	scene->GetCamera()->Invert(false);
+
 }
 
 void WaterTexturePass::PostRun()

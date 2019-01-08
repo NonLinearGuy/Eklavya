@@ -162,10 +162,11 @@
     <ClCompile Include="Renderer\Texture2D.cpp" />
     <ClCompile Include="Renderer\VertexArrayObject.cpp" />
     <ClCompile Include="Scene\BaseNode.cpp" />
+    <ClCompile Include="Scene\BoundingVolume.cpp" />
     <ClCompile Include="Scene\BoxNode.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
     <ClCompile Include="Scene\DebugCamera.cpp" />
-    <ClCompile Include="Scene\FrustumNode.cpp" />
+    <ClCompile Include="Scene\Frustum.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SkyNode.cpp" />
     <ClCompile Include="Scene\SphereNode.cpp" />
@@ -195,11 +196,12 @@
     <ClInclude Include="Renderer\Texture2D.h" />
     <ClInclude Include="Renderer\VertexArrayObject.h" />
     <ClInclude Include="Scene\BaseNode.h" />
+    <ClInclude Include="Scene\BoundingVolume.h" />
     <ClInclude Include="Scene\BoxNode.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\DebugCamera.h" />
     <ClInclude Include="Scene\defines.h" />
-    <ClInclude Include="Scene\FrustumNode.h" />
+    <ClInclude Include="Scene\Frustum.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SkyNode.h" />
     <ClInclude Include="Scene\SphereNode.h" />
@@ -214,6 +216,8 @@
     <Text Include="log.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\outlined_fs.glsl" />
+    <None Include="Assets\Shaders\outlined_vs.glsl" />
     <None Include="Assets\Shaders\skybox_fs.glsl" />
     <None Include="Assets\Shaders\skybox_vs.glsl" />
     <None Include="Assets\Shaders\main_output_fs.glsl" />
@@ -230,6 +234,8 @@
     <None Include="Assets\Shaders\water_vs.glsl" />
     <None Include="frustum_fs.glsl" />
     <None Include="frustum_vs.glsl" />
+    <None Include="Scene\Assets\Shaders\unlit_solids_fs.glsl" />
+    <None Include="Scene\Assets\Shaders\unlit_solids_vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

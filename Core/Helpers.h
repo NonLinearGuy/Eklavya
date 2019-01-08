@@ -11,3 +11,6 @@ inline std::shared_ptr<Type> MakeSharedPtr(std::weak_ptr<Type> weakObject)
 		std::shared_ptr<Type>();
 }
 
+const int ACTOR_NOT_NEEDED = -1;
+const int ACTOR_BOUNDING_VOLUME = -2;
+

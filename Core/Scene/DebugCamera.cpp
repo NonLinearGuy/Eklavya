@@ -1,22 +1,30 @@
 #include "DebugCamera.h"
+#include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include "../Timer.h"
 #include <GLFW/glfw3.h>
+#include "../Helpers.h"
 #include "../Renderer/GLRenderer.h"
+#include "Frustum.h"
+#include "Scene.h"
 
 
-
-DebugCamera::DebugCamera()
+DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	: 
-	BaseNode(2000,nullptr,ERenderGroup::OUTLINED),
+	BaseNode(ACTOR_NOT_NEEDED,nullptr,ERenderGroup::OUTLINED),
 	UserInputListener(),
+	m_Frustum(new Frustum(fov,ratio,nearDist,farDist)),
 	m_Senstivity(.005),
-	m_Pitch(-90.0f),
+	m_Pitch(90.0f),
 	m_Yaw(0.0f),
 	m_Position(0.0f),
-	m_Front(0.0f,0.0f,1.0f),
+	m_Front(0.0f,0.0f,-1.0f),
 	m_CursorStartedMoving(true),
-	m_Speed(150)
+	m_Speed(150),
+	m_LastCursorX(0),m_LastCursorY(0),
+	m_View(1.0f),
+	m_Projection(glm::perspective(fov,ratio,nearDist,farDist)),
+	m_Debug(false)
 {
 
 }
@@ -48,6 +56,23 @@ void DebugCamera::OnCursorMove(double x, double y)
 	m_Front.z = sin(m_Yaw) * cos(m_Pitch);
 
 	m_Front = glm::normalize(m_Front);
+
+	UpdateCamera();
+}
+
+DebugCamera::~DebugCamera()
+{
+
+}
+
+void DebugCamera::UpdateCamera()
+{
+	m_View = glm::lookAt(m_Position, m_Position + m_Front, glm::vec3(0.0f, 1.0f, 0.0f));
+	if (!m_Debug)
+	{
+		m_Frustum->UpdatePlanes(m_Projection, m_View);
+		m_ToWorld = m_View;
+	}
 }
 
 void DebugCamera::PollKeyAction()
@@ -64,9 +89,37 @@ void DebugCamera::PollKeyAction()
 		Move(EDirection::RIGHT, dt);
 }
 
-void DebugCamera::Invert(bool invert)
+void DebugCamera::OnKeyAction(int key, int action)
 {
-	m_InvertCamera = invert;
+	if (GLFW_KEY_LEFT_SHIFT == key && GLFW_PRESS == action)
+	{
+		m_Debug = !m_Debug;
+		if (m_Debug)
+		{
+			m_Frustum->UpdatePlanes(m_Projection,m_ToWorld);
+			m_ToWorld = glm::mat4(1.0f);
+		}
+	}
+}
+
+void DebugCamera::PreRender(Scene* scene)
+{
+	scene->PushMatrix(m_ToWorld);
+	glEnable(GL_LINE_WIDTH);
+	glLineWidth(10.0f);
+	scene->GetRenderer()->GetActiveProgram()->SetVec4("color",glm::vec4(0.0f,1.0f,1.0f,1.0f));
+}
+
+void DebugCamera::Render(Scene * scene)
+{
+	if(m_Debug)
+		m_Frustum->Draw();
+}
+
+void DebugCamera::PostRender(Scene* scene)
+{
+	scene->PopMatrix();
+	glDisable(GL_LINE_WIDTH);
 }
 
 void DebugCamera::Move(EDirection direction,float dt)
@@ -88,18 +141,24 @@ void DebugCamera::Move(EDirection direction,float dt)
 		m_Position += speed * -m_Front;
 		break;
 	}
+
+	UpdateCamera();
 }
 
 
 glm::mat4 DebugCamera::GetView()
 {
-	glm::vec3 position(m_Position);
-	if (m_InvertCamera)
-	{
-		position.y = -2.0 * m_Position.y;
-		m_Front.y = -m_Front.y;
-	}
-	return glm::lookAt(position,position + m_Front,glm::vec3(0.0f,1.0f,0.0f));
+	return m_View;
+}
+
+glm::mat4 DebugCamera::GetProjection()
+{
+	return m_Projection;
+}
+
+glm::mat4 DebugCamera::GetClipMatrix()
+{
+	return m_Projection * m_View;
 }
 
 

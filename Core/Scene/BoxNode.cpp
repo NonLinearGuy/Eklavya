@@ -9,6 +9,7 @@
 #include "../Renderer/GLRenderer.h"
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Material.h"
+#include "BoundingVolume.h"
 
 
 

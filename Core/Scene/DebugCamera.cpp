@@ -71,7 +71,6 @@ void DebugCamera::UpdateCamera()
 	if (!m_Debug)
 	{
 		m_Frustum->UpdatePlanes(m_Projection, m_View);
-		m_ToWorld = m_View;
 	}
 }
 
@@ -96,8 +95,7 @@ void DebugCamera::OnKeyAction(int key, int action)
 		m_Debug = !m_Debug;
 		if (m_Debug)
 		{
-			m_Frustum->UpdatePlanes(m_Projection,m_ToWorld);
-			m_ToWorld = glm::mat4(1.0f);
+			m_ToWorld = glm::inverse(m_View);
 		}
 	}
 }
@@ -106,8 +104,8 @@ void DebugCamera::PreRender(Scene* scene)
 {
 	scene->PushMatrix(m_ToWorld);
 	glEnable(GL_LINE_WIDTH);
-	glLineWidth(10.0f);
-	scene->GetRenderer()->GetActiveProgram()->SetVec4("color",glm::vec4(0.0f,1.0f,1.0f,1.0f));
+	glLineWidth(5.0f);
+	scene->GetRenderer()->GetActiveProgram()->SetVec4("color",glm::vec4(1.0f,1.0f,0.0f,1.0f));
 }
 
 void DebugCamera::Render(Scene * scene)
@@ -130,6 +128,7 @@ void DebugCamera::Move(EDirection direction,float dt)
 	{
 	case EDirection::LEFT:
 		m_Position += speed * glm::cross(glm::vec3(0.0f,1.0f,0.0f),m_Front);
+		break;
 		break;
 	case EDirection::RIGHT:
 		m_Position += speed * glm::cross(m_Front, glm::vec3(0.0f, 1.0f, 0.0f));

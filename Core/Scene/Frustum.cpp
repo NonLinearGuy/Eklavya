@@ -118,7 +118,7 @@ bool Frustum::IsSphereInside(const glm::vec3& position, float radius)
 {
 	for (auto plane : m_Planes)
 	{
-		float dist = plane.x * position.x + plane.y * position.y + plane.z * position.z + (plane.w);
+		float dist = plane.x * position.x + plane.y * position.y + plane.z * position.z + plane.w;
 		if (dist < -radius) return false;
 	}
 	return true;

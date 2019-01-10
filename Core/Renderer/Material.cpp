@@ -30,6 +30,7 @@ void Material::SetPropsInShader(std::shared_ptr<ShaderProgram> pShader)
 	pShader->SetVec3("material.diffuse", m_Diffuse);
 	pShader->SetVec3("material.specular", m_Specular);
 	pShader->SetFloat("material.specPow",m_SpecPow);
+	pShader->SetFloat("material.opacity", m_Opacity);
 
 	if (m_Albedo)
 	{

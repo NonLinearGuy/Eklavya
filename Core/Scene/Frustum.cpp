@@ -103,12 +103,14 @@ void Frustum::Draw()
 	glDrawElements(GL_LINES,24,GL_UNSIGNED_INT,0);
 }
 
-bool Frustum::IsInside(IBoundVolume* volume)
+bool Frustum::IsInside(std::shared_ptr<IBoundVolume> volume)
 {
+	if (!volume) return true;
 	EBoundType type = volume->GetType();
+
 	if (EBoundType::SPHERE == type)
 	{
-		SphereBound* sphere = static_cast<SphereBound*>(volume);
+		std::shared_ptr<SphereBound> sphere = std::static_pointer_cast<SphereBound>(volume);
 		return IsSphereInside(sphere->GetCenter(),sphere->GetRadius());
 	}
 	else

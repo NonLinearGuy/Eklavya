@@ -41,7 +41,7 @@ public:
 	VertexArrayObject* GetVAO() { return m_VAO; }
 	void Destroy();
 	
-	bool IsInside(IBoundVolume* volume);
+	bool IsInside(std::shared_ptr<IBoundVolume> volume);
 	void Draw();
 private:
 	

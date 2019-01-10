@@ -11,6 +11,7 @@ enum ERenderGroup
 	SOLID = MIN,
 	WATER,
 	OUTLINED,
+	BOUND_VOLUME,
 	SKYBOX,
 	MAX
 };
@@ -38,7 +39,8 @@ public:
 	virtual void RenderChildren(Scene* scene);
 	virtual void PostRender(Scene* scene);
 	
-	inline bool IsInsideFrustum(Scene* scene) { return true; }
+	inline std::shared_ptr<IBoundVolume> GetBoundVolume() { return m_BoundVolume; }
+	
 
 	virtual void AddChild(std::shared_ptr<BaseNode> pChild);
 	virtual bool RemoveChild(std::shared_ptr<BaseNode> pChild);
@@ -60,6 +62,6 @@ protected:
 	std::vector<std::shared_ptr<BaseNode>> m_Children;
 	ActorID m_ActorID;
 	Material* m_Material;
-	IBoundVolume* m_BoundVolume;
+	std::shared_ptr<IBoundVolume> m_BoundVolume;
 };
 

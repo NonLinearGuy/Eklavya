@@ -6,6 +6,7 @@
 #include "../Renderer/VertexArrayObject.h"
 
 class Scene;
+class SphereVAO;
 
 class SphereNode : public BaseNode
 {
@@ -16,7 +17,7 @@ public:
 	void Destroy()override;
 	void Render(Scene* scene)override;
 private:
-	VertexArrayObject m_VAO;
+	SphereVAO* m_SphereVAO;
 	int m_IndicesSize;
 	std::shared_ptr<Texture2D> m_FloorTexture;
 	float m_Radius;

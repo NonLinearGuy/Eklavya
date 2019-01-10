@@ -63,6 +63,7 @@ bool GLRenderer::Initialize()
 	m_Programs[EShaderProgram::SHADOW] = LoadShaderProgram("shadow_map");
 	m_Programs[EShaderProgram::WATER_PASS] = LoadShaderProgram("water_pass");
 	m_Programs[EShaderProgram::OUTLINED] = LoadShaderProgram("outlined");
+	m_Programs[EShaderProgram::UNLIT_SOLID] = LoadShaderProgram("unlit_solids");
 	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
 	m_ActiveProgram->Use();
 
@@ -81,6 +82,8 @@ bool GLRenderer::Initialize()
 	SetClearColor(0.0f,0.0f,0.0f,1.0f);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
 
 	return true;
 }

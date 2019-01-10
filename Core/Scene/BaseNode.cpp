@@ -59,14 +59,15 @@ void BaseNode::PreRender(Scene *scene)
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
 	if (transform)
-		m_ToWorld = transform->GetModelMatrix();
-	if (m_BoundVolume)
 	{
-		static_cast<SphereBound*>(m_BoundVolume)->SetCenter(transform->GetPosition());
+		m_ToWorld = transform->GetModelMatrix();
+		if (m_BoundVolume)
+		{
+			std::static_pointer_cast<SphereBound>(m_BoundVolume)->SetCenter(transform->GetPosition());
+		}
 	}
 	scene->PushMatrix(m_ToWorld);
-
-	if (m_Material && scene->ShouldSetMaterialProps())
+	if ( m_Material && scene->ShouldSetMaterialProps() )
 	{
 		auto shader = scene->GetRenderer()->GetActiveProgram();
 		m_Material->SetPropsInShader(shader);
@@ -83,9 +84,12 @@ void BaseNode::RenderChildren(Scene* scene)
 {
 	for (auto child : m_Children)
 	{
+		if (scene->GetCamera()->GetFrustum()->IsInside(child->GetBoundVolume()))
+		{
 			child->PreRender(scene);
 			child->Render(scene);
 			child->PostRender(scene);
+		}
 	}
 }
 

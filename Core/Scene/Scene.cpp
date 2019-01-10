@@ -7,7 +7,7 @@
 #include "Frustum.h"
 #include "WaterNode.h"
 #include "../Helpers.h"
-
+#include "BoundingVolume.h"
 
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
@@ -27,6 +27,8 @@ void Scene::Init()
 	m_Nodes.reserve(100);
 	m_Groups.reserve(ERenderGroup::MAX);
 
+	//! FOLLOW THE SAME ORDER AS ERenderGroup enum
+
 	std::shared_ptr<BaseNode> staticGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::SOLID);
 	m_Groups.push_back(staticGroup);
 
@@ -35,6 +37,9 @@ void Scene::Init()
 
 	std::shared_ptr<BaseNode> outlinedGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::OUTLINED);
 	m_Groups.push_back(outlinedGroup);
+
+	std::shared_ptr<BaseNode> boundVolumeGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::BOUND_VOLUME);
+	m_Groups.push_back(boundVolumeGroup);
 
 	std::shared_ptr<BaseNode> skyGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::SKYBOX);
 	m_Groups.push_back(skyGroup);
@@ -141,6 +146,13 @@ void Scene::MainPassRender()
 			glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 			m_Groups[ERenderGroup::WATER]->Render(this);
 			glDisable(GL_BLEND);
+			break;
+		case ERenderGroup::BOUND_VOLUME:
+			m_Renderer->SetShaderProgram(EShaderProgram::UNLIT_SOLID);
+			m_Renderer->SetProjectionMatrix(projection);
+			view = m_Camera->GetView();
+			m_Renderer->SetViewMatrix(view);
+			m_Groups[ERenderGroup::BOUND_VOLUME]->Render(this);
 			break;
 		case ERenderGroup::SKYBOX:
 			m_Renderer->SetShaderProgram(EShaderProgram::SKYBOX);

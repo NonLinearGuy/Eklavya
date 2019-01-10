@@ -14,6 +14,7 @@ class IRenderPass;
 enum class EShaderProgram
 {
 	SOLID,
+	UNLIT_SOLID,
 	SKYBOX,
 	SHADOW,
 	OUTLINED,

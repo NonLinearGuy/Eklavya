@@ -3,31 +3,38 @@
 
 #include <memory>
 #include <glm/glm.hpp>
+#include "BaseNode.h"
 
-class BaseNode;
+
+class Scene;
+class SphereVAO;
 
 enum class EBoundType
 {
 	SPHERE = 0
 };
 
-class IBoundVolume 
+class IBoundVolume
 {
 public:
 	IBoundVolume(EBoundType type);
 	virtual EBoundType GetType() { return m_Type; }
 protected:
 	EBoundType m_Type;
+	//for debugging
+	std::shared_ptr<BaseNode> m_BaseNode;
 };
 
 class SphereBound : public IBoundVolume
 {
 public:
 	SphereBound(const glm::vec3& center,float radius);
+	~SphereBound();
 	inline void SetCenter(const glm::vec3& center) { m_Center = center; }
 	inline void SetRadius(float m_Radius) {}
 	inline glm::vec3 GetCenter() { return m_Center; }
 	inline float GetRadius() { return m_Radius; }
+
 private:
 	float m_Radius;
 	glm::vec3 m_Center;

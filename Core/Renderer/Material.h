@@ -17,6 +17,7 @@ public:
 	inline void SetDiffuse(const glm::vec3& diffuse) { m_Diffuse = diffuse; }
 	inline void SetSpecular(const glm::vec3& specular) { m_Specular = specular; }
 	inline void SetSpecPow(float pow) { m_SpecPow = pow; }
+	inline void SetOpacity(float opacity) { m_Opacity = opacity; }
 
 	void SetAlbedoMap(std::shared_ptr<Texture2D> m_AlbedoMap);
 	void SetPropsInShader(std::shared_ptr<ShaderProgram> pShader);
@@ -26,6 +27,7 @@ private:
 	glm::vec3 m_Ambient;
 	glm::vec3 m_Diffuse;
 	glm::vec3 m_Specular; 
+	float m_Opacity;
 	float m_SpecPow;
 	bool m_UseColor;
 };

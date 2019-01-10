@@ -58,5 +58,21 @@ void VertexArrayObject::Create(Type* bufferData, size_t bufferDataSize, int* ind
 	Unbind();
 }
 
+
+class SphereVAO
+{
+public:
+	SphereVAO();
+	~SphereVAO();
+	int GetIndicesSize() { return m_IndicesSize; }
+	void Init(float radius, int stack, int sector);
+	void Destroy();
+	void Bind();
+	void Unbind();
+private:
+	VertexArrayObject m_VAO;
+	int m_IndicesSize;
+};
+
 #endif
 

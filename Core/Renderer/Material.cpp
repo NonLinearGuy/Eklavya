@@ -17,6 +17,11 @@ void Material::SetAlbedoMap(std::shared_ptr<Texture2D> pAlbedo)
 	m_Albedo = pAlbedo;
 }
 
+void Material::SetNormalMap(std::shared_ptr<Texture2D> pNormal)
+{
+	m_Normal = pNormal;
+}
+
 void Material::SetPropsInShader(std::shared_ptr<ShaderProgram> pShader)
 {
 	if (!pShader->IsCurrentlyActive())
@@ -25,16 +30,24 @@ void Material::SetPropsInShader(std::shared_ptr<ShaderProgram> pShader)
 		pShader->SetStatus(true);
 	}
 
-	pShader->SetInt("material.bApplyColor",m_UseColor);
-	pShader->SetVec3("material.ambient",m_Ambient);
+	pShader->SetInt("material.bApplyColor", m_UseColor);
+	pShader->SetInt("material.bApplyNormalMap", 0);
+	pShader->SetVec3("material.ambient", m_Ambient);
 	pShader->SetVec3("material.diffuse", m_Diffuse);
 	pShader->SetVec3("material.specular", m_Specular);
-	pShader->SetFloat("material.specPow",m_SpecPow);
+	pShader->SetFloat("material.specPow", m_SpecPow);
 	pShader->SetFloat("material.opacity", m_Opacity);
 
 	if (m_Albedo)
 	{
-		pShader->SetInt("material.albedoMap",0);
+		pShader->SetInt("material.albedoMap", 0);
 		m_Albedo->BindToUnit(GL_TEXTURE0);
+	}
+
+	if (m_Normal)
+	{
+		pShader->SetInt("material.bApplyNormalMap",1);
+		pShader->SetInt("material.normalMap", 1);
+		m_Normal->BindToUnit(GL_TEXTURE1);
 	}
 }

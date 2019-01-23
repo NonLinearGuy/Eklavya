@@ -15,6 +15,6 @@ public:
 	void Tick(Scene* scene,float deltaTime)override;;
 	void Render(Scene* scene)override;
 private:
+	
 	VertexArrayObject m_VAOConfig;
-	std::shared_ptr<Texture2D> m_FloorTexture;
 };

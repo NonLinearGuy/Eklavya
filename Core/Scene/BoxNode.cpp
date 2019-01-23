@@ -10,6 +10,7 @@
 #include "../Renderer/ShaderProgram.h"
 #include "../Renderer/Material.h"
 #include "BoundingVolume.h"
+#include "../Components/BaseRenderComponent.h"
 
 
 
@@ -73,22 +74,39 @@ bool BoxNode::Init()
 	};
 
 
-
-	m_VAOConfig.Create(vertices,sizeof(vertices),0);
+m_VAOConfig.Create(vertices,sizeof(vertices),0);
 	m_VAOConfig.SetPosPtr(3,0,sizeof(float) * 8);
 	m_VAOConfig.SetNormalPtr(sizeof(float) * 3,sizeof(float) * 8);
 	m_VAOConfig.SetTexPtr(sizeof(float) * 6,sizeof(float) * 8);
 
 	m_Material = new Material();
-	m_FloorTexture = std::make_shared<Texture2D>();
-	if(m_ActorID == 0)
-		m_FloorTexture->CreateTexture("Assets/Textures/albedo.jpg");
+	if (!m_AlbedoName.empty())
+	{
+		auto texture = std::make_shared<Texture2D>();
+		texture->CreateTexture("Assets/Textures/" + m_AlbedoName);
+		m_Material->SetAlbedoMap(texture);
+		m_Material->SetDiffuse(glm::vec3(1.0f));
+		m_Material->SetAmbient(glm::vec3(.5f));
+		m_Material->SetUseColor(false);
+	}
 	else
-		m_FloorTexture->CreateTexture("Assets/Textures/floor_albedo.png");
-	m_Material->SetAlbedoMap(m_FloorTexture);
-	m_Material->SetDiffuse(glm::vec3(0.0f,.5f,0.0f));
-	m_Material->SetAmbient(glm::vec3(0.0f,.2f,0.0f));
-	m_Material->SetUseColor(false);
+	{
+		m_Material->SetDiffuse(m_Color * glm::vec3(1.0f));
+		m_Material->SetAmbient(m_Color * glm::vec3(.5f));
+		m_Material->SetUseColor(true);
+	}
+
+	if (!m_NormalName.empty())
+	{
+		auto texture = std::make_shared<Texture2D>();
+		texture->CreateTexture("Assets/Textures/" + m_NormalName);
+		m_Material->SetNormalMap(texture);
+		m_Material->SetDiffuse(glm::vec3(1.0f));
+		m_Material->SetAmbient(glm::vec3(.5f));
+		m_Material->SetUseColor(false);
+	}
+
+	m_Material->SetOpacity(m_Opacity);
 
 	return true;
 }

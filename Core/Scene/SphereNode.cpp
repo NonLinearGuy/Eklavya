@@ -33,10 +33,20 @@ SphereNode::~SphereNode()
 
 bool SphereNode::Init()
 {
-	if(m_WeakRenderComponent)
+	glm::vec3 color;
+	std::string texturePath;
+
+	if (m_WeakRenderComponent)
+	{
 		m_Radius = (static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetRadius();
+		color = (static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetColor();
+		texturePath = (static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetTexturePath();
+	}
 	else
+	{
 		m_Radius = 1;
+		color = glm::vec3(1.0f);
+	}
 
 	float sectorCount = (float)(static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetSectors();
 	float stackCount = (float)(static_cast<SphereRenderComponent*>(m_WeakRenderComponent))->GetStacks();
@@ -44,12 +54,30 @@ bool SphereNode::Init()
 	m_SphereVAO->Init(m_Radius,stackCount,sectorCount);
 	
 	m_Material = new Material();
-	m_FloorTexture = std::make_shared<Texture2D>();
-	m_FloorTexture->CreateTexture("Assets/Textures/floor_albedo.png");
-	m_Material->SetAlbedoMap(m_FloorTexture);
-	m_Material->SetDiffuse(glm::vec3(1.0f,0.0f,0.0f));
-	m_Material->SetAmbient(glm::vec3(.5f,0.0f,0.0f));
-	m_Material->SetUseColor(true);
+	if (!m_AlbedoName.empty())
+	{
+		auto texture = std::make_shared<Texture2D>();
+		texture->CreateTexture("Assets/Textures/" + m_AlbedoName);
+		m_Material->SetAlbedoMap(texture);
+		m_Material->SetDiffuse(glm::vec3(1.0f));
+		m_Material->SetAmbient(glm::vec3(.5f));
+		m_Material->SetUseColor(false);
+	}
+	else
+	{
+		m_Material->SetDiffuse(m_Color * glm::vec3(1.0f));
+		m_Material->SetAmbient(m_Color * glm::vec3(.5f));
+		m_Material->SetUseColor(true);
+	}
+
+	if (!m_NormalName.empty())
+	{
+		auto texture = std::make_shared<Texture2D>();
+		texture->CreateTexture("Assets/Textures/" + m_NormalName);
+		m_Material->SetNormalMap(texture);
+	}
+
+	m_Material->SetOpacity(m_Opacity);
 
 	m_BoundVolume = std::make_shared<SphereBound>(glm::vec3(0.0f),m_Radius);
 

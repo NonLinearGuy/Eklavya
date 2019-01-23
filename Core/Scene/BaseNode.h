@@ -53,6 +53,11 @@ public:
 	void SetTransform(const glm::mat4& toWorld);
 
 	void SetParent(std::shared_ptr<BaseNode> parent) { m_Parent = parent; }
+
+	void SetAlbedoName(std::string name) { m_AlbedoName = name; }
+	void SetNormalName(std::string name) { m_NormalName = name; }
+	void SetColor(glm::vec3 color) { m_Color = color; }
+	void SetOpacity(float opacity) { m_Opacity = opacity; }
 protected:
 	
 	glm::mat4 m_ToWorld;
@@ -63,5 +68,11 @@ protected:
 	ActorID m_ActorID;
 	Material* m_Material;
 	std::shared_ptr<IBoundVolume> m_BoundVolume;
+
+	//temps
+	std::string m_AlbedoName;
+	std::string m_NormalName;
+	glm::vec3 m_Color;
+	float m_Opacity;
 };
 

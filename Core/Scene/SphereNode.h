@@ -19,7 +19,6 @@ public:
 private:
 	SphereVAO* m_SphereVAO;
 	int m_IndicesSize;
-	std::shared_ptr<Texture2D> m_FloorTexture;
 	float m_Radius;
 };
 

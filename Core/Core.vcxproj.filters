@@ -19,6 +19,12 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{e89178ad-38f1-4d01-8fbe-afa5f13a3dbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{ec3ae381-4eac-45b9-b1d2-b9b3a773bd40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{51a4d1b3-7aef-4663-ba31-bfbd80afb690}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\BaseComponent.cpp">
@@ -105,6 +111,23 @@
     <ClCompile Include="Scene\Frustum.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Physics\ProjectileComponent.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collider.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\RigidBody.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\CollisionDetector.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Event\EventDispatcher.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorFactory.cpp" />
+    <ClCompile Include="Globals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -198,6 +221,32 @@
     <ClInclude Include="Scene\Frustum.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Physics\Constants.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\ProjectileComponent.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CollisionDetector.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collider.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\RigidBody.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\Events.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventType.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\EventDispatcher.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorFactory.h" />
+    <ClInclude Include="Globals.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt" />

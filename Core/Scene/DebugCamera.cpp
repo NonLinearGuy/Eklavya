@@ -17,8 +17,8 @@ DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	m_Senstivity(.005),
 	m_Pitch(90.0f),
 	m_Yaw(0.0f),
-	m_Position(0.0f),
-	m_Front(0.0f,0.0f,-1.0f),
+	m_Position(0.0f,150.0f,200.0f),
+	m_Front(0.0f,-0.5f,-1.0f),
 	m_CursorStartedMoving(true),
 	m_Speed(150),
 	m_LastCursorX(0),m_LastCursorY(0),
@@ -103,8 +103,6 @@ void DebugCamera::OnKeyAction(int key, int action)
 void DebugCamera::PreRender(Scene* scene)
 {
 	scene->PushMatrix(m_ToWorld);
-	glEnable(GL_LINE_WIDTH);
-	glLineWidth(5.0f);
 	scene->GetRenderer()->GetActiveProgram()->SetVec4("color",glm::vec4(1.0f,1.0f,0.0f,1.0f));
 }
 
@@ -117,7 +115,6 @@ void DebugCamera::Render(Scene * scene)
 void DebugCamera::PostRender(Scene* scene)
 {
 	scene->PopMatrix();
-	glDisable(GL_LINE_WIDTH);
 }
 
 void DebugCamera::Move(EDirection direction,float dt)

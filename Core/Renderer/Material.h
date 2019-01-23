@@ -19,11 +19,13 @@ public:
 	inline void SetSpecPow(float pow) { m_SpecPow = pow; }
 	inline void SetOpacity(float opacity) { m_Opacity = opacity; }
 
-	void SetAlbedoMap(std::shared_ptr<Texture2D> m_AlbedoMap);
+	void SetNormalMap(std::shared_ptr<Texture2D> pNormalMap);
+	void SetAlbedoMap(std::shared_ptr<Texture2D> pAlbedoMap);
 	void SetPropsInShader(std::shared_ptr<ShaderProgram> pShader);
 	
 private:
 	std::shared_ptr<Texture2D> m_Albedo;
+	std::shared_ptr<Texture2D> m_Normal;
 	glm::vec3 m_Ambient;
 	glm::vec3 m_Diffuse;
 	glm::vec3 m_Specular; 

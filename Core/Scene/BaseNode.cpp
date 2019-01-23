@@ -18,7 +18,9 @@ BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderG
 	m_RenderGroup(renderPass),
 	m_WeakRenderComponent(renderComponent),
 	m_ToWorld(1.0f),
-	m_BoundVolume(nullptr)
+	m_BoundVolume(nullptr),
+	m_Color(.7f),
+	m_Opacity(1.0f)
 {
 
 }
@@ -84,12 +86,12 @@ void BaseNode::RenderChildren(Scene* scene)
 {
 	for (auto child : m_Children)
 	{
+		child->PreRender(scene);
 		if (scene->GetCamera()->GetFrustum()->IsInside(child->GetBoundVolume()))
 		{
-			child->PreRender(scene);
 			child->Render(scene);
-			child->PostRender(scene);
 		}
+		child->PostRender(scene);
 	}
 }
 

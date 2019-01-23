@@ -12,20 +12,22 @@ class Transform : public BaseComponent
 public:
 	Transform(const glm::vec3& position = glm::vec3(0.0f),const glm::vec3& scale = glm::vec3(1.0f),const glm::vec3& pEulerAngles = glm::vec3(0.0f));
 	~Transform();
+	
+	void SetRotation(const glm::quat& pRotation);
 	void SetRotation(const glm::vec3& pNewYawPitchRoll);
-
+	
+	inline void SetPosition(float x, float y, float z) { m_Position = glm::vec3(x, y, z); }
 	inline void SetPosition(const glm::vec3& pNewPosition) { m_Position = pNewPosition; }
-	inline void SetX(float pX) { m_Position.x = pX; }
-	inline void SetY(float pY) { m_Position.y = pY; }
-	inline void SetZ(float pZ) { m_Position.z = pZ; }
-	inline void SetScale(const glm::vec3& pNewScale) { m_Scale = pNewScale; }
-	inline void SetScaleX(float pX) { m_Scale.x = pX; }
-	inline void SetScaleY(float pY) { m_Scale.y = pY; }
-	inline void SetScaleZ(float pZ) { m_Scale.z = pZ; }
+	
+	inline void SetScale(float x,float y,float z) { m_Scale = glm::vec3(x,y,z); }
+	inline void SetScale(float uniformScale) { m_Scale = glm::vec3(uniformScale); }
+	inline void SetScale(glm::vec3 scale) { m_Scale = scale; }
 
 	inline const glm::quat& GetRotation() { return m_Rotation; }
 	inline const glm::vec3& GetPosition() const { return m_Position; }
 	inline const glm::vec3& GetScale()const { return m_Scale; }
+
+	glm::vec3 TransformToLocal(const glm::vec3& vertex);
 
 	glm::mat4 GetModelMatrix();
 
@@ -35,5 +37,6 @@ private:
 	glm::vec3 m_Position;
 	glm::quat m_Rotation;
 	glm::vec3 m_Scale;
+	glm::mat4 m_Model;
 };
 

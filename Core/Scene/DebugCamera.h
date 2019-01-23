@@ -36,6 +36,7 @@ public:
 	glm::mat4 GetView();
 	glm::mat4 GetProjection();
 	glm::mat4 GetClipMatrix();
+	inline glm::vec3 GetFront() { return m_Front; }
 
 	void UpdateCamera();
 

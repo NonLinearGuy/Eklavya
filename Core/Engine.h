@@ -11,9 +11,11 @@
 #include "UI/TextRenderer.hpp"
 #include "Scene/DebugCamera.h"
 #include "Scene/Scene.h"
+#include "Physics/Collider.h"
+
 
 class GLRenderer;
-
+class IEventData;
 
 	class Engine final : public GLFWGame
 	{
@@ -29,18 +31,18 @@ class GLRenderer;
 		void OnMouseAction(int key, int action)override;
 		void OnCursorMoved(double x, double y)override;
 		inline GLWindowContext* GetWindowContext() { return m_CurrentContext; }
+		
 		std::shared_ptr<GameActor> GetActor(ActorID id);
-
-		//temps
-		std::shared_ptr<GameActor> CreateActor(int id,const std::string& name,const std::string& renderCompName,glm::vec3 pos,glm::vec3 scale,float radius = 1.0f);
-		std::shared_ptr<PawnActor> CreatePawnActor(int id, const std::string& name, const std::string& renderCompName, glm::vec3 pos, glm::vec3 scale, float radius = 1.0f);
-		std::shared_ptr<BaseNode> GetBaseNode(std::shared_ptr<GameActor> actor);
-
+		
+		void AddActor(std::shared_ptr<GameActor> newActor) { m_Actors.push_back(newActor); }
+		
 		void PrepareScene();
+
 	private:
 
 		std::shared_ptr<GLRenderer> m_Renderer;
 		Scene * m_Scene;
 		std::vector< std::shared_ptr<GameActor> > m_Actors;
 		TextRenderer* m_Text;
+		float deltaScale;
 	};

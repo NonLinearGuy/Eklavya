@@ -53,5 +53,5 @@
 
 	void Logger::LogToConsole(const char* pFormat, ...)
 	{
-		fprintf(stderr,pFormat);
+		printf(pFormat);
 	}

@@ -25,7 +25,8 @@ void InputHandler::OnMouseAction(int key, int action)
 
 void InputHandler::OnKeyAction(int key, int action)
 {
-	m_KeyStates[key] = GLFW_PRESS == action ? true : false;
+	if (action == GLFW_PRESS) m_KeyStates[key] = true;
+	if (action == GLFW_RELEASE) m_KeyStates[key] = false;
 
 	for (auto listener : m_Listeners)
 		listener->OnKeyAction(key,action);

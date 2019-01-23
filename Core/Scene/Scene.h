@@ -10,6 +10,7 @@ class Engine;
 class DebugCamera;
 class BaseNode;
 class GLRenderer;
+class IEventData;
 
 struct LightSource
 {
@@ -32,6 +33,9 @@ public:
 	void AddChild(std::shared_ptr<BaseNode> pNewNode);
 	void RemoveChild(std::shared_ptr<BaseNode> pNode);
 	void Render(ERenderPass renderPass);
+
+	//Listeners
+	void OnActorCreated(std::shared_ptr<IEventData> data);
 
 
 	inline std::shared_ptr<DebugCamera> GetCamera() { return m_Camera; }

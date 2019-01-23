@@ -8,6 +8,9 @@
 #include "WaterNode.h"
 #include "../Helpers.h"
 #include "BoundingVolume.h"
+#include "../Event/EventDispatcher.h"
+#include "../Event/Events.h"
+#include <functional>
 
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
@@ -54,13 +57,22 @@ void Scene::Init()
 	m_LightSource.m_Position = glm::vec3(glm::vec3(-150.0f, 100.0f, 100.0f));
 
 	float aspectRatio = m_EngineRef->GetCurrentContext()->GetAspectRatio();
-	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 500.0f);
+	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 1000.0f);
 	m_Camera->Init();
 	m_WaterNode = std::make_shared<WaterNode>();
 	m_WaterNode->Init();
 
 	AddChild(m_WaterNode);
 	AddChild(m_Camera);
+
+
+
+	RegisterToEvent<Scene>(this,&Scene::OnActorCreated,EEventType::ACTOR_CREATED);
+}
+
+void Scene::OnActorCreated(std::shared_ptr<IEventData> data)
+{
+
 }
 
 void Scene::Destroy()

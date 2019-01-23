@@ -11,7 +11,7 @@ class GameActor;
 class BaseComponent
 {
 public:
-	explicit BaseComponent();
+	BaseComponent();
 	virtual ~BaseComponent();
 
 	virtual ComponentID GetID() = 0;

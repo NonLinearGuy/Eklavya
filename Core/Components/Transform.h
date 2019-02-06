@@ -29,7 +29,9 @@ public:
 
 	glm::vec3 TransformToLocal(const glm::vec3& vertex);
 
+	glm::mat4 GetTRMatrix();
 	glm::mat4 GetModelMatrix();
+	glm::mat4 GetRotationMatrix();
 
 	ComponentID GetID()override { return s_ID; }
 	static ComponentID s_ID;

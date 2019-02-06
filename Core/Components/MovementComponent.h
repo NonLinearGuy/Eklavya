@@ -101,14 +101,9 @@ public:
 	void Tick(float deltaTime)override
 	{
 		static float angle = 0.0f;
-		angle += 1.0f * deltaTime;
+		angle += .3 * deltaTime;
 		auto transform = MakeSharedPtr(m_Owner->GetComponent<Transform>(Transform::s_ID));
-		glm::vec3 oldPosition = transform->GetPosition();
-		float y = 20 + 60 * sin(toPIE * (m_StartAngle + angle));
-		float z = 60 * cos(toPIE * (m_StartAngle + angle));
-		oldPosition.y = y;
-		oldPosition.z = z;
-		transform->SetPosition(oldPosition);
+		transform->SetRotation(glm::vec3(angle,0.0f,0.0f));
 	}
 
 private:

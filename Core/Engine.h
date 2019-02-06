@@ -16,6 +16,7 @@
 
 class GLRenderer;
 class IEventData;
+class DiagManager;
 
 	class Engine final : public GLFWGame
 	{
@@ -43,6 +44,7 @@ class IEventData;
 		std::shared_ptr<GLRenderer> m_Renderer;
 		Scene * m_Scene;
 		std::vector< std::shared_ptr<GameActor> > m_Actors;
-		TextRenderer* m_Text;
+		std::shared_ptr<TextRenderer> m_Text;
 		float deltaScale;
+		std::shared_ptr<DiagManager> m_Diagnostics;
 	};

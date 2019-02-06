@@ -144,7 +144,7 @@
 
 			if (*iter == '\n')
 			{
-				tempPos.y += pSize * 70.0f;
+				tempPos.y += pSize * 75.0f;
 				tempPos.x = pPosition.x;
 				continue;
 			}

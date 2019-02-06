@@ -43,3 +43,20 @@ void DefaultState::Exit()
 {
 
 }
+
+
+//UI
+
+void UIState::Enter()
+{
+	if (GL_FALSE == glIsEnabled(GL_BLEND))
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	}
+}
+
+void UIState::Exit()
+{
+	glDisable(GL_BLEND);
+}

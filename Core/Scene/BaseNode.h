@@ -10,8 +10,8 @@ enum ERenderGroup
 	MIN = 0,
 	SOLID = MIN,
 	WATER,
-	OUTLINED,
 	BOUND_VOLUME,
+	OUTLINED,
 	SKYBOX,
 	MAX
 };

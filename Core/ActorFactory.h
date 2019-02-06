@@ -18,5 +18,5 @@ private:
 public:
 	static void CreateSky();
 	static void CreateSphereCollider(const glm::vec3& center,float radius);
-	static void CreateBoxCollider(const glm::vec3& position, float scale);
+	static void CreateBoxCollider(const glm::vec3& position, const glm::vec3& halfSize);
 };

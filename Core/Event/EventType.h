@@ -3,8 +3,8 @@
 
 enum EEventType
 {
-	MIN = 0,
-	ACTOR_CREATED = MIN,
+	FIRST = 0,
+	ACTOR_CREATED = FIRST,
 	ACTOR_DESTROYED,
-	MAX
+	LAST
 };

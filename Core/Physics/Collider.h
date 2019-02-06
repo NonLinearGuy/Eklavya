@@ -3,10 +3,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <memory>
-#include <../Components/Transform.h>
-#include "../Components/BaseComponent.h"
 
-class RigidBody;
 class Texture2D;
 
 enum class EColliderType
@@ -18,25 +15,13 @@ enum class EColliderType
 	MAX
 };
 
-class ICollider : public BaseComponent
+class ICollider
 {
 public:
 	ICollider(EColliderType type);
 	virtual ~ICollider();
 	EColliderType GetType() { return m_Type; }
-
-	void Init()override;
-	void Tick(float delta)override;
-	void Destroy()override;
-
-	ComponentID GetID()override { return sID; }
-
-	glm::vec3 TransformToLocal(const glm::vec3& worldPos);
-	glm::vec3 GetPosition();
-	std::shared_ptr<RigidBody> GetBody() { return m_RigidBody; }
-protected:
-	static ComponentID sID;
-	std::shared_ptr<RigidBody> m_RigidBody;
+	protected:
 	EColliderType m_Type;
 };
 

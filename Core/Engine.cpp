@@ -9,12 +9,11 @@
 #include "Renderer/GLRenderer.h"
 #include "Physics/ProjectileComponent.h"
 #include "Physics/CollisionDetector.h"
-#include "Physics/RigidBody.h"
-#include "Physics/CollisionDetector.h"
 
 #include "ActorFactory.h"
 #include "Globals.h"
-
+#include "Event/EventDispatcher.h"
+#include "Debugging/Diagnostics.h"
 
 	Engine::Engine()
 	{
@@ -35,13 +34,16 @@
 		Logger::GetInstance()->Init("HIPHOP TEST");
 		Timer::GetInstance()->Reset();
 
-		m_Text = new TextRenderer("gothic");
+		m_Text = std::make_shared<TextRenderer>("gothic");
+		m_Diagnostics = std::make_shared<DiagManager>(m_Text);
 
 		m_Renderer = std::make_shared<GLRenderer>(m_CurrentContext);
 		m_Renderer->Initialize();
 
 		m_Scene = new Scene(this, m_Renderer, "TestScene");
 		m_Scene->Init();
+
+		PrepareScene();
 
 		deltaScale = 1.0f;
 
@@ -51,7 +53,11 @@
 
 	void Engine::PrepareScene()
 	{
-		
+		ActorFactory::CreateSky();
+		ActorFactory::CreateBoxCollider(glm::vec3(0.0f),glm::vec3(50.0f));
+		ActorFactory::CreateBoxCollider(glm::vec3(-60.0f,60.0f,0.0f), glm::vec3(50.0f));
+		ActorFactory::CreateBoxCollider(glm::vec3(60.0f,60.0f,0.0f), glm::vec3(50.0f));
+		ActorFactory::CreateBoxCollider(glm::vec3(-60.0f,-60.0f,0.0f), glm::vec3(50.0f));
 	}
 
 	void Engine::Tick()
@@ -59,12 +65,23 @@
 		Timer::GetInstance()->Update();
 		InputHandler::GetInstance()->PollKeyActions();
 		double dt = Timer::GetInstance()->GetDeltaTimeInSeconds();
+		int fps = Timer::GetInstance()->GetFramesPerSecond();
 
-		//Physics Engine Update
+		DiagManager::sGeneralDiagsMap[EMapKeys::KEY_FPS] = std::to_string(fps);
+		DiagManager::sGeneralDiagsMap[EMapKeys::KEY_DELTA] = std::to_string(dt);
 
-		//Render 3D
+		for (auto actor : m_Actors)
+			actor->Tick(dt);
 
-		//Render 2D on top
+		m_Scene->Tick(dt);
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		m_Renderer->RunAllPasses(m_Scene);
+		m_Scene->Render(ERenderPass::MAIN_PASS);
+
+		m_Renderer->ChangeState(new UIState());
+		m_Diagnostics->PostCurrent();
 		
 		m_CurrentContext->SwapBuffers();
 
@@ -102,6 +119,15 @@
 
 		if (key == GLFW_KEY_DELETE && action == GLFW_PRESS)
 			m_Scene->RemoveAnObject();
+
+		if (key == GLFW_KEY_DELETE && action == GLFW_PRESS)
+		{
+			auto actor = m_Actors.back();
+			auto data = std::make_shared<EventActorCreated>();
+			data->m_Actor = actor;
+
+			EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_DESTROYED, data);
+		}
 
 		InputHandler::GetInstance()->OnKeyAction(key, action);
 	}

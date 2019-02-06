@@ -34,3 +34,10 @@ public:
 	void Enter()override;
 	void Exit()override;
 };
+
+class UIState : public IRenderState
+{
+public:
+	void Enter()override;
+	void Exit()override;
+};

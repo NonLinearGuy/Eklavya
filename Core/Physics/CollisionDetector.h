@@ -30,6 +30,11 @@ private:
 class CollisionDetector
 {
 public:
+	//plane - box
+	//plane - sphere
+	//sphere - box
+	//sphere - sphere
+	//box - box
 	static bool BoxAndSphere(std::shared_ptr<BoxCollider> one, std::shared_ptr<SphereCollider> two);
 };
 

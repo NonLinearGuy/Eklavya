@@ -23,6 +23,8 @@
     <ProjectGuid>{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}</ProjectGuid>
     <RootNamespace>Core</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>
+    </ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -147,7 +149,9 @@
     <ClCompile Include="Components\BaseRenderComponent.cpp" />
     <ClCompile Include="Components\GameActor.cpp" />
     <ClCompile Include="Components\PawnActor.cpp" />
+    <ClCompile Include="Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
+    <ClCompile Include="Debugging\Diagnostics.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Event\EventDispatcher.cpp" />
     <ClCompile Include="glad.c" />
@@ -157,8 +161,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Physics\CollisionDetector.cpp" />
+    <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Physics\ProjectileComponent.cpp" />
-    <ClCompile Include="Physics\RigidBody.cpp" />
     <ClCompile Include="Renderer\Cubemap.cpp" />
     <ClCompile Include="Renderer\Framebuffer.cpp" />
     <ClCompile Include="Renderer\GLRenderer.cpp" />
@@ -168,6 +172,7 @@
     <ClCompile Include="Renderer\ShaderProgram.cpp" />
     <ClCompile Include="Renderer\Texture2D.cpp" />
     <ClCompile Include="Renderer\VertexArrayObject.cpp" />
+    <ClCompile Include="Scene\ArrowNode.cpp" />
     <ClCompile Include="Scene\BaseNode.cpp" />
     <ClCompile Include="Scene\BoundingVolume.cpp" />
     <ClCompile Include="Scene\BoxNode.cpp" />
@@ -189,7 +194,9 @@
     <ClInclude Include="Components\BaseRenderComponent.h" />
     <ClInclude Include="Components\MovementComponent.h" />
     <ClInclude Include="Components\PawnActor.h" />
+    <ClInclude Include="Components\RigidBodyComponent.h" />
     <ClInclude Include="Components\Transform.h" />
+    <ClInclude Include="Debugging\Diagnostics.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Event\EventDispatcher.h" />
     <ClInclude Include="Event\Events.h" />
@@ -201,8 +208,8 @@
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Physics\Constants.h" />
     <ClInclude Include="Physics\CollisionDetector.h" />
+    <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Physics\ProjectileComponent.h" />
-    <ClInclude Include="Physics\RigidBody.h" />
     <ClInclude Include="Renderer\Cubemap.h" />
     <ClInclude Include="Renderer\Framebuffer.h" />
     <ClInclude Include="Renderer\GLRenderer.h" />
@@ -212,6 +219,7 @@
     <ClInclude Include="Renderer\ShaderProgram.h" />
     <ClInclude Include="Renderer\Texture2D.h" />
     <ClInclude Include="Renderer\VertexArrayObject.h" />
+    <ClInclude Include="Scene\ArrowNode.h" />
     <ClInclude Include="Scene\BaseNode.h" />
     <ClInclude Include="Scene\BoundingVolume.h" />
     <ClInclude Include="Scene\BoxNode.h" />

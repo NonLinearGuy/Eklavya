@@ -42,3 +42,15 @@ glm::mat4 Transform::GetModelMatrix()
 
 	return translation * rotation * scale;
 }
+
+glm::mat4 Transform::GetRotationMatrix()
+{
+	return glm::toMat4(m_Rotation);
+}
+
+glm::mat4 Transform::GetTRMatrix()
+{
+	glm::mat4 rotation = glm::toMat4(m_Rotation);
+	glm::mat4 translation = glm::translate(glm::mat4(1.0f), m_Position);
+	return translation * rotation;
+}

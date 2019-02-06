@@ -36,6 +36,7 @@ public:
 
 	//Listeners
 	void OnActorCreated(std::shared_ptr<IEventData> data);
+	void OnActorDestroyed(std::shared_ptr<IEventData> data);
 
 
 	inline std::shared_ptr<DebugCamera> GetCamera() { return m_Camera; }

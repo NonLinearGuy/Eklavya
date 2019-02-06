@@ -28,3 +28,10 @@ public:
 protected:
 	std::shared_ptr<GameActor> m_Owner;
 };
+
+
+class AudioComponent : public BaseComponent
+{
+public:
+private:
+};

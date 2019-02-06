@@ -25,6 +25,12 @@
     <Filter Include="Event">
       <UniqueIdentifier>{51a4d1b3-7aef-4663-ba31-bfbd80afb690}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Debugging">
+      <UniqueIdentifier>{7ff563d9-0a64-4a6f-a36c-19b5b2d79e4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{e28487a1-bf35-4061-a7c7-79fdf3d7026d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\BaseComponent.cpp">
@@ -117,9 +123,6 @@
     <ClCompile Include="Physics\Collider.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
-    <ClCompile Include="Physics\RigidBody.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
     <ClCompile Include="Physics\CollisionDetector.cpp">
       <Filter>Physics</Filter>
     </ClCompile>
@@ -128,6 +131,18 @@
     </ClCompile>
     <ClCompile Include="ActorFactory.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Scene\ArrowNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\RigidBodyComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Debugging\Diagnostics.cpp">
+      <Filter>Debugging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -233,9 +248,6 @@
     <ClInclude Include="Physics\Collider.h">
       <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Physics\RigidBody.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Event\Events.h">
       <Filter>Event</Filter>
     </ClInclude>
@@ -247,6 +259,18 @@
     </ClInclude>
     <ClInclude Include="ActorFactory.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Scene\ArrowNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\RigidBodyComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Debugging\Diagnostics.h">
+      <Filter>Debugging</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt" />

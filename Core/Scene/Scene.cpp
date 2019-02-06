@@ -11,6 +11,11 @@
 #include "../Event/EventDispatcher.h"
 #include "../Event/Events.h"
 #include <functional>
+#include "../Components/BaseRenderComponent.h"
+#include "ArrowNode.h"
+
+
+#define DRAW_TRANSFORM
 
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
@@ -19,18 +24,8 @@ Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::s
 	m_TotalNodesCount(0),
 	m_CulledNodesCount(0)
 {
-}
-
-Scene::~Scene()
-{
-}
-
-void Scene::Init()
-{
 	m_Nodes.reserve(100);
 	m_Groups.reserve(ERenderGroup::MAX);
-
-	//! FOLLOW THE SAME ORDER AS ERenderGroup enum
 
 	std::shared_ptr<BaseNode> staticGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::SOLID);
 	m_Groups.push_back(staticGroup);
@@ -50,6 +45,20 @@ void Scene::Init()
 	glm::mat4 id = glm::mat4(1.0f);
 	m_MatrixStack.push(id);
 
+	RegisterToEvent<Scene>(this, &Scene::OnActorCreated, EEventType::ACTOR_CREATED);
+	RegisterToEvent<Scene>(this, &Scene::OnActorDestroyed, EEventType::ACTOR_DESTROYED);
+}
+
+Scene::~Scene()
+{
+	RegisterToEvent<Scene>(this, &Scene::OnActorCreated, EEventType::ACTOR_CREATED);
+	RegisterToEvent<Scene>(this, &Scene::OnActorDestroyed, EEventType::ACTOR_DESTROYED);
+}
+
+void Scene::Init()
+{
+
+
 	m_LightSource.m_Ambient = glm::vec3(1.0f);
 	m_LightSource.m_Diffuse = glm::vec3(.5f);
 	m_LightSource.m_Specular = glm::vec3(1.0f);
@@ -57,7 +66,7 @@ void Scene::Init()
 	m_LightSource.m_Position = glm::vec3(glm::vec3(-150.0f, 100.0f, 100.0f));
 
 	float aspectRatio = m_EngineRef->GetCurrentContext()->GetAspectRatio();
-	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 1000.0f);
+	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 10000.0f);
 	m_Camera->Init();
 	m_WaterNode = std::make_shared<WaterNode>();
 	m_WaterNode->Init();
@@ -65,14 +74,33 @@ void Scene::Init()
 	AddChild(m_WaterNode);
 	AddChild(m_Camera);
 
-
-
-	RegisterToEvent<Scene>(this,&Scene::OnActorCreated,EEventType::ACTOR_CREATED);
+	
 }
 
 void Scene::OnActorCreated(std::shared_ptr<IEventData> data)
 {
+	auto actor = std::static_pointer_cast<EventActorCreated>(data)->m_Actor;
+	auto baseNode = MakeSharedPtr(actor->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID))->GetBaseNode();
+	baseNode->Init();
+	AddChild(baseNode);
 
+#ifdef DRAW_TRANSFORM
+	if (baseNode->GetRenderGroup() != ERenderGroup::SKYBOX)
+	{
+		auto arrowNode = std::make_shared<ArrowNode>(actor->GetID());
+		arrowNode->Init();
+		AddChild(arrowNode);
+	}
+#endif
+	
+}
+
+
+void Scene::OnActorDestroyed(std::shared_ptr<IEventData> data)
+{
+	auto actor = std::static_pointer_cast<EventActorCreated>(data)->m_Actor;
+	auto baseNode = MakeSharedPtr(actor->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID))->GetBaseNode();
+	RemoveChild(baseNode);
 }
 
 void Scene::Destroy()
@@ -145,13 +173,7 @@ void Scene::MainPassRender()
 			m_Renderer->SetViewMatrix(view);
 			m_Renderer->SetShadowPassValues();
 			m_Renderer->SetLightValues(lightViewSpacePos,&m_LightSource);
-			m_Groups[groupIndex]->Render(this);
-			break;
-		case ERenderGroup::OUTLINED:
-			m_Renderer->SetShaderProgram(EShaderProgram::OUTLINED);
-			m_Renderer->SetProjectionMatrix(projection);
-			m_Renderer->SetViewMatrix(view);
-			m_Groups[ERenderGroup::OUTLINED]->Render(this);
+			m_Groups[ERenderGroup::SOLID]->Render(this);
 			break;
 		case ERenderGroup::WATER:
 			glEnable(GL_BLEND);
@@ -166,13 +188,24 @@ void Scene::MainPassRender()
 			m_Renderer->SetViewMatrix(view);
 			m_Groups[ERenderGroup::BOUND_VOLUME]->Render(this);
 			break;
+		case ERenderGroup::OUTLINED:
+			glDepthFunc(GL_ALWAYS);
+			glEnable(GL_LINE_WIDTH);
+			glLineWidth(3.0f);
+			m_Renderer->SetShaderProgram(EShaderProgram::OUTLINED);
+			m_Renderer->SetProjectionMatrix(projection);
+			m_Renderer->SetViewMatrix(view);
+			m_Groups[ERenderGroup::OUTLINED]->Render(this);
+			glDisable(GL_LINE_WIDTH);
+			glDepthFunc(GL_LEQUAL);
+			break;
 		case ERenderGroup::SKYBOX:
 			m_Renderer->SetShaderProgram(EShaderProgram::SKYBOX);
 			m_Renderer->SetProjectionMatrix(projection);
 			view = m_Camera->GetView();
 			m_Renderer->SetViewMatrix(view);
 			m_Renderer->ChangeState(new SkyBoxState());
-			m_Groups[groupIndex]->Render(this);
+			m_Groups[ERenderGroup::SKYBOX]->Render(this);
 			m_Renderer->ChangeState(new DefaultState());
 			break;
 		}

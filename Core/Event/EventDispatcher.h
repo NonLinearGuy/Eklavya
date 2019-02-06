@@ -21,7 +21,7 @@ public:
 
 	
 	void AddListener(Callback method,EEventType eventType);
-	void RemoveListener(Callback method,EEventType eventType = EEventType::MAX);
+	void RemoveListener(Callback method,EEventType eventType = EEventType::LAST);
 	void TriggerEvent(EEventType eventType,EventDataSharedPtr eventData);
 
 	~EventDispatcher();

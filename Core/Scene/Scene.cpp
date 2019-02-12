@@ -20,9 +20,7 @@
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
 	m_EngineRef(engineRef), 
-	m_Renderer(renderer),
-	m_TotalNodesCount(0),
-	m_CulledNodesCount(0)
+	m_Renderer(renderer)
 {
 	m_Nodes.reserve(100);
 	m_Groups.reserve(ERenderGroup::MAX);
@@ -60,10 +58,10 @@ void Scene::Init()
 
 
 	m_LightSource.m_Ambient = glm::vec3(1.0f);
-	m_LightSource.m_Diffuse = glm::vec3(.5f);
+	m_LightSource.m_Diffuse = glm::vec3(.8f);
 	m_LightSource.m_Specular = glm::vec3(1.0f);
 
-	m_LightSource.m_Position = glm::vec3(glm::vec3(-150.0f, 100.0f, 100.0f));
+	m_LightSource.m_Position = glm::vec3(glm::vec3(-250.0f, 200.0f, 200.0f));
 
 	float aspectRatio = m_EngineRef->GetCurrentContext()->GetAspectRatio();
 	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 10000.0f);
@@ -122,17 +120,9 @@ void Scene::AddChild(std::shared_ptr<BaseNode> pNewNode)
 	auto group = pNewNode->GetRenderGroup();
 	if (group >= ERenderGroup::MIN && group < ERenderGroup::MAX && m_Groups[group])
 	{
-		m_TotalNodesCount++;
 		m_Nodes.push_back(pNewNode);
 		m_Groups[group]->AddChild(pNewNode);
 	}
-}
-
-
-void Scene::RemoveAnObject()
-{
-	auto lastObject = m_Nodes.at(m_Nodes.size() - 1);
-	RemoveChild(lastObject);
 }
 
 
@@ -148,7 +138,6 @@ void Scene::RemoveChild(std::shared_ptr<BaseNode> pNode)
 		auto group = pNode->GetRenderGroup();
 		removed = m_Groups[group]->RemoveChild(pNode);
 		assert(removed);
-		m_TotalNodesCount--;
 	}
 }
 
@@ -246,17 +235,14 @@ void Scene::Render(ERenderPass pass)
 	switch (pass)
 	{
 	case ERenderPass::SHADOW_PASS:
-		m_CulledNodesCount = 0;
 		m_ShouldSetMaterial = false;
 		ShadowPassRender();
 		break;
 	case ERenderPass::MAIN_PASS:
-		m_CulledNodesCount = 0;
 		m_ShouldSetMaterial = true;
 		MainPassRender();
 		break;
 	case ERenderPass::WATER_TEXTURE_PASS:
-		m_CulledNodesCount = 0;
 		m_ShouldSetMaterial = true;
 		WaterPassRender();
 		break;

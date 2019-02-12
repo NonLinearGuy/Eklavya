@@ -7,16 +7,31 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Local|Win32 = Local|Win32
+		Local|x64 = Local|x64
+		Local|x86 = Local|x86
+		Release|Win32 = Release|Win32
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Debug|Win32.Build.0 = Debug|Win32
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Debug|x64.ActiveCfg = Debug|x64
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Debug|x64.Build.0 = Debug|x64
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Debug|x86.ActiveCfg = Debug|Win32
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Debug|x86.Build.0 = Debug|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Local|Win32.ActiveCfg = Local|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Local|Win32.Build.0 = Local|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Local|x64.ActiveCfg = Local|x64
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Local|x64.Build.0 = Local|x64
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Local|x86.ActiveCfg = Local|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Local|x86.Build.0 = Local|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Release|Win32.ActiveCfg = Release|Win32
+		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Release|Win32.Build.0 = Release|Win32
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Release|x64.ActiveCfg = Release|x64
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Release|x64.Build.0 = Release|x64
 		{A16814FB-2572-4CBB-8C01-9E71E4CD1FE6}.Release|x86.ActiveCfg = Release|Win32

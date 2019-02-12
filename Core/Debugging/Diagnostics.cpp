@@ -16,8 +16,18 @@ DiagManager::DiagManager(std::shared_ptr<TextRenderer> Text)
 	
 	for (int keyIndex = 0; keyIndex < EMapKeys::KEY_MAX; ++keyIndex)
 		m_KeyStrings.push_back("");
+	
+	//General
 	m_KeyStrings[EMapKeys::KEY_FPS] = "Fps";
 	m_KeyStrings[EMapKeys::KEY_DELTA] = "Delta";
+
+
+	//Scene Graph 
+	m_KeyStrings[EMapKeys::KEY_COLLIDERS] = "Colliders";
+	//Scene Graph
+	m_KeyStrings[EMapKeys::KEY_CULLED_OBJECT_COUNT] = "Node Culled";
+	m_KeyStrings[EMapKeys::KEY_SOLID_GROUP_OBJECTS_COUNT] = "Total Solids";
+
 }
 
 DiagManager::~DiagManager()
@@ -29,8 +39,8 @@ void DiagManager::OnKeyAction(int key, int action)
 {
 	if (action == GLFW_PRESS)
 	{
-		if (GLFW_KEY_PAGE_UP == key) --m_CurrentTab;
-		if (GLFW_KEY_PAGE_DOWN == key) ++m_CurrentTab;
+		if (GLFW_KEY_PAGE_DOWN == key) --m_CurrentTab;
+		if (GLFW_KEY_PAGE_UP == key) ++m_CurrentTab;
 		m_CurrentTab = (m_CurrentTab < 0) ? ETabs::TAB_MAX - 1 : (m_CurrentTab % ETabs::TAB_MAX);
 	}
 }
@@ -41,21 +51,21 @@ void DiagManager::PostCurrent()
 	switch (m_CurrentTab)
 	{
 	case ETabs::GENERAL:
-		m_Stream << "*******************GENERAL******************\n";
+		m_Stream << "[     GENERAL    ]\n\n";
 		PostGeneralDiags();
 		break;
 	case ETabs::PHYSICS:
-		m_Stream << "*******************PHYSICS******************\n";
+		m_Stream << "[     PHYSICS    ]\n\n";
 		PostPhysicsDiags();
 		break;
 	case ETabs::SCENE_GRAPH:
-		m_Stream << "*******************SCENE GRAPH******************\n";
+		m_Stream << "[      SCENE GRAPH     ] \n\n";
 		PostSceneGraphDiags();
 		break;
 	};
-
-	m_TextRenderer->Text(glm::vec2(200.0f,50.0f), 2.0f, glm::vec3(1.0f, 0.0f, 0.0f), m_Stream.str().c_str());
-	m_Stream << "\n______________________________________________";
+	m_Stream << "=======================";
+	m_TextRenderer->Text(glm::vec2(20.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), m_Stream.str().c_str());
+	
 }
 
 void DiagManager::PostGeneralDiags()

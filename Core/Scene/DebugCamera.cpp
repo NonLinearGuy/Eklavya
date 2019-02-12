@@ -20,7 +20,7 @@ DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	m_Position(0.0f,150.0f,200.0f),
 	m_Front(0.0f,-0.5f,-1.0f),
 	m_CursorStartedMoving(true),
-	m_Speed(150),
+	m_Speed(450),
 	m_LastCursorX(0),m_LastCursorY(0),
 	m_View(1.0f),
 	m_Projection(glm::perspective(fov,ratio,nearDist,farDist)),

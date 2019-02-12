@@ -116,7 +116,7 @@ void BoxColliderRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			m_BaseNode = std::make_shared<BoxNode>(m_Owner->GetID(), weakThis, ERenderGroup::BOUND_VOLUME);
+			m_BaseNode = std::make_shared<BoxNode>(m_Owner->GetID(), weakThis, ERenderGroup::SOLID);
 		}
 	}
 }
@@ -147,7 +147,7 @@ void SphereColliderRenderComponent::CreateBaseNode()
 		if (sharedTransform)
 		{
 			BaseRenderComponent* weakThis(this);
-			m_BaseNode = std::make_shared<SphereNode>(m_Owner->GetID(), weakThis, ERenderGroup::BOUND_VOLUME);
+			m_BaseNode = std::make_shared<SphereNode>(m_Owner->GetID(), weakThis, ERenderGroup::SOLID);
 		}
 	}
 }

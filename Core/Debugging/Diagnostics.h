@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include "../UserInputListener.h"
+#include "../Globals.h"
 
 class TextRenderer;
 
@@ -24,6 +25,12 @@ enum EMapKeys
 	KEY_FPS = 0,
 	KEY_DELTA,
 
+	//PHYSICS,
+	KEY_COLLIDERS,
+	//SCENE GRAPH
+	KEY_CULLED_OBJECT_COUNT,
+	KEY_SOLID_GROUP_OBJECTS_COUNT,
+	KEY_BOUND_VOLUME_GROUP_COUNT,
 	KEY_MAX
 };
 
@@ -35,6 +42,7 @@ public:
 	void OnKeyAction(int key, int action)override;
 	void PostCurrent();
 public:
+	//inline static void SetKeyData(EMapKeys key);
 	static std::map<EMapKeys, std::string> sSceneDiagsMap;
 	static std::map<EMapKeys, std::string> sPhysicsDiagsMap;
 	static std::map<EMapKeys, std::string> sGeneralDiagsMap;
@@ -48,3 +56,6 @@ private:
 	std::stringstream m_Stream;
 	std::vector<std::string> m_KeyStrings;
 };
+
+
+						

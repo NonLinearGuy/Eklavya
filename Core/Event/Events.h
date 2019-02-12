@@ -23,3 +23,10 @@ class EventActorDestroyed : public IEventData
 public:
 	std::shared_ptr<GameActor> m_GameActor;
 };
+
+class EventCollision : public IEventData
+{
+public:
+	std::string m_FirstName;
+	std::string m_SecondName;
+};

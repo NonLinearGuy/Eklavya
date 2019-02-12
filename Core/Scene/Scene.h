@@ -20,6 +20,7 @@ struct LightSource
 	glm::vec3 m_Ambient;
 };
 
+
 class Scene
 {
 public:
@@ -54,14 +55,6 @@ public:
 	void PopMatrix() { m_MatrixStack.pop(); }
 
 	inline LightSource& GetLightSource() { return m_LightSource; }
-
-	//for debugging
-	inline int GetCulledCount() { return m_CulledNodesCount; }
-	inline int GetTotalCount() { return m_TotalNodesCount; }
-	
-	inline void ScaleCullNotCount(int value) { m_CulledNodesCount += value; }
-
-	void RemoveAnObject();
 
 private:
 	/* 
@@ -113,8 +106,6 @@ private:
 	
 	std::vector< std::shared_ptr<BaseNode> > m_Nodes;
 	
-	//for debugging
-	int m_TotalNodesCount;
-	int m_CulledNodesCount;
+
 };
 

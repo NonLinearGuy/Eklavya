@@ -68,7 +68,7 @@ bool GLRenderer::Initialize()
 	m_ActiveProgram->Use();
 
 
-	auto shadowPass = new ShadowMapPass(this,32,1024 * 2.0f, 1024 * 2.0f);
+	auto shadowPass = new ShadowMapPass(this,32,1024 * 3.0f, 1024 * 3.0f);
 	shadowPass->Init();
 	auto refractionPass = new WaterTexturePass(this,false,glm::vec4(0.0f,-1.0f,0.0f,10.0f),m_Context->GetWidth(),m_Context->GetHeight());
 	refractionPass->Init();

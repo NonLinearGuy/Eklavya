@@ -101,7 +101,7 @@ public:
 	void Tick(float deltaTime)override
 	{
 		static float angle = 0.0f;
-		angle += .3 * deltaTime;
+		angle += 1.0f * deltaTime;
 		auto transform = MakeSharedPtr(m_Owner->GetComponent<Transform>(Transform::s_ID));
 		transform->SetRotation(glm::vec3(angle,0.0f,0.0f));
 	}

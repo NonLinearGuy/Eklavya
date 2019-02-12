@@ -91,6 +91,10 @@ void BaseNode::RenderChildren(Scene* scene)
 		{
 			child->Render(scene);
 		}
+		else
+		{
+			
+		}
 		child->PostRender(scene);
 	}
 }

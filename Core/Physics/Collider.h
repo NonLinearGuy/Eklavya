@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-class Texture2D;
+class RigidBodyComponent;
 
 enum class EColliderType
 {
@@ -21,8 +21,11 @@ public:
 	ICollider(EColliderType type);
 	virtual ~ICollider();
 	EColliderType GetType() { return m_Type; }
+	inline void SetBody(std::shared_ptr<RigidBodyComponent> pBody) { m_Body = pBody; }
+	inline std::shared_ptr<RigidBodyComponent> GetBody() { return m_Body; }
 	protected:
 	EColliderType m_Type;
+	std::shared_ptr<RigidBodyComponent> m_Body;
 };
 
 

@@ -56,6 +56,11 @@ void BaseNode::SetTransform(const glm::mat4& toWorld)
 	m_ToWorld = toWorld;
 }
 
+void BaseNode::SetColor(glm::vec3 color)
+{
+	m_Material->SetDiffuse(color);
+}
+
 void BaseNode::PreRender(Scene *scene)
 {
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);

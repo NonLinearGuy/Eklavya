@@ -2,10 +2,14 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 
 //Forward Declarations
 class ICollider;
 class IEventData;
+
+//REMOVE IT LATER!!
+class BaseNode;
 
 class Physics
 {
@@ -17,4 +21,7 @@ public:
 	void Simulate(float delta);
 private:
 	std::vector< std::shared_ptr<ICollider> > m_Colliders;
+	std::map< std::shared_ptr<ICollider>,std::shared_ptr<BaseNode>> m_BaseNodeMap;
+
+	
 };

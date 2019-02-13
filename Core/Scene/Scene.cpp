@@ -49,8 +49,8 @@ Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::s
 
 Scene::~Scene()
 {
-	RegisterToEvent<Scene>(this, &Scene::OnActorCreated, EEventType::ACTOR_CREATED);
-	RegisterToEvent<Scene>(this, &Scene::OnActorDestroyed, EEventType::ACTOR_DESTROYED);
+	UnRegisterToEvent<Scene>(this, &Scene::OnActorCreated, EEventType::ACTOR_CREATED);
+	UnRegisterToEvent<Scene>(this, &Scene::OnActorDestroyed, EEventType::ACTOR_DESTROYED);
 }
 
 void Scene::Init()

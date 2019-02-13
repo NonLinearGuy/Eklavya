@@ -56,7 +56,7 @@ public:
 
 	void SetAlbedoName(std::string name) { m_AlbedoName = name; }
 	void SetNormalName(std::string name) { m_NormalName = name; }
-	void SetColor(glm::vec3 color) { m_Color = color; }
+	void SetColor(glm::vec3 color);
 	void SetOpacity(float opacity) { m_Opacity = opacity; }
 protected:
 	

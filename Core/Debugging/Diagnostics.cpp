@@ -21,9 +21,11 @@ DiagManager::DiagManager(std::shared_ptr<TextRenderer> Text)
 	m_KeyStrings[EMapKeys::KEY_FPS] = "Fps";
 	m_KeyStrings[EMapKeys::KEY_DELTA] = "Delta";
 
-
-	//Scene Graph 
+	//Physics 
 	m_KeyStrings[EMapKeys::KEY_COLLIDERS] = "Colliders";
+	m_KeyStrings[EMapKeys::KEY_INTERPEN] = "Penetration";
+	m_KeyStrings[EMapKeys::KEY_NORMAL] = "Normal";
+	m_KeyStrings[EMapKeys::KEY_CONTACT_POINT] = "Contact Point";
 	//Scene Graph
 	m_KeyStrings[EMapKeys::KEY_CULLED_OBJECT_COUNT] = "Node Culled";
 	m_KeyStrings[EMapKeys::KEY_SOLID_GROUP_OBJECTS_COUNT] = "Total Solids";

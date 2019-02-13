@@ -8,11 +8,14 @@
 #include "Collider.h"
 #include "../Debugging/Diagnostics.h"
 #include "CollisionDetector.h"
+#include "../Components/BaseRenderComponent.h"
+#include "../Scene/BaseNode.h"
 
 Physics::Physics()
 {
 	RegisterToEvent<Physics>(this,&Physics::OnActorCreated,EEventType::ACTOR_CREATED);
 	RegisterToEvent<Physics>(this, &Physics::OnActorDestroyed, EEventType::ACTOR_DESTROYED);
+
 }
 
 Physics::~Physics()
@@ -28,9 +31,16 @@ void Physics::OnActorCreated(std::shared_ptr<IEventData> data)
 	if (body)
 	{
 		auto collider = body->GetCollider();
-		if(collider)
+		if (collider)
+		{
 			m_Colliders.push_back(collider);
+			auto baseNode = MakeSharedPtr(actor->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID))->GetBaseNode();
+			m_BaseNodeMap[collider] = baseNode;
+		}
 	}
+
+	
+
 }
 
 void Physics::OnActorDestroyed(std::shared_ptr<IEventData> data)
@@ -54,56 +64,39 @@ void Physics::Simulate(float delta)
 {
 	DiagManager::sPhysicsDiagsMap[EMapKeys::KEY_COLLIDERS] = std::to_string(m_Colliders.size());
 	
+	int counter = 0;
 	//Generate Contacts
-	for (auto first : m_Colliders)
+	std::vector<ContactData> m_Contacts;
+
+	for (auto first = m_Colliders.begin(); first != m_Colliders.end() ;  ++first)
 	{
-		for (auto second : m_Colliders)
+		for (auto second = m_Colliders.begin(); second != m_Colliders.end();  ++second)
 		{
-			if (first == second) continue;
+			if (*first == *second) continue;
 
-			if (first->GetType() == EColliderType::SPHERE && second->GetType() == EColliderType::BOX)
+			auto firstCollider = *first;
+			auto secondCollider = *second;
+
+			if (firstCollider->GetType() == EColliderType::SPHERE && secondCollider->GetType() == EColliderType::SPHERE)
 			{
-				auto box = std::static_pointer_cast<BoxCollider>(second);
-				auto sphere = std::static_pointer_cast<SphereCollider>(first);
-				if (CollisionDetector::BoxAndSphere(box, sphere))
+				auto sphere1 = std::static_pointer_cast<SphereCollider>(firstCollider);
+				auto sphere2 = std::static_pointer_cast<SphereCollider>(secondCollider);
+				
+				if (ContactGenerator::SphereAndSphere(sphere1, sphere2,m_Contacts))
 				{
-					box->GetBody()->SetSleep(true);
-					sphere->GetBody()->SetSleep(true);
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f,0.0f,0.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//sphere1->GetBody()->SetSleep(true);
+					//sphere2->GetBody()->SetSleep(true);
+				}
+				else
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				}
 			}
 
-			if (first->GetType() == EColliderType::BOX && second->GetType() == EColliderType::SPHERE)
-			{
-				auto box = std::static_pointer_cast<BoxCollider>(first);
-				auto sphere = std::static_pointer_cast<SphereCollider>(second);
-				if (CollisionDetector::BoxAndSphere(box, sphere))
-				{
-					box->GetBody()->SetSleep(true);
-					sphere->GetBody()->SetSleep(true);
-				}
-			}
-
-			if (first->GetType() == EColliderType::SPHERE && second->GetType() == EColliderType::SPHERE)
-			{
-				auto sphere1 = std::static_pointer_cast<SphereCollider>(first);
-				auto sphere2 = std::static_pointer_cast<SphereCollider>(second);
-				if (CollisionDetector::SphereAndSphere(sphere1, sphere2))
-				{
-					sphere1->GetBody()->SetSleep(true);
-					sphere2->GetBody()->SetSleep(true);
-				}
-			}
-
-			if (first->GetType() == EColliderType::BOX && second->GetType() == EColliderType::BOX)
-			{
-				auto box1 = std::static_pointer_cast<BoxCollider>(first);
-				auto box2 = std::static_pointer_cast<BoxCollider>(second);
-				if (CollisionDetector::BoxAndBox(box1, box2))
-				{
-					box1->GetBody()->SetSleep(true);
-					box2->GetBody()->SetSleep(true);
-				}
-			}
+			counter++;
 		}
 	}
 

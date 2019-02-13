@@ -11,6 +11,8 @@
 
 ActorID ActorFactory::s_ActorIDCount = 0;
 
+const float SPEED = .01;
+
 void ActorFactory::CreateSky()
 {
 	auto sky = std::make_shared<GameActor>("Sky", s_ActorIDCount);
@@ -31,7 +33,7 @@ void ActorFactory::CreateSky()
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED,data);
 }
 
-void ActorFactory::CreateSphereCollider(const glm::vec3 & center, float radius)
+void ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, glm::vec3 direction)
 {
 	std::string name = "SphereCollider#" + std::to_string(s_ActorIDCount);
 	ActorID id = s_ActorIDCount;
@@ -47,15 +49,15 @@ void ActorFactory::CreateSphereCollider(const glm::vec3 & center, float radius)
 	renderComponent->SetColor(glm::vec3(1.0f));
 	newActor->AddComponent(renderComponent);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
+	renderComponent->GetBaseNode()->SetAlbedoName("ornament.jpg");
 
 	auto collider = std::make_shared<SphereCollider>();
 	collider->SetRadius(radius);
 	auto rbComp = std::make_shared<RigidBodyComponent>(collider);
 	collider->SetBody(rbComp);
 	rbComp->SetPos(center);
-	rbComp->SetVel(glm::vec3(0.0f, -50.0f, 0.0f));
-	rbComp->SetAccel(glm::vec3(0.0f, -50.0f, 0.0f));
+	rbComp->SetVel(SPEED * direction);
+	rbComp->SetAccel(direction);
 	rbComp->SetInverseMass(radius * radius);
 	rbComp->SetOwner(newActor);
 	newActor->AddComponent(rbComp);
@@ -68,7 +70,7 @@ void ActorFactory::CreateSphereCollider(const glm::vec3 & center, float radius)
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
 }
 
-void ActorFactory::CreateBoxCollider(const glm::vec3& position, const glm::vec3& halfSize, const glm::vec3& rotation,bool movement)
+void ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& halfSize, const glm::vec3& rotation, glm::vec3 direction,bool movement)
 {
 	std::string name = "BoxCollider#" + std::to_string(s_ActorIDCount);
 	ActorID id = s_ActorIDCount;
@@ -94,8 +96,8 @@ void ActorFactory::CreateBoxCollider(const glm::vec3& position, const glm::vec3&
 		rbComp->SetPos(position);
 		rbComp->SetRotation(rotation);
 		rbComp->SetInverseMass(40.0f);
-		rbComp->SetVel(glm::vec3(0.0f, -100.0f, 0.0f));
-		rbComp->SetAccel(glm::vec3(0.0f,-100.0f, 0.0f));
+		rbComp->SetVel(SPEED * direction);
+		rbComp->SetAccel(direction);
 		rbComp->SetOwner(newActor);
 		if (!movement)
 			rbComp->SetSleep(true);

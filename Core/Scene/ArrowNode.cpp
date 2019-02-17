@@ -62,7 +62,7 @@ void ArrowNode::PreRender(Scene* scene)
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
 
 	float length = glm::length(scene->GetCamera()->GetPosition() - transform->GetPosition()) * .05f;
-	if (length > 10.0f) length = 10.0f;
+	if (length > 40.0f) length = 40.0f;
 	m_ToWorld =  glm::scale(transform->GetTRMatrix(), glm::vec3(length));
 	
 	scene->PushMatrix(m_ToWorld);

@@ -17,6 +17,11 @@ public:
 	float	  m_PenetrationDepth;
 	std::shared_ptr<RigidBodyComponent> m_BodyA;
 	std::shared_ptr<RigidBodyComponent> m_BodyB;
+	glm::vec3 m_DesiredDeltaVel;
+	/*holds relative position from center of both bodies*/
+	glm::vec3 m_RelContactPositions[2];
+	glm::mat3 m_ContactToWorld;
+	void CalculateContactToWorld();
 };
 
 
@@ -39,16 +44,17 @@ private:
 class ContactGenerator
 {
 public:
-	static bool SphereAndBox(std::shared_ptr<BoxCollider> box,
-		std::shared_ptr<SphereCollider> sphere,
-		std::vector<ContactData>& pContacts
-		);
-
+	
 	static bool SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne,
 		std::shared_ptr<SphereCollider> sphereTwo,
 		std::vector<ContactData>& pContacts
 	);
 
+	static bool SphereAndBox(std::shared_ptr<BoxCollider> box,
+		std::shared_ptr<SphereCollider> sphere,
+		std::vector<ContactData>& pContacts
+	);
+	
 };
 
 #endif

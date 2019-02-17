@@ -11,13 +11,23 @@ unsigned int RigidBodyComponent::s_ID = 7;
 
 RigidBodyComponent::RigidBodyComponent(std::shared_ptr<ICollider> pCollider)
 	:
-	m_Rotation(glm::vec3(0.0f)),
+	m_Collider(pCollider),
+	m_IsAwake(false),
+	m_InverseMass(1.0f),
+	m_Forces(0.0f),
+	m_Torques(0.0f,0.0f,0.0f),
+	//Linear
 	m_Position(0.0f,0.0f,0.0f),
 	m_LinearVelocity(0.0f,0.0f,0.0f),
 	m_LinearAcceleration(0.0f,0.0f,0.0f),
-	m_Collider(pCollider),
-	m_Sleep(false),
+	//angular
+	m_Orientation(glm::vec3(0.0f)),
+	m_Rotation(0.0f),
+	//matrices
+	m_InverseTensor(1.0f),
+	m_InverseTensorWorld(1.0f),
 	m_TransformMatrix(1.0f)
+
 {
 }
 
@@ -36,18 +46,29 @@ void RigidBodyComponent::Destroy()
 
 void RigidBodyComponent::UpdateData()
 {
-	glm::mat4 rotation = glm::toMat4(m_Rotation);
+	m_Orientation = glm::normalize(m_Orientation);
+
+	glm::mat4 orientation = glm::toMat4(m_Orientation);
 	glm::mat4 translation = glm::translate(glm::mat4(1.0f), m_Position);
-	m_TransformMatrix = translation * rotation;
+	m_TransformMatrix = translation * orientation;
+
+	//Recalculating inverse tensor
+	m_InverseTensorWorld = glm::mat3(orientation) * m_InverseTensor;
+
+	//updating matrices for rendering
+	auto transform = MakeSharedPtr(m_Owner->GetComponent<Transform>(Transform::s_ID));
+	transform->SetPosition(m_Position);
+	transform->SetRotation(m_Orientation);
 }
-
-
 
 glm::vec3 RigidBodyComponent::GetPointInLocalSpace(const glm::vec3& point)
 {
-	auto transform = MakeSharedPtr(m_Owner->GetComponent<Transform>(Transform::s_ID));
-	transform->SetPosition(m_Position);
-	return transform->TransformToLocal(point);
+	return glm::inverse(m_TransformMatrix) * glm::vec4(point,1.0f);
+}
+
+glm::vec3 RigidBodyComponent::GetPointInWorldSpace(const glm::vec3& point)
+{
+	return m_TransformMatrix * glm::vec4(point, 1.0f);
 }
 
 glm::vec3 RigidBodyComponent::GetAxis(int index)
@@ -57,16 +78,84 @@ glm::vec3 RigidBodyComponent::GetAxis(int index)
 
 void RigidBodyComponent::Tick(float deltaTime)
 {
-	if (m_Sleep) {
+	if (!m_IsAwake) {
 		UpdateData();
 		return;
 	}
 
-	m_Position += m_LinearVelocity * deltaTime;
-	m_LinearVelocity += m_LinearAcceleration * deltaTime;
+	//m_LinearAcceleration += m_InverseMass;// *m_Forces;
+	m_LinearVelocity += m_LinearAcceleration * .033f;
+	m_Position += m_LinearVelocity * .033f; 
+	
+
+	glm::vec3 angularAcc = m_InverseTensorWorld * m_Torques;
+	m_Rotation += angularAcc * .033f;
+	glm::quat w(m_Rotation * .033f);
+	w.w = 0.0f;
+	w *= m_Orientation;
+	m_Orientation += (w * 0.5f);
 
 	UpdateData();
-	auto transform = MakeSharedPtr(m_Owner->GetComponent<Transform>(Transform::s_ID));
-	transform->SetPosition(m_Position);
 }
+
+void RigidBodyComponent::SetMass(float mass)
+{
+	assert(mass > 0.0f);
+	m_InverseMass = 1.0f / mass;
+	UpdateTensor();
+}
+
+void RigidBodyComponent::SetInverseMass(float inverseMass)
+{
+	m_InverseMass = inverseMass;
+	UpdateTensor();
+}
+
+
+void RigidBodyComponent::UpdateTensor()
+{
+	EColliderType type = m_Collider->GetType();
+
+	switch (type)
+	{
+	case EColliderType::SPHERE:
+		SetTensorForSphere();
+		break;
+	case EColliderType::BOX:
+		SetTensorForCuboid();
+		break;
+	default:
+		SetTensorIdentity();
+		break;
+	};
+}
+
+
+void RigidBodyComponent::SetTensorForSphere()
+{
+	glm::mat4 tensor(1.0f);
+	float radius = std::static_pointer_cast<SphereCollider>(m_Collider)->GetRadius();
+	float scalar = (2.0f / 5.0f) * m_InverseMass * radius * radius;
+	tensor[0][0] = tensor[1][1] = tensor[2][2] = scalar;
+	m_InverseTensor = glm::inverse(tensor);
+}
+
+void RigidBodyComponent::SetTensorForCuboid()
+{
+	glm::mat4 tensor(1.0f);
+	float scalar = (1.0f / 12.0f) * m_InverseMass;
+	glm::vec3 halfSize = std::static_pointer_cast<BoxCollider>(m_Collider)->GetHalfSize();
+
+	tensor[0][0] = scalar * (halfSize.y * halfSize.y + halfSize.z * halfSize.z);
+	tensor[1][1] = scalar * (halfSize.x * halfSize.x + halfSize.z * halfSize.z);
+	tensor[2][2] = scalar * (halfSize.x * halfSize.x + halfSize.y * halfSize.y);
+
+	m_InverseTensor = glm::inverse(tensor);
+}
+
+void RigidBodyComponent::SetTensorIdentity()
+{
+	m_InverseTensor = glm::mat4(1.0f);
+}
+
 

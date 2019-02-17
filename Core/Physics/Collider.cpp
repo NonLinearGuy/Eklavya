@@ -30,7 +30,6 @@ BoxCollider::~BoxCollider()
 void BoxCollider::SetHalfSize(glm::vec3 halfSize)
 {
 	m_HalfSize = glm::vec3(halfSize.x / 2.0f, halfSize.y / 2.0f, halfSize.z / 2.0f);
-	int a = 2 + 3;
 }
 
 

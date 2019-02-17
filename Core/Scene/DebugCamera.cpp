@@ -7,6 +7,10 @@
 #include "../Renderer/GLRenderer.h"
 #include "Frustum.h"
 #include "Scene.h"
+#include "../Debugging/Diagnostics.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include "../Utils/Logger.h"
 
 
 DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
@@ -24,7 +28,10 @@ DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	m_LastCursorX(0),m_LastCursorY(0),
 	m_View(1.0f),
 	m_Projection(glm::perspective(fov,ratio,nearDist,farDist)),
-	m_Debug(false)
+	m_Debug(false),
+	m_InterpSpeed(.1f),
+	m_Interpolating(false),
+	m_InterpWeight(0.0f)
 {
 
 }
@@ -78,6 +85,7 @@ void DebugCamera::PollKeyAction()
 {
 	float dt = Timer::GetInstance()->GetDeltaTimeInSeconds();
 	
+	if (m_Interpolating) return;
 	if (IsKeyPressed(GLFW_KEY_W))
 		Move(EDirection::UP,dt);
 	if (IsKeyPressed(GLFW_KEY_S))
@@ -98,7 +106,43 @@ void DebugCamera::OnKeyAction(int key, int action)
 			m_ToWorld = glm::inverse(m_View);
 		}
 	}
+
+	if (GLFW_KEY_I == key && GLFW_PRESS == action)
+	{
+		m_Interpolating = true;
+		m_InterpWeight = 0.0f;
+		m_CursorStartedMoving = false;
+	}
 }
+
+
+void DebugCamera::Tick(Scene* scene, float deltaTime)
+{
+	if (m_Interpolating)
+	{
+		m_InterpWeight += m_InterpSpeed * deltaTime;
+		m_Position = glm::mix(m_Position,glm::vec3(0.0f,300.0f,500.0f),m_InterpWeight);
+		auto orientation = glm::quat(m_Front);
+		auto result = glm::eulerAngles(glm::slerp(orientation, glm::quat(glm::vec3(0.0f, -.5f, -1.0f)), m_InterpWeight));
+		m_Front.x = result.x;
+		m_Front.y = result.y;
+		m_Front.z = result.z;
+		UpdateCamera();
+	
+		float insideSphere = glm::length2(glm::vec3(0.0f, 300.0f, 500.0f) - m_Position) < 10.0f;
+
+		if (insideSphere)
+		{
+			m_Interpolating = false;
+			m_InterpWeight = 0.0f;
+			m_Yaw = result.y;
+			m_Pitch = 180 - result.x;
+			
+			return;
+		}
+	}
+}
+
 
 void DebugCamera::PreRender(Scene* scene)
 {

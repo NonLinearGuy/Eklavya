@@ -142,10 +142,10 @@
 				center.y = 300.0f;
 				float radius = 50.0f;// Random::GetInstance()->Real(10.0f, 50.0f);
 				glm::vec3 direction(1.0f,0.0f,0.0f);
-				float distance = 200.0f;
+				float distance = 100.0f;
 
 				ActorFactory::CreateSphereCollider((direction * distance) + glm::vec3(0.0f,100.0f,0.0f), radius, (-1.0f * direction));
-				ActorFactory::CreateSphereCollider(((-1.0f * direction) * distance ) + glm::vec3(0.0f,100.0f,0.0f), radius,direction);
+				ActorFactory::CreateBoxCollider(((-1.0f * direction) * distance ) + glm::vec3(0.0f,100.0f,0.0f), glm::vec3(radius * 2.0f),glm::vec3(0.0f,0.0f,.5f),direction,true);
 			}
 		}
 		InputHandler::GetInstance()->OnKeyAction(key, action);

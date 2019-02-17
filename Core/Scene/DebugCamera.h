@@ -28,7 +28,7 @@ public:
 	void OnCursorMove(double x, double y) override;
 	void PollKeyAction() override;
 	void OnKeyAction(int key,int action)override;
-
+	void Tick(Scene* scene,float deltaTime)override;
 	void PreRender(Scene* scene)override;
 	void Render(Scene* scene)override;
 	void PostRender(Scene* scene)override;
@@ -60,6 +60,9 @@ private:
 	glm::mat4 m_View;
 	glm::mat4 m_Projection;
 	Frustum* m_Frustum;
+	bool m_Interpolating;
+	float m_InterpSpeed;
+	float m_InterpWeight;
 };
 
 #endif

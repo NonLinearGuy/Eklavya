@@ -11,7 +11,7 @@
 
 ActorID ActorFactory::s_ActorIDCount = 0;
 
-const float SPEED = .01;
+const float SPEED = .1f;
 
 void ActorFactory::CreateSky()
 {
@@ -49,17 +49,18 @@ void ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, gl
 	renderComponent->SetColor(glm::vec3(1.0f));
 	newActor->AddComponent(renderComponent);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("ornament.jpg");
+	renderComponent->GetBaseNode()->SetAlbedoName("pixar.jpg");
 
 	auto collider = std::make_shared<SphereCollider>();
 	collider->SetRadius(radius);
 	auto rbComp = std::make_shared<RigidBodyComponent>(collider);
+	rbComp->SetOwner(newActor);
 	collider->SetBody(rbComp);
 	rbComp->SetPos(center);
+	rbComp->SetInverseMass(1.0f);
 	rbComp->SetVel(SPEED * direction);
 	rbComp->SetAccel(direction);
-	rbComp->SetInverseMass(radius * radius);
-	rbComp->SetOwner(newActor);
+	rbComp->AddTorque(glm::vec3(100.0f,0.0f,1.0f));
 	newActor->AddComponent(rbComp);
 
 	g_Engine->AddActor(newActor);
@@ -70,7 +71,7 @@ void ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, gl
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
 }
 
-void ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& halfSize, const glm::vec3& rotation, glm::vec3 direction,bool movement)
+std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& halfSize, const glm::vec3& rotation, glm::vec3 direction,bool movement)
 {
 	std::string name = "BoxCollider#" + std::to_string(s_ActorIDCount);
 	ActorID id = s_ActorIDCount;
@@ -84,7 +85,10 @@ void ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& 
 	renderComponent = std::make_shared<BoxColliderRenderComponent>();
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("Debug.png");
+	if(!movement)
+		renderComponent->GetBaseNode()->SetAlbedoName("0.png");
+	else
+		renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
 	newActor->AddComponent(renderComponent);
 
 	//physics component
@@ -94,13 +98,15 @@ void ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& 
 		auto rbComp = std::make_shared<RigidBodyComponent>(collider);
 		collider->SetBody(rbComp);
 		rbComp->SetPos(position);
-		rbComp->SetRotation(rotation);
-		rbComp->SetInverseMass(40.0f);
 		rbComp->SetVel(SPEED * direction);
 		rbComp->SetAccel(direction);
+		rbComp->SetOrientation(rotation);
+		//rbComp->AddForce(glm::vec3(0.0f,-50.0f,0.0f));
+		rbComp->SetInverseMass(1.0f);
 		rbComp->SetOwner(newActor);
+		//rbComp->AddTorque(glm::vec3(0.0f,0.0f,1000.0f));
 		if (!movement)
-			rbComp->SetSleep(true);
+			rbComp->SetAwake(false);
 		newActor->AddComponent(rbComp);
 	
 	g_Engine->AddActor(newActor);
@@ -109,4 +115,6 @@ void ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& 
 	data->m_Actor = newActor;
 
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
+
+	return rbComp;
 }

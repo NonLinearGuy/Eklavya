@@ -56,6 +56,10 @@ void Physics::OnActorDestroyed(std::shared_ptr<IEventData> data)
 			if (iter != m_Colliders.end())
 				m_Colliders.erase(iter);
 		}
+		else
+		{
+			int a = 2 + 3;
+		}
 	}
 	//I DOUBLE DARE YOU TO USE iter AGAIN!!!!!!!!!!!!!!!!!!!
 }
@@ -86,7 +90,7 @@ void Physics::Simulate(float delta)
 				{
 					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f,0.0f,0.0f));
 					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//sphere1->GetBody()->SetSleep(true);
+				//	sphere1->GetBody()->SetSleep(true);
 					//sphere2->GetBody()->SetSleep(true);
 				}
 				else
@@ -96,6 +100,62 @@ void Physics::Simulate(float delta)
 				}
 			}
 
+			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::SPHERE)
+			{
+				auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
+				auto sphere2 = std::static_pointer_cast<SphereCollider>(secondCollider);
+
+				if (ContactGenerator::SphereAndBox(box1, sphere2, m_Contacts))
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					box1->GetBody()->SetAwake(false);
+					sphere2->GetBody()->SetAwake(true);
+				}
+				else
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+				}
+			}
+
+			if (firstCollider->GetType() == EColliderType::SPHERE && secondCollider->GetType() == EColliderType::BOX)
+			{
+				auto box = std::static_pointer_cast<BoxCollider>(secondCollider);
+				auto sphere = std::static_pointer_cast<SphereCollider>(firstCollider);
+
+				if (ContactGenerator::SphereAndBox(box, sphere, m_Contacts))
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					box->GetBody()->SetAwake(false);
+					sphere->GetBody()->SetAwake(false);
+				}
+				else
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+				}
+			}
+
+			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::BOX)
+			{
+				auto box1 = std::static_pointer_cast<BoxCollider>(secondCollider);
+				auto box2 = std::static_pointer_cast<BoxCollider>(firstCollider);
+
+				if (IntersectionTests::BoxAndBox(box1,box2))
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					box1->GetBody()->SetAwake(false);
+					box2->GetBody()->SetAwake(false);
+				}
+				else
+				{
+					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+				}
+			}
 			counter++;
 		}
 	}

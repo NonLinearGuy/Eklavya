@@ -28,6 +28,7 @@ public:
 	inline const glm::vec3& GetScale()const { return m_Scale; }
 
 	glm::vec3 TransformToLocal(const glm::vec3& vertex);
+	glm::vec3 TransformToWorld(const glm::vec3& vertex);
 
 	glm::mat4 GetTRMatrix();
 	glm::mat4 GetModelMatrix();

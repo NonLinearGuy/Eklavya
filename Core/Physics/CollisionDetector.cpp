@@ -65,13 +65,6 @@ bool IntersectionTests::SphereAndSphere(std::shared_ptr<SphereCollider> one, std
 
 //CONTACT GENERATION
 
-bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::shared_ptr<SphereCollider> sphere, std::vector<ContactData>& pContacts)
-{
-	//early test
-	ContactData newContactData;
-	return true;
-
-}
 
 bool ContactGenerator::SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne, std::shared_ptr<SphereCollider> sphereTwo, std::vector<ContactData>& pContacts)
 {
@@ -101,4 +94,41 @@ bool ContactGenerator::SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne
 	pContacts.push_back(newContact);
 
 	return true;
+}
+
+
+
+bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::shared_ptr<SphereCollider> sphere, std::vector<ContactData>& pContacts)
+{
+	//early test
+	if (!IntersectionTests::BoxAndSphere(box, sphere))
+		return false;
+
+	ContactData newContact;
+	newContact.m_BodyA = sphere->GetBody();
+	newContact.m_BodyA = box->GetBody();
+
+	glm::vec3 relativePos = box->GetBody()->GetPointInLocalSpace(sphere->GetBody()->GetAxis(3));
+	glm::vec3 halfSize = box->GetHalfSize();
+	glm::vec3 closestPoint = glm::clamp(relativePos,-1.0f * halfSize,halfSize);
+
+	glm::vec3  closestPointWorld = box->GetBody()->GetPointInWorldSpace(closestPoint);
+
+	newContact.m_Point = closestPointWorld;
+	newContact.m_Normal = glm::normalize(sphere->GetBody()->GetAxis(3) - closestPointWorld);
+	newContact.m_PenetrationDepth = sphere->GetRadius() - glm::length(closestPoint - relativePos);
+
+	pContacts.push_back(newContact);
+
+	std::stringstream ss;
+	ss << "(" << newContact.m_Point.x << "," << newContact.m_Point.y << "," << newContact.m_Point.z << ")";
+	DiagManager::sPhysicsDiagsMap[KEY_CONTACT_POINT] = ss.str();
+	ss.str("");
+	ss << "(" << newContact.m_Normal.x << "," << newContact.m_Normal.y << "," << newContact.m_Normal.z << ")";
+	DiagManager::sPhysicsDiagsMap[KEY_NORMAL] = ss.str();
+	DiagManager::sPhysicsDiagsMap[KEY_INTERPEN] = std::to_string(newContact.m_PenetrationDepth);
+	pContacts.push_back(newContact);
+
+	return true;
+
 }

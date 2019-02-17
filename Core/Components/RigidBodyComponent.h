@@ -21,41 +21,57 @@ public:
 	ComponentID GetID()override { return s_ID; }
 	static ComponentID s_ID;
 
-	inline void SetMass(float mass) 
-	{ 
-		assert(mass > .001f); 
-		m_InverseMass = 1.0f / mass; 
-	}
-	
-	inline void SetInverseMass(float mass) { m_InverseMass = mass; }
+	void SetMass(float mass);
+	void SetInverseMass(float inverseMass);
+	void UpdateTensor();
+
 	inline void SetPos(glm::vec3 pPosition) { m_Position = pPosition; }
-	inline void SetRotation(const glm::vec3& eulerAngles) { m_Rotation = glm::quat(eulerAngles);  }
+	inline void SetOrientation(const glm::vec3& eulerAngles) { m_Orientation = glm::quat(eulerAngles);  }
 	inline void SetVel(glm::vec3 pVelocity) { m_LinearVelocity = pVelocity; }
 	inline void SetAccel(glm::vec3 pAccel) { m_LinearAcceleration = pAccel; }
+
 	inline glm::vec3 GetPosition() { return m_Position; }
 	inline std::shared_ptr<ICollider> GetCollider() { return m_Collider; }
 
 	glm::vec3 GetPointInLocalSpace(const glm::vec3& point);
+	glm::vec3 GetPointInWorldSpace(const glm::vec3& point);
 	
-	inline void SetSleep(bool value) { m_Sleep = value; }
+	inline void SetAwake(bool isAwake) { m_IsAwake = isAwake; }
+
+	inline void AddTorque(glm::vec3 torque) { m_Torques += torque; m_IsAwake = true; }
+	inline void AddForce(glm::vec3 force) { m_Forces += force; m_IsAwake = true; }
 
 	glm::vec3 GetAxis(int index);
 
 private:
 
 	void UpdateData();
+	void SetTensorForSphere();
+	void SetTensorForCuboid();
+	void SetTensorIdentity();
 
+	//forces
+	glm::vec3 m_Torques;
+	glm::vec3 m_Forces;
+
+	//object props
+	float m_InverseMass;
+
+	//linear motion
 	glm::vec3 m_LinearVelocity;
 	glm::vec3 m_LinearAcceleration;
 	glm::vec3 m_Position;
-	glm::quat m_Rotation;
-	float m_InverseMass;
 
+	//Angular motion
+	
+	glm::vec3 m_Rotation;
+	glm::quat m_Orientation;
+	glm::mat3 m_InverseTensor;
+	glm::mat3 m_InverseTensorWorld;
+	
 	std::shared_ptr<ICollider> m_Collider;
 
 	glm::mat4 m_TransformMatrix;
-
-	bool m_Sleep;
-	
+	bool m_IsAwake;
 };
 

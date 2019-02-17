@@ -16,6 +16,7 @@
 #include "Debugging/Diagnostics.h"
 #include "Physics/Physics.h"
 #include "Random.h"
+#include "Components/RigidBodyComponent.h"
 
 
 	Engine::Engine()
@@ -144,8 +145,33 @@
 				glm::vec3 direction(1.0f,0.0f,0.0f);
 				float distance = 100.0f;
 
-				ActorFactory::CreateSphereCollider((direction * distance) + glm::vec3(0.0f,100.0f,0.0f), radius, (-1.0f * direction));
-				ActorFactory::CreateBoxCollider(((-1.0f * direction) * distance ) + glm::vec3(0.0f,100.0f,0.0f), glm::vec3(radius * 2.0f),glm::vec3(0.0f,0.0f,.5f),direction,true);
+				//m_RB = ActorFactory::CreateSphereCollider(glm::vec3(0.0f,100.0f,0.0f), radius, glm::vec3(0.0f));
+				ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 400.0f, 0.0f), glm::vec3(radius * 2.0f), glm::vec3(-1.0f, -2.0f, 0.0f), direction,true);
+				ActorFactory::CreateBoxCollider(glm::vec3(0.0f,100.0f,0.0f), glm::vec3(radius * 2.0f),glm::vec3(-1.0f,0.0f,0.0f),direction,false);
+
+			}
+
+			glm::vec3 force = glm::vec3(0.0f);
+			glm::vec3 torque = glm::vec3(0.0f);
+			if (GLFW_KEY_J == key)
+			{
+				force.x = -10000.0f;
+				torque.z = 1000.0f;
+				if (m_RB)
+				{
+					m_RB->AddForce(force);
+					m_RB->AddTorque(torque);
+				}
+			}
+			else if (GLFW_KEY_L == key)
+			{
+				force.x = 10000.0f;
+				torque.z = -1000.0f;
+				if (m_RB)
+				{
+					m_RB->AddForce(force);
+					m_RB->AddTorque(torque);
+				}
 			}
 		}
 		InputHandler::GetInstance()->OnKeyAction(key, action);

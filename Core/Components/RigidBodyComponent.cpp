@@ -15,14 +15,16 @@ RigidBodyComponent::RigidBodyComponent(std::shared_ptr<ICollider> pCollider)
 	m_IsAwake(false),
 	m_InverseMass(1.0f),
 	m_Forces(0.0f),
-	m_Torques(0.0f,0.0f,0.0f),
+	m_Torques(0.0f, 0.0f, 0.0f),
 	//Linear
-	m_Position(0.0f,0.0f,0.0f),
-	m_LinearVelocity(0.0f,0.0f,0.0f),
-	m_LinearAcceleration(0.0f,0.0f,0.0f),
+	m_Position(0.0f, 0.0f, 0.0f),
+	m_LinearVelocity(0.0f, 0.0f, 0.0f),
+	m_LinearAcceleration(0.0f, 0.0f, 0.0f),
+	m_LinearDamping(.99f),
 	//angular
 	m_Orientation(glm::vec3(0.0f)),
 	m_Rotation(0.0f),
+	m_AngularDamping(.99f),
 	//matrices
 	m_InverseTensor(1.0f),
 	m_InverseTensorWorld(1.0f),
@@ -83,19 +85,30 @@ void RigidBodyComponent::Tick(float deltaTime)
 		return;
 	}
 
-	//m_LinearAcceleration += m_InverseMass;// *m_Forces;
-	m_LinearVelocity += m_LinearAcceleration * .033f;
-	m_Position += m_LinearVelocity * .033f; 
-	
+	float delta = deltaTime;
 
-	glm::vec3 angularAcc = m_InverseTensorWorld * m_Torques;
-	m_Rotation += angularAcc * .033f;
-	glm::quat w(m_Rotation * .033f);
+	glm::vec3 acc = m_LinearAcceleration;
+	acc += m_InverseMass * m_Forces;
+	m_LinearVelocity += acc * delta;
+	
+	glm::vec3 angularAcc = m_InverseMass * m_Torques;//m_InverseTensorWorld * m_Torques;
+	m_Rotation += angularAcc * delta;
+
+	//Damping 
+	//m_LinearVelocity *= pow(m_LinearDamping, 2.0);
+	m_Rotation *= pow(m_AngularDamping,2);
+
+	m_Position += m_LinearVelocity * delta;
+
+	glm::quat w(m_Rotation * delta);
 	w.w = 0.0f;
 	w *= m_Orientation;
 	m_Orientation += (w * 0.5f);
 
 	UpdateData();
+
+	m_Forces = glm::vec3(0.0f);
+	m_Torques = glm::vec3(0.0f);
 }
 
 void RigidBodyComponent::SetMass(float mass)

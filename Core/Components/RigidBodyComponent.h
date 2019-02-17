@@ -61,6 +61,7 @@ private:
 	glm::vec3 m_LinearVelocity;
 	glm::vec3 m_LinearAcceleration;
 	glm::vec3 m_Position;
+	float m_LinearDamping;
 
 	//Angular motion
 	
@@ -68,6 +69,7 @@ private:
 	glm::quat m_Orientation;
 	glm::mat3 m_InverseTensor;
 	glm::mat3 m_InverseTensorWorld;
+	float m_AngularDamping;
 	
 	std::shared_ptr<ICollider> m_Collider;
 

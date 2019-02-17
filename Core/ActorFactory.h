@@ -20,7 +20,7 @@ private:
 
 public:
 	static void CreateSky();
-	static void CreateSphereCollider(const glm::vec3 center,
+	static std::shared_ptr<RigidBodyComponent> CreateSphereCollider(const glm::vec3 center,
 		float radius,
 		glm::vec3 direction);
 	static std::shared_ptr<RigidBodyComponent> CreateBoxCollider(const glm::vec3 position,

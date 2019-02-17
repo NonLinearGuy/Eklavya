@@ -8,6 +8,8 @@
 
 bool IntersectionTests::OverlapOnAxis(std::shared_ptr<BoxCollider> one, std::shared_ptr<BoxCollider> two, glm::vec3 axis)
 {
+	if (glm::length2(axis) < .0001f) return true;
+
 	glm::vec3 box1Pos = one->GetBody()->GetAxis(3);
 	glm::vec3 box2Pos = two->GetBody()->GetAxis(3);
 	glm::vec3 toCenter = box2Pos - box1Pos;
@@ -38,8 +40,22 @@ bool IntersectionTests::BoxAndBox(std::shared_ptr<BoxCollider> one, std::shared_
 
 		OverlapOnAxis(one, two, two->GetBody()->GetAxis(0)) &&
 		OverlapOnAxis(one, two, two->GetBody()->GetAxis(1)) &&
-		OverlapOnAxis(one, two, two->GetBody()->GetAxis(2));
+		OverlapOnAxis(one, two, two->GetBody()->GetAxis(2)) &&
+
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(0), two->GetBody()->GetAxis(0))) &&
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(0), two->GetBody()->GetAxis(1))) &&
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(0), two->GetBody()->GetAxis(2))) &&
+
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(1), two->GetBody()->GetAxis(0))) &&
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(1), two->GetBody()->GetAxis(1))) &&
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(1), two->GetBody()->GetAxis(2))) &&
+		
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(2), two->GetBody()->GetAxis(0))) &&
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(2), two->GetBody()->GetAxis(1))) &&
+		OverlapOnAxis(one, two, glm::cross(one->GetBody()->GetAxis(2), two->GetBody()->GetAxis(2)));
+
 	return collision;
+		
 }
 bool IntersectionTests::BoxAndSphere(std::shared_ptr<BoxCollider>  box, std::shared_ptr<SphereCollider> sphere)
 {
@@ -131,4 +147,15 @@ bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::share
 
 	return true;
 
+}
+
+bool ContactGenerator::BoxAndBox(std::shared_ptr<BoxCollider> box1, std::shared_ptr<BoxCollider> box2, std::vector<ContactData>& pContacts)
+{
+	
+	return false;
+}
+
+bool ContactGenerator::BoxAndPoint(std::shared_ptr<BoxCollider> box1, const glm::vec3 vertex, std::vector<ContactData>& pContacts)
+{
+	return false;
 }

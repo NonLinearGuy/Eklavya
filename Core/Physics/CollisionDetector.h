@@ -43,17 +43,23 @@ private:
 
 class ContactGenerator
 {
+
+private:
+	static bool BoxAndPoint(std::shared_ptr<BoxCollider> box1,
+		const glm::vec3 vertex,
+		std::vector<ContactData>& pContacts);
 public:
-	
 	static bool SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne,
 		std::shared_ptr<SphereCollider> sphereTwo,
 		std::vector<ContactData>& pContacts
 	);
-
 	static bool SphereAndBox(std::shared_ptr<BoxCollider> box,
 		std::shared_ptr<SphereCollider> sphere,
 		std::vector<ContactData>& pContacts
 	);
+	static bool BoxAndBox(std::shared_ptr<BoxCollider> box1,
+		std::shared_ptr<BoxCollider> box2,
+		std::vector<ContactData>& pContacts);
 	
 };
 

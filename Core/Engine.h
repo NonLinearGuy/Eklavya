@@ -50,4 +50,5 @@ class Physics;
 		std::shared_ptr<DiagManager> m_Diagnostics;
 		std::shared_ptr<Physics> m_Physics;
 		std::shared_ptr<RigidBodyComponent> m_RB;
+		glm::vec3 m_Force;
 	};

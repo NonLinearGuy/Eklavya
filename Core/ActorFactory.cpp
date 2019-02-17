@@ -33,7 +33,7 @@ void ActorFactory::CreateSky()
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED,data);
 }
 
-void ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, glm::vec3 direction)
+std::shared_ptr<RigidBodyComponent> ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, glm::vec3 direction)
 {
 	std::string name = "SphereCollider#" + std::to_string(s_ActorIDCount);
 	ActorID id = s_ActorIDCount;
@@ -58,9 +58,6 @@ void ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, gl
 	collider->SetBody(rbComp);
 	rbComp->SetPos(center);
 	rbComp->SetInverseMass(1.0f);
-	rbComp->SetVel(SPEED * direction);
-	rbComp->SetAccel(direction);
-	rbComp->AddTorque(glm::vec3(100.0f,0.0f,1.0f));
 	newActor->AddComponent(rbComp);
 
 	g_Engine->AddActor(newActor);
@@ -69,6 +66,8 @@ void ActorFactory::CreateSphereCollider(const glm::vec3 center, float radius, gl
 	data->m_Actor = newActor;
 
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
+
+	return rbComp;
 }
 
 std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::vec3 position, const glm::vec3& halfSize, const glm::vec3& rotation, glm::vec3 direction,bool movement)
@@ -78,7 +77,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	s_ActorIDCount++;
 
 	auto newActor = std::make_shared<GameActor>(name, id);
-	auto transformComponent = std::make_shared<Transform>(position,halfSize,rotation);
+	auto transformComponent = std::make_shared<Transform>(position,halfSize);
 	transformComponent->SetOwner(newActor);
 	newActor->AddComponent(transformComponent);
 	std::shared_ptr<BaseRenderComponent> renderComponent;
@@ -88,7 +87,9 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	if(!movement)
 		renderComponent->GetBaseNode()->SetAlbedoName("0.png");
 	else
+	{
 		renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
+	}
 	newActor->AddComponent(renderComponent);
 
 	//physics component
@@ -98,15 +99,11 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 		auto rbComp = std::make_shared<RigidBodyComponent>(collider);
 		collider->SetBody(rbComp);
 		rbComp->SetPos(position);
-		rbComp->SetVel(SPEED * direction);
-		rbComp->SetAccel(direction);
 		rbComp->SetOrientation(rotation);
-		//rbComp->AddForce(glm::vec3(0.0f,-50.0f,0.0f));
 		rbComp->SetInverseMass(1.0f);
+		rbComp->SetAccel(glm::vec3(0.0f, -100.8f, 0.0f));
 		rbComp->SetOwner(newActor);
-		//rbComp->AddTorque(glm::vec3(0.0f,0.0f,1000.0f));
-		if (!movement)
-			rbComp->SetAwake(false);
+		rbComp->SetAwake(movement);
 		newActor->AddComponent(rbComp);
 	
 	g_Engine->AddActor(newActor);

@@ -17,3 +17,5 @@ inline std::shared_ptr<Type> MakeSharedPtr(std::weak_ptr<Type> weakObject)
 const int ACTOR_NOT_NEEDED = -1;
 const int ACTOR_BOUNDING_VOLUME = -2;
 
+#define MAX_FLOAT std::numeric_limits<float>::max();
+

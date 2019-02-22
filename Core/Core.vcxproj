@@ -236,6 +236,7 @@
     <ClCompile Include="Scene\BoundingVolume.cpp" />
     <ClCompile Include="Scene\BoxNode.cpp" />
     <ClCompile Include="Scene\CameraNode.cpp" />
+    <ClCompile Include="Scene\ContactsNode.cpp" />
     <ClCompile Include="Scene\DebugCamera.cpp" />
     <ClCompile Include="Scene\Frustum.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
@@ -284,6 +285,7 @@
     <ClInclude Include="Scene\BoundingVolume.h" />
     <ClInclude Include="Scene\BoxNode.h" />
     <ClInclude Include="Scene\CameraNode.h" />
+    <ClInclude Include="Scene\ContactsNode.h" />
     <ClInclude Include="Scene\DebugCamera.h" />
     <ClInclude Include="Scene\defines.h" />
     <ClInclude Include="Scene\Frustum.h" />
@@ -305,6 +307,8 @@
     <None Include="Assets\Fonts\ocr.fnt" />
     <None Include="Assets\Shaders\outlined_fs.glsl" />
     <None Include="Assets\Shaders\outlined_vs.glsl" />
+    <None Include="Assets\Shaders\world_point_fs.glsl" />
+    <None Include="Assets\Shaders\world_point_vs.glsl" />
     <None Include="Assets\Shaders\skybox_fs.glsl" />
     <None Include="Assets\Shaders\skybox_vs.glsl" />
     <None Include="Assets\Shaders\main_output_fs.glsl" />
@@ -315,14 +319,14 @@
     <None Include="Assets\Shaders\solids_vs.glsl" />
     <None Include="Assets\Shaders\text_fs.glsl" />
     <None Include="Assets\Shaders\text_vs.glsl" />
+    <None Include="Assets\Shaders\unlit_solids_fs.glsl" />
+    <None Include="Assets\Shaders\unlit_solids_vs.glsl" />
     <None Include="Assets\Shaders\water_fs.glsl" />
     <None Include="Assets\Shaders\water_pass_fs.glsl" />
     <None Include="Assets\Shaders\water_pass_vs.glsl" />
     <None Include="Assets\Shaders\water_vs.glsl" />
     <None Include="frustum_fs.glsl" />
     <None Include="frustum_vs.glsl" />
-    <None Include="Scene\Assets\Shaders\unlit_solids_fs.glsl" />
-    <None Include="Scene\Assets\Shaders\unlit_solids_vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

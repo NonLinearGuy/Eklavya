@@ -36,18 +36,38 @@ public:
 	static bool BoxAndBox(std::shared_ptr<BoxCollider> boxFirst, std::shared_ptr<BoxCollider> boxSecond);
 	static bool BoxAndSphere(std::shared_ptr<BoxCollider> box, std::shared_ptr<SphereCollider> sphere);
 	static bool SphereAndSphere(std::shared_ptr<SphereCollider> sphereFirst, std::shared_ptr<SphereCollider> sphereSecond);
+	static float GetProjectedLength(std::shared_ptr<BoxCollider> box, glm::vec3 axis);
 private:
 	static bool OverlapOnAxis(std::shared_ptr<BoxCollider> one,std::shared_ptr<BoxCollider> two,glm::vec3 axis);
-	static float GetProjectedLength(std::shared_ptr<BoxCollider> box, glm::vec3 axis);
+	
 };
 
 class ContactGenerator
 {
 
 private:
-	static bool BoxAndPoint(std::shared_ptr<BoxCollider> box1,
-		const glm::vec3 vertex,
-		std::vector<ContactData>& pContacts);
+
+	/* Calculates overlap of boxes on axis*/
+	static float GetPenOnAxis(std::shared_ptr<BoxCollider> box1,
+							std::shared_ptr<BoxCollider> box2,
+							const glm::vec3& toCenter,
+							const glm::vec3 axis);
+
+	/* check if penetration on this axis is smallest*/
+	static bool CheckAxisForSmallestPen(std::shared_ptr<BoxCollider> box1,
+										std::shared_ptr<BoxCollider> box2,
+										const glm::vec3& toCenter,
+										glm::vec3 axis,
+										unsigned index,
+										unsigned& bestAxis,
+										float& smallestPen);
+
+	static void PointFaceContactForBoxes(std::shared_ptr<BoxCollider> box1,
+		std::shared_ptr<BoxCollider> box2,
+		const glm::vec3& toCenter,
+		float pen,
+		int axisIndex,
+		ContactData& newContact);
 public:
 	static bool SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne,
 		std::shared_ptr<SphereCollider> sphereTwo,
@@ -61,6 +81,13 @@ public:
 		std::shared_ptr<BoxCollider> box2,
 		std::vector<ContactData>& pContacts);
 	
+};
+
+
+class Resolver
+{
+public:
+	static void ResolveContacts(std::vector<ContactData> contacts);
 };
 
 #endif

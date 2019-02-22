@@ -18,6 +18,7 @@ enum class EShaderProgram
 	SKYBOX,
 	SHADOW,
 	OUTLINED,
+	CONTACTS,
 	WATER_PASS
 };
 

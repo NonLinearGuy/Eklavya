@@ -11,7 +11,8 @@ class SphereVAO;
 
 enum class EBoundType
 {
-	SPHERE = 0
+	SPHERE = 0,
+	BOX
 };
 
 class IBoundVolume
@@ -38,6 +39,22 @@ public:
 private:
 	float m_Radius;
 	glm::vec3 m_Center;
+};
+
+class BoxBound : public IBoundVolume
+{
+public:
+	BoxBound(const glm::vec3& extents);
+	~BoxBound();
+	inline void SetTransform(const glm::mat4& transform) { m_Transform = transform; }
+	inline void SetExtents(const glm::vec3& extents) { m_Extents = extents; }
+	inline glm::vec3 GetExtents() { return m_Extents; }
+	inline glm::vec4* GetPoints() { return m_Points; }
+	inline glm::mat4 GetTransform() { return m_Transform; }
+private:
+	glm::mat4 m_Transform;
+	glm::vec3 m_Extents;
+	glm::vec4 m_Points[8];
 };
 
 #endif

@@ -74,5 +74,18 @@ private:
 	int m_IndicesSize;
 };
 
+class CuboidVAO
+{
+public:
+	CuboidVAO();
+	~CuboidVAO();
+	void Init();
+	void Destroy();
+	void Bind();
+	void Unbind();
+private:
+	VertexArrayObject m_VAO;
+};
+
 #endif
 

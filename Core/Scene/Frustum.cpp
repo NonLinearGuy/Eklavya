@@ -113,9 +113,15 @@ bool Frustum::IsInside(std::shared_ptr<IBoundVolume> volume)
 		std::shared_ptr<SphereBound> sphere = std::static_pointer_cast<SphereBound>(volume);
 		return IsSphereInside(sphere->GetCenter(),sphere->GetRadius());
 	}
+	else if (EBoundType::BOX == type)
+	{
+		std::shared_ptr<BoxBound> box = std::static_pointer_cast<BoxBound>(volume);
+		return IsBoxInside(box);
+	}
 	else
 		return false;
 }
+
 bool Frustum::IsSphereInside(const glm::vec3& position, float radius)
 {
 	for (auto plane : m_Planes)
@@ -124,4 +130,34 @@ bool Frustum::IsSphereInside(const glm::vec3& position, float radius)
 		if (dist < -radius) return false;
 	}
 	return true;
+}
+
+bool Frustum::IsBoxInside(std::shared_ptr<BoxBound> box)
+{
+	auto points = box->GetPoints();
+	glm::vec3 extents = box->GetExtents();
+	glm::mat4 transform = box->GetTransform();
+
+	int insidePlaneCounter = 0;
+
+	for (auto plane : m_Planes)
+	{
+		for (int i = 0; i < 8; ++i)
+		{
+			glm::vec4 vertex = points[i];
+			vertex.x *= extents.x;
+			vertex.y *= extents.y;
+			vertex.z *= extents.z;
+			vertex = transform * vertex;
+			float dist = plane.x * vertex.x + plane.y * vertex.y + plane.z * vertex.z + plane.w;
+			if (dist >= 0)
+			{
+				insidePlaneCounter++;
+				break;
+			}
+		}
+	}
+	if (insidePlaneCounter == 6)
+		return true;
+	return false;
 }

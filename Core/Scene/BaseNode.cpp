@@ -70,7 +70,13 @@ void BaseNode::PreRender(Scene *scene)
 		m_ToWorld = transform->GetModelMatrix();
 		if (m_BoundVolume)
 		{
-			std::static_pointer_cast<SphereBound>(m_BoundVolume)->SetCenter(transform->GetPosition());
+			if(EBoundType::SPHERE == m_BoundVolume->GetType())
+				std::static_pointer_cast<SphereBound>(m_BoundVolume)->SetCenter(transform->GetPosition());
+			else
+			{
+				auto box = std::static_pointer_cast<BoxBound>(m_BoundVolume);
+				box->SetTransform(transform->GetTRMatrix());
+			}
 		}
 	}
 	scene->PushMatrix(m_ToWorld);

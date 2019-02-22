@@ -5,6 +5,8 @@
 #include "../Renderer/Texture2D.h"
 #include "../Renderer/VertexArrayObject.h"
 
+class CuboidVAO;
+
 class BoxNode : public BaseNode
 {
 public:
@@ -16,5 +18,5 @@ public:
 	void Render(Scene* scene)override;
 private:
 	
-	VertexArrayObject m_VAOConfig;
+	CuboidVAO* m_CubeVAO;
 };

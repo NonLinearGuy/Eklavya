@@ -3,6 +3,9 @@
 #include "EventType.h"
 #include <memory>
 #include "../Components/GameActor.h"
+#include <glm/glm.hpp>
+#include <vector>
+#include "../Physics/CollisionDetector.h"
 
 class IEventData
 {
@@ -29,4 +32,10 @@ class EventCollision : public IEventData
 public:
 	std::string m_FirstName;
 	std::string m_SecondName;
+};
+
+class EventContactsUpdated : public IEventData
+{
+public:
+	std::vector<ContactData> m_ContactsWorld;
 };

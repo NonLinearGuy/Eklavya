@@ -11,6 +11,7 @@ class DebugCamera;
 class BaseNode;
 class GLRenderer;
 class IEventData;
+class ContactsNode;
 
 struct LightSource
 {
@@ -106,6 +107,8 @@ private:
 	
 	std::vector< std::shared_ptr<BaseNode> > m_Nodes;
 	
+	
+	std::shared_ptr<ContactsNode> m_ContactsNode;
 
 };
 

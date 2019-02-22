@@ -70,7 +70,7 @@ void Physics::Simulate(float delta)
 	
 	int counter = 0;
 	//Generate Contacts
-	std::vector<ContactData> m_Contacts;
+	std::vector<ContactData> contacts;
 
 	for (auto first = m_Colliders.begin(); first != m_Colliders.end() ;  ++first)
 	{
@@ -86,17 +86,17 @@ void Physics::Simulate(float delta)
 				auto sphere1 = std::static_pointer_cast<SphereCollider>(firstCollider);
 				auto sphere2 = std::static_pointer_cast<SphereCollider>(secondCollider);
 				
-				if (ContactGenerator::SphereAndSphere(sphere1, sphere2,m_Contacts))
+				if (ContactGenerator::SphereAndSphere(sphere1, sphere2,contacts))
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f,0.0f,0.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-				//	sphere1->GetBody()->SetSleep(true);
-					//sphere2->GetBody()->SetSleep(true);
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f,0.0f,0.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//sphere1->GetBody()->SetAwake(false);
+					//sphere2->GetBody()->SetAwake(false);
 				}
 				else
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				}
 			}
 
@@ -105,17 +105,17 @@ void Physics::Simulate(float delta)
 				auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
 				auto sphere2 = std::static_pointer_cast<SphereCollider>(secondCollider);
 
-				if (ContactGenerator::SphereAndBox(box1, sphere2, m_Contacts))
+				if (ContactGenerator::SphereAndBox(box1, sphere2, contacts))
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					box1->GetBody()->SetAwake(false);
-					sphere2->GetBody()->SetAwake(true);
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//box1->GetBody()->SetAwake(false);
+				//	sphere2->GetBody()->SetAwake(false);
 				}
 				else
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				}
 			}
 
@@ -124,17 +124,17 @@ void Physics::Simulate(float delta)
 				auto box = std::static_pointer_cast<BoxCollider>(secondCollider);
 				auto sphere = std::static_pointer_cast<SphereCollider>(firstCollider);
 
-				if (ContactGenerator::SphereAndBox(box, sphere, m_Contacts))
+				if (ContactGenerator::SphereAndBox(box, sphere, contacts))
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					box->GetBody()->SetAwake(false);
-					sphere->GetBody()->SetAwake(false);
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//box->GetBody()->SetAwake(false);
+					//sphere->GetBody()->SetAwake(false);
 				}
 				else
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				}
 			}
 
@@ -143,23 +143,27 @@ void Physics::Simulate(float delta)
 				auto box1 = std::static_pointer_cast<BoxCollider>(secondCollider);
 				auto box2 = std::static_pointer_cast<BoxCollider>(firstCollider);
 
-				if (IntersectionTests::BoxAndBox(box1,box2))
+				if (ContactGenerator::BoxAndBox(box1,box2,contacts))
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 					box1->GetBody()->SetAwake(false);
 					box2->GetBody()->SetAwake(false);
 				}
 				else
 				{
-					m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 				}
 			}
-			counter++;
+			
 		}
 	}
 
+	auto data = std::make_shared<EventContactsUpdated>();
+	data->m_ContactsWorld = contacts;
+	EventDispatcher::GetInstance().TriggerEvent(EEventType::CONTACTS_UPDATED,data);
 
+	Resolver::ResolveContacts(contacts);
 	//Resolve Constraints
 }

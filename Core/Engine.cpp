@@ -140,14 +140,19 @@
 				static int heightOffset = 0;
 	
 				glm::vec3 center = Random::GetInstance()->GetOnXZ(-250.0f, 250.0f);
-				center.y = 300.0f;
-				float radius = 50.0f;// Random::GetInstance()->Real(10.0f, 50.0f);
+				center.y = 20.0f;
+				float radius = 50.0f; Random::GetInstance()->Real(50.0f, 80.0f);
 				glm::vec3 direction(1.0f,0.0f,0.0f);
 				float distance = 100.0f;
 
-				//m_RB = ActorFactory::CreateSphereCollider(glm::vec3(0.0f,100.0f,0.0f), radius, glm::vec3(0.0f));
-				ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 400.0f, 0.0f), glm::vec3(radius * 2.0f), glm::vec3(-1.0f, -2.0f, 0.0f), direction,true);
-				ActorFactory::CreateBoxCollider(glm::vec3(0.0f,100.0f,0.0f), glm::vec3(radius * 2.0f),glm::vec3(-1.0f,0.0f,0.0f),direction,false);
+		
+				//if(rand() % 2 == 1)
+					//ActorFactory::CreateSphereCollider(glm::vec3(0.0f, 300.0f, 0.0f),radius * .5f,glm::vec3(0.0f));
+				//else
+					ActorFactory::CreateBoxCollider(glm::vec3(0.0f,300.0f,0.0f), glm::vec3(radius), glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f),true);
+		
+				//ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 400.0f, 0.0f), glm::vec3(radius * 2.0f), glm::vec3(-1.0f, -2.0f, 0.0f), direction,true);
+				//ActorFactory::CreateBoxCollider(glm::vec3(0.0f,100.0f,0.0f), glm::vec3(radius * 2.0f),glm::vec3(-1.0f,0.0f,0.0f),direction,false);
 
 			}
 

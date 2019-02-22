@@ -64,6 +64,7 @@ bool GLRenderer::Initialize()
 	m_Programs[EShaderProgram::WATER_PASS] = LoadShaderProgram("water_pass");
 	m_Programs[EShaderProgram::OUTLINED] = LoadShaderProgram("outlined");
 	m_Programs[EShaderProgram::UNLIT_SOLID] = LoadShaderProgram("unlit_solids");
+	m_Programs[EShaderProgram::CONTACTS] = LoadShaderProgram("world_point");
 	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
 	m_ActiveProgram->Use();
 

@@ -4,6 +4,7 @@
 
 class VertexArrayObject;
 class IBoundVolume;
+class BoxBound;
 
 enum EPlane
 {
@@ -46,6 +47,7 @@ public:
 private:
 	
 	bool IsSphereInside(const glm::vec3& center, float radius);
+	bool IsBoxInside(std::shared_ptr<BoxBound> box);
 	
 	Plane m_Planes[6];
 	glm::vec3 m_Points[10];

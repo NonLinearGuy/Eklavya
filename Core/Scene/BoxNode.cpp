@@ -11,7 +11,9 @@
 #include "../Renderer/Material.h"
 #include "BoundingVolume.h"
 #include "../Components/BaseRenderComponent.h"
-
+#include "../Renderer/VertexArrayObject.h"
+#include "../Globals.h"
+#include "../Engine.h"
 
 
 BoxNode::BoxNode(ActorID actorID,BaseRenderComponent* renderComponent, ERenderGroup renderPass)
@@ -28,56 +30,9 @@ BoxNode::~BoxNode()
 
 bool BoxNode::Init()
 {
-	float vertices[] = {
-		// Back face
-		-0.5f, -0.5f, -0.5f, 0.0f,0.0f,-1.0f, 0.0f, 0.0f, // Bottom-left
-		 0.5f,  0.5f, -0.5f, 0.0f,0.0f,-1.0f,  1.0f, 1.0f, // top-right
-		 0.5f, -0.5f, -0.5f, 0.0f,0.0f,-1.0f,  1.0f, 0.0f, // bottom-right         
-		 0.5f,  0.5f, -0.5f, 0.0f,0.0f,-1.0f,  1.0f, 1.0f, // top-right
-		-0.5f, -0.5f, -0.5f, 0.0f,0.0f,-1.0f,  0.0f, 0.0f, // bottom-left
-		-0.5f,  0.5f, -0.5f, 0.0f,0.0f,-1.0f,  0.0f, 1.0f, // top-left
-		// Front face
-		-0.5f, -0.5f,  0.5f, 0.0f,0.0f,1.0f,  0.0f, 0.0f, // bottom-left
-		 0.5f, -0.5f,  0.5f,  0.0f,0.0f,1.0f, 1.0f, 0.0f, // bottom-right
-		 0.5f,  0.5f,  0.5f, 0.0f,0.0f,1.0f,  1.0f, 1.0f, // top-right
-		 0.5f,  0.5f,  0.5f,0.0f,0.0f,1.0f,   1.0f, 1.0f, // top-right
-		-0.5f,  0.5f,  0.5f, 0.0f,0.0f,1.0f,  0.0f, 1.0f, // top-left
-		-0.5f, -0.5f,  0.5f, 0.0f,0.0f,1.0f,  0.0f, 0.0f, // bottom-left
-		// Left face
-		-0.5f,  0.5f,  0.5f, -1.0f,0.0f,0.0f,  1.0f, 0.0f, // top-right
-		-0.5f,  0.5f, -0.5f,  -1.0f,0.0f,0.0f, 1.0f, 1.0f, // top-left
-		-0.5f, -0.5f, -0.5f,  -1.0f,0.0f,0.0f, 0.0f, 1.0f, // bottom-left
-		-0.5f, -0.5f, -0.5f,  -1.0f,0.0f,0.0f, 0.0f, 1.0f, // bottom-left
-		-0.5f, -0.5f,  0.5f,  -1.0f,0.0f,0.0f, 0.0f, 0.0f, // bottom-right
-		-0.5f,  0.5f,  0.5f,  -1.0f,0.0f,0.0f, 1.0f, 0.0f, // top-right
-		// Right face
-		 0.5f,  0.5f,  0.5f,  1.0f,0.0f,0.0f, 1.0f, 0.0f, // top-left
-		 0.5f, -0.5f, -0.5f,  1.0f,0.0f,0.0f, 0.0f, 1.0f, // bottom-right
-		 0.5f,  0.5f, -0.5f,  1.0f,0.0f,0.0f, 1.0f, 1.0f, // top-right         
-		 0.5f, -0.5f, -0.5f,  1.0f,0.0f,0.0f, 0.0f, 1.0f, // bottom-right
-		 0.5f,  0.5f,  0.5f,  1.0f,0.0f,0.0f, 1.0f, 0.0f, // top-left
-		 0.5f, -0.5f,  0.5f,  1.0f,0.0f,0.0f, 0.0f, 0.0f, // bottom-left     
-		// Bottom face
-		-0.5f, -0.5f, -0.5f,  0.0f,-1.0f,0.0f,  0.0f, 1.0f, // top-right
-		 0.5f, -0.5f, -0.5f,  0.0f,-1.0f,0.0f, 1.0f, 1.0f, // top-left
-		 0.5f, -0.5f,  0.5f,  0.0f,-1.0f,0.0f, 1.0f, 0.0f, // bottom-left
-		 0.5f, -0.5f,  0.5f,  0.0f,-1.0f,0.0f, 1.0f, 0.0f, // bottom-left
-		-0.5f, -0.5f,  0.5f,  0.0f,-1.0f,0.0f, 0.0f, 0.0f, // bottom-right
-		-0.5f, -0.5f, -0.5f,  0.0f,-1.0f,0.0f, 0.0f, 1.0f, // top-right
-		// Top face
-		-0.5f,  0.5f, -0.5f,  0.0f,1.0f,0.0f, 0.0f, 1.0f, // top-left
-		 0.5f,  0.5f,  0.5f,  0.0f,1.0f,0.0f, 1.0f, 0.0f, // bottom-right
-		 0.5f,  0.5f, -0.5f,  0.0f,1.0f,0.0f, 1.0f, 1.0f, // top-right     
-		 0.5f,  0.5f,  0.5f,   0.0f,1.0f,0.0f,1.0f, 0.0f, // bottom-right
-		-0.5f,  0.5f, -0.5f,  0.0f,1.0f,0.0f, 0.0f, 1.0f, // top-left
-		-0.5f,  0.5f,  0.5f,  0.0f,1.0f,0.0f, 0.0f, 0.0f  // bottom-left        
-	};
-
-
-m_VAOConfig.Create(vertices,sizeof(vertices),0);
-	m_VAOConfig.SetPosPtr(3,0,sizeof(float) * 8);
-	m_VAOConfig.SetNormalPtr(sizeof(float) * 3,sizeof(float) * 8);
-	m_VAOConfig.SetTexPtr(sizeof(float) * 6,sizeof(float) * 8);
+	
+	m_CubeVAO = new CuboidVAO();
+	m_CubeVAO->Init();
 
 	m_Material = new Material();
 	if (!m_AlbedoName.empty())
@@ -108,13 +63,17 @@ m_VAOConfig.Create(vertices,sizeof(vertices),0);
 
 	m_Material->SetOpacity(m_Opacity);
 
+	std::shared_ptr<GameActor> gameActor = g_Engine->GetActor(m_ActorID);
+	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
+	m_BoundVolume = std::make_shared<BoxBound>(transform->GetScale());
+
 	return true;
 }
 
 void BoxNode::Destroy()
 {
 	delete m_Material;
-	m_VAOConfig.Destroy();
+	m_CubeVAO->Destroy();
 }
 
 void BoxNode::Tick(Scene* scene,float deltaTime)
@@ -123,7 +82,7 @@ void BoxNode::Tick(Scene* scene,float deltaTime)
 
 void BoxNode::Render(Scene* scene)
 {
-	m_VAOConfig.Bind();
+	m_CubeVAO->Bind();
 	glDrawArrays(GL_TRIANGLES,0,36);
 	RenderChildren(scene);
 }

@@ -95,7 +95,7 @@ void RigidBodyComponent::Tick(float deltaTime)
 	m_Rotation += angularAcc * delta;
 
 	//Damping 
-	//m_LinearVelocity *= pow(m_LinearDamping, 2.0);
+	m_LinearVelocity *= pow(m_LinearDamping, 2.0);
 	m_Rotation *= pow(m_AngularDamping,2);
 
 	m_Position += m_LinearVelocity * delta;

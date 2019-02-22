@@ -13,9 +13,10 @@
 #include <functional>
 #include "../Components/BaseRenderComponent.h"
 #include "ArrowNode.h"
+#include "ContactsNode.h"
 
 
-#define DRAW_TRANSFORM
+//#define DRAW_TRANSFORM
 
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
@@ -33,6 +34,9 @@ Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::s
 
 	std::shared_ptr<BaseNode> outlinedGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::OUTLINED);
 	m_Groups.push_back(outlinedGroup);
+
+	std::shared_ptr<BaseNode> contactsGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::CONTACTS);
+	m_Groups.push_back(contactsGroup);
 
 	std::shared_ptr<BaseNode> boundVolumeGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::BOUND_VOLUME);
 	m_Groups.push_back(boundVolumeGroup);
@@ -69,9 +73,12 @@ void Scene::Init()
 	m_WaterNode = std::make_shared<WaterNode>();
 	m_WaterNode->Init();
 
+	m_ContactsNode = std::make_shared<ContactsNode>(100001);
+	m_ContactsNode->Init();
+
 	AddChild(m_WaterNode);
 	AddChild(m_Camera);
-
+	AddChild(m_ContactsNode);
 	
 }
 
@@ -188,6 +195,20 @@ void Scene::MainPassRender()
 			glDisable(GL_LINE_WIDTH);
 			glDepthFunc(GL_LEQUAL);
 			break;
+		case ERenderGroup::CONTACTS :
+			glDepthFunc(GL_ALWAYS);
+			glEnable(GL_POINT_SIZE);
+			glEnable(GL_LINE_WIDTH);
+			glLineWidth(4.0f);
+			glPointSize(8.0f);
+			m_Renderer->SetShaderProgram(EShaderProgram::CONTACTS);
+			m_Renderer->SetProjectionMatrix(projection);
+			m_Renderer->SetViewMatrix(view);
+			m_Groups[ERenderGroup::CONTACTS]->Render(this);
+			glDisable(GL_POINT_SIZE);
+			glDisable(GL_LINE_WIDTH);
+			glDepthFunc(GL_LEQUAL);
+				break;
 		case ERenderGroup::SKYBOX:
 			m_Renderer->SetShaderProgram(EShaderProgram::SKYBOX);
 			m_Renderer->SetProjectionMatrix(projection);

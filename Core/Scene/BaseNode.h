@@ -13,6 +13,7 @@ enum ERenderGroup
 	BOUND_VOLUME,
 	OUTLINED,
 	SKYBOX,
+	CONTACTS,
 	MAX
 };
 

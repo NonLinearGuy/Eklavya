@@ -144,6 +144,9 @@
       <Filter>Debugging</Filter>
     </ClCompile>
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Scene\ContactsNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -273,6 +276,9 @@
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Scene\ContactsNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt" />
@@ -328,13 +334,19 @@
     <None Include="Assets\Shaders\outlined_vs.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Scene\Assets\Shaders\unlit_solids_vs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Scene\Assets\Shaders\unlit_solids_fs.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Assets\Fonts\ocr.fnt" />
     <None Include="Assets\Fonts\diag_font.fnt" />
+    <None Include="Assets\Shaders\unlit_solids_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\unlit_solids_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\world_point_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\world_point_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

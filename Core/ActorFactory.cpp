@@ -8,6 +8,7 @@
 #include "Engine.h"
 #include "Components/MovementComponent.h"
 #include "Components/RigidBodyComponent.h"
+#include "Random.h"
 
 ActorID ActorFactory::s_ActorIDCount = 0;
 
@@ -58,7 +59,9 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateSphereCollider(const glm
 	collider->SetBody(rbComp);
 	rbComp->SetPos(center);
 	rbComp->SetInverseMass(1.0f);
+	rbComp->SetAccel(glm::vec3(0.0f,-300.0f,0.0f));
 	newActor->AddComponent(rbComp);
+	rbComp->SetAwake(true);
 
 	g_Engine->AddActor(newActor);
 
@@ -88,7 +91,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 		renderComponent->GetBaseNode()->SetAlbedoName("0.png");
 	else
 	{
-		renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
+		renderComponent->GetBaseNode()->SetAlbedoName("box.png");
 	}
 	newActor->AddComponent(renderComponent);
 
@@ -101,7 +104,8 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 		rbComp->SetPos(position);
 		rbComp->SetOrientation(rotation);
 		rbComp->SetInverseMass(1.0f);
-		rbComp->SetAccel(glm::vec3(0.0f, -100.8f, 0.0f));
+		rbComp->SetAccel(glm::vec3(0.0f, -300.8f, 0.0f));
+		//rbComp->SetAngularAcc(Random::GetInstance()->GetPointOnUnitSphere() * 10.0f);
 		rbComp->SetOwner(newActor);
 		rbComp->SetAwake(movement);
 		newActor->AddComponent(rbComp);

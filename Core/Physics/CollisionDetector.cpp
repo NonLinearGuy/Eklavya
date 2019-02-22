@@ -3,12 +3,16 @@
 #include "../Components/RigidBodyComponent.h"
 #include "../Debugging/Diagnostics.h"
 #include <sstream>
+#include "../Helpers.h"
+#include <limits>
+#include "../Random.h"
 
 //INTERSECTION TESTS
 
 bool IntersectionTests::OverlapOnAxis(std::shared_ptr<BoxCollider> one, std::shared_ptr<BoxCollider> two, glm::vec3 axis)
 {
 	if (glm::length2(axis) < .0001f) return true;
+	axis = glm::normalize(axis);
 
 	glm::vec3 box1Pos = one->GetBody()->GetAxis(3);
 	glm::vec3 box2Pos = two->GetBody()->GetAxis(3);
@@ -74,7 +78,7 @@ bool IntersectionTests::SphereAndSphere(std::shared_ptr<SphereCollider> one, std
 {
 	glm::vec3 midline = one->GetBody()->GetPosition() - two->GetBody()->GetPosition();
 	float totalRadius = one->GetRadius() + two->GetRadius();
-	return (midline.x * midline.x) + (midline.y * midline.y) + (midline.z * midline.z) < totalRadius * totalRadius;
+	return glm::length2(midline) < totalRadius * totalRadius;
 }
 
 
@@ -121,7 +125,7 @@ bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::share
 		return false;
 
 	ContactData newContact;
-	newContact.m_BodyA = sphere->GetBody();
+	newContact.m_BodyB = sphere->GetBody();
 	newContact.m_BodyA = box->GetBody();
 
 	glm::vec3 relativePos = box->GetBody()->GetPointInLocalSpace(sphere->GetBody()->GetAxis(3));
@@ -143,19 +147,137 @@ bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::share
 	ss << "(" << newContact.m_Normal.x << "," << newContact.m_Normal.y << "," << newContact.m_Normal.z << ")";
 	DiagManager::sPhysicsDiagsMap[KEY_NORMAL] = ss.str();
 	DiagManager::sPhysicsDiagsMap[KEY_INTERPEN] = std::to_string(newContact.m_PenetrationDepth);
-	pContacts.push_back(newContact);
+	//pContacts.push_back(newContact);
 
 	return true;
 
 }
 
-bool ContactGenerator::BoxAndBox(std::shared_ptr<BoxCollider> box1, std::shared_ptr<BoxCollider> box2, std::vector<ContactData>& pContacts)
+float ContactGenerator::GetPenOnAxis(std::shared_ptr<BoxCollider> box1,
+	std::shared_ptr<BoxCollider> box2,
+	const glm::vec3& toCenter,
+	const glm::vec3 axis)
 {
-	
-	return false;
+	float boxOneProjectionLen = IntersectionTests::GetProjectedLength(box1,axis);
+	float boxTwoProjectionLen = IntersectionTests::GetProjectedLength(box2, axis);
+	float toCenterProjectionLen = glm::abs(glm::dot(toCenter,axis));
+	return (boxOneProjectionLen + boxTwoProjectionLen) - toCenterProjectionLen;
 }
 
-bool ContactGenerator::BoxAndPoint(std::shared_ptr<BoxCollider> box1, const glm::vec3 vertex, std::vector<ContactData>& pContacts)
+bool ContactGenerator::CheckAxisForSmallestPen(std::shared_ptr<BoxCollider> box1,
+	std::shared_ptr<BoxCollider> box2,
+	const glm::vec3& toCenter,
+	glm::vec3 axis,
+	unsigned index,
+	unsigned& bestAxis,
+	float& smallestPen)
 {
-	return false;
+	/* checking if axis were parallel when taking cross products*/
+	if (glm::length2(axis) < 0.0001f) return true;
+	axis = glm::normalize(axis);
+
+	float penetration = GetPenOnAxis(box1,box2,toCenter,axis);
+	if (penetration < 0) return false;
+	if (penetration < smallestPen)
+	{
+		smallestPen = penetration;
+		bestAxis = index;
+	}
+	return true;
+}
+
+void ContactGenerator::PointFaceContactForBoxes(std::shared_ptr<BoxCollider> box1,
+	std::shared_ptr<BoxCollider> box2,
+	const glm::vec3& toCenter,
+	float pen,
+	int axisIndex,
+	ContactData& newContact)
+{
+	glm::vec3 normal = box1->GetBody()->GetAxis(axisIndex);
+	if (glm::dot(normal, toCenter) > 0)
+	{
+		normal *= -1.0f;
+	}
+
+	//determining the box2 vertex which is in contact
+	glm::vec3 localContact = box2->GetHalfSize();
+
+	if (glm::dot(normal, box2->GetBody()->GetAxis(0)) < 0) localContact.x *= -1.0f;
+	if (glm::dot(normal, box2->GetBody()->GetAxis(1)) < 0) localContact.y *= -1.0f;
+	if (glm::dot(normal, box2->GetBody()->GetAxis(2)) < 0) localContact.z *= -1.0f;
+
+	newContact.m_Normal = normal;
+	newContact.m_Point = box2->GetBody()->GetPointInWorldSpace(localContact);
+}
+
+bool ContactGenerator::BoxAndBox(std::shared_ptr<BoxCollider> box1, std::shared_ptr<BoxCollider> box2, std::vector<ContactData>& pContacts)
+{
+	unsigned bestAxis = 0xffffff;
+	float smallestPen = MAX_FLOAT;
+	glm::vec3 toCenter = box2->GetBody()->GetAxis(3) - box1->GetBody()->GetAxis(3);
+	//get smallest penetration
+
+	bool overlap = CheckAxisForSmallestPen(box1, box2, toCenter,
+		box1->GetBody()->GetAxis(0), 0, bestAxis, smallestPen) &&
+
+		CheckAxisForSmallestPen(box1, box2, toCenter,
+			box1->GetBody()->GetAxis(1), 1, bestAxis, smallestPen) &&
+
+		CheckAxisForSmallestPen(box1, box2, toCenter,
+			box1->GetBody()->GetAxis(2), 2, bestAxis, smallestPen) &&
+
+		CheckAxisForSmallestPen(box1, box2, toCenter,
+			box2->GetBody()->GetAxis(0), 3, bestAxis, smallestPen) &&
+
+		CheckAxisForSmallestPen(box1, box2, toCenter,
+			box2->GetBody()->GetAxis(1), 4, bestAxis, smallestPen) &&
+
+		CheckAxisForSmallestPen(box1, box2, toCenter,
+			box2->GetBody()->GetAxis(2), 5, bestAxis, smallestPen);
+
+	if (!overlap) return false;
+
+	assert(bestAxis != 0xffffff);
+
+	/* Box2 point is colliding with the face of box1*/
+	if (bestAxis < 3)
+	{
+		ContactData newContact;
+		newContact.m_BodyA = box1->GetBody();
+		newContact.m_BodyB = box2->GetBody();
+		newContact.m_PenetrationDepth = smallestPen;
+		PointFaceContactForBoxes(box1,box2,toCenter,smallestPen,bestAxis,newContact);
+		pContacts.push_back(newContact);
+	}
+	/* Box1 point is colliding with the face of box2*/
+	else if (bestAxis < 6)
+	{
+		ContactData newContact;
+		newContact.m_BodyA = box2->GetBody();
+		newContact.m_BodyB = box1->GetBody();
+		newContact.m_PenetrationDepth = smallestPen;
+		PointFaceContactForBoxes(box2, box1, toCenter * -1.0f, smallestPen, bestAxis - 3, newContact);
+		pContacts.push_back(newContact);
+	}
+
+	return true;
+}
+
+void Resolver::ResolveContacts(std::vector<ContactData> contacts)
+{
+	for (auto contact : contacts)
+	{
+		float pen = contact.m_PenetrationDepth;
+		if (contact.m_BodyB->GetCollider()->GetType() != EColliderType::SPHERE)
+		{
+			contact.m_BodyB->SetVel(-contact.m_Normal * 40.0f * pen);
+			contact.m_BodyB->SetAngularVel(Random::GetInstance()->GetPointOnUnitSphere() * 40.0f);
+		}
+		if (contact.m_BodyB->GetCollider()->GetType() == EColliderType::SPHERE)
+		{
+			contact.m_BodyB->SetVel(pen * contact.m_Normal * 120.0f);
+			contact.m_BodyB->SetAngularVel(Random::GetInstance()->GetPointOnUnitSphere() * 10.0f);
+		}
+		
+	}
 }

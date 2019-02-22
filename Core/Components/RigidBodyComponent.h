@@ -28,7 +28,11 @@ public:
 	inline void SetPos(glm::vec3 pPosition) { m_Position = pPosition; }
 	inline void SetOrientation(const glm::vec3& eulerAngles) { m_Orientation = glm::quat(eulerAngles);  }
 	inline void SetVel(glm::vec3 pVelocity) { m_LinearVelocity = pVelocity; }
+	inline void SetAngularVel(glm::vec3 pVel) { m_Rotation = pVel; };
 	inline void SetAccel(glm::vec3 pAccel) { m_LinearAcceleration = pAccel; }
+	inline void SetAngularAcc(glm::vec3 pAccel) { m_Rotation = pAccel; }
+	inline glm::vec3 GetVelocity() { return m_LinearVelocity; }
+	inline glm::vec3 GetAngularVel() { return m_Rotation; }
 
 	inline glm::vec3 GetPosition() { return m_Position; }
 	inline std::shared_ptr<ICollider> GetCollider() { return m_Collider; }

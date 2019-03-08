@@ -5,7 +5,6 @@
 
 #include "Utils/Logger.h"
 #include "Scene/Scene.h"
-#include"Components/MovementComponent.h"
 #include "Renderer/GLRenderer.h"
 #include "Physics/ProjectileComponent.h"
 #include "Physics/CollisionDetector.h"
@@ -60,7 +59,8 @@
 	void Engine::PrepareScene()
 	{
 		ActorFactory::CreateSky();
-		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(500.0f,10.0f,500.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f));
+		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(500.0f,10.0f,500.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
+		ActorFactory::CreateModelActor(glm::vec3(0.0f,1000.0f,0.0f),glm::vec3(30.0f),glm::vec3(0.0f));
 		//ActorFactory::CreateBoxCollider(glm::vec3(.0f, 20.0f, 240.0f), glm::vec3(500.0f, 300.0f, 10.0f), glm::vec3(0.0f));
 	
 	}
@@ -149,10 +149,11 @@
 				//if(rand() % 2 == 1)
 					//ActorFactory::CreateSphereCollider(glm::vec3(0.0f, 300.0f, 0.0f),radius * .5f,glm::vec3(0.0f));
 				//else
-					ActorFactory::CreateBoxCollider(glm::vec3(0.0f,300.0f,0.0f), glm::vec3(radius), glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f),true);
-		
-				//ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 400.0f, 0.0f), glm::vec3(radius * 2.0f), glm::vec3(-1.0f, -2.0f, 0.0f), direction,true);
-				//ActorFactory::CreateBoxCollider(glm::vec3(0.0f,100.0f,0.0f), glm::vec3(radius * 2.0f),glm::vec3(-1.0f,0.0f,0.0f),direction,false);
+					//ActorFactory::CreateBoxCollider(glm::vec3(0.0f,300.0f,0.0f), glm::vec3(radius), glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f),true);
+	
+				ActorFactory::CreateBoxCollider(glm::vec3(distance, 200.0f, 0.0f), glm::vec3(50.0f), glm::vec3(0.0f, 0.0f, 0.0f),-1.0f * direction,10000.0f, false,true);
+				ActorFactory::CreateBoxCollider(glm::vec3(-distance, 200.0f, 0.0f), glm::vec3(50.0f), glm::vec3(0.0f, 0.0f, 0.0f), direction, 100000.0f, false);
+				
 
 			}
 

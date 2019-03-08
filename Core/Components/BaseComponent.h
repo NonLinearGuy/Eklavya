@@ -24,6 +24,7 @@ public:
 	virtual void Tick(float deltaTime) {}
 
 	inline void SetOwner(std::shared_ptr<GameActor> pOwner) { m_Owner = pOwner; }
+	unsigned GetOwnerID();
 
 protected:
 	std::shared_ptr<GameActor> m_Owner;

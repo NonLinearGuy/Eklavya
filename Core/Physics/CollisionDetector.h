@@ -21,7 +21,11 @@ public:
 	/*holds relative position from center of both bodies*/
 	glm::vec3 m_RelContactPositions[2];
 	glm::mat3 m_ContactToWorld;
+	glm::mat3 m_WorldToContact;
 	void CalculateContactToWorld();
+	void CalculateContactToWorld2();
+	void PrepareData();
+	void applyImpulse();
 };
 
 

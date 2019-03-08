@@ -30,8 +30,8 @@ public:
 class EventCollision : public IEventData
 {
 public:
-	std::string m_FirstName;
-	std::string m_SecondName;
+	unsigned mFirstActorID;
+	unsigned mSecondActorID;
 };
 
 class EventContactsUpdated : public IEventData

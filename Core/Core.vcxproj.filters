@@ -31,6 +31,9 @@
     <Filter Include="Sound">
       <UniqueIdentifier>{e28487a1-bf35-4061-a7c7-79fdf3d7026d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{c242e46b-2664-483e-a2d9-1d383e4b5e08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\BaseComponent.cpp">
@@ -147,6 +150,25 @@
     <ClCompile Include="Scene\ContactsNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\ModelNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\PlayerMovementComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\AnimationComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Joint.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\KeyFrame.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -213,9 +235,6 @@
     <ClInclude Include="Renderer\RenderState.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Components\MovementComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer\Framebuffer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -279,6 +298,29 @@
     <ClInclude Include="Scene\ContactsNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\BoundNodes.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Scene\ModelNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\PlayerMovementComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\KeyFrame.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Joint.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\AnimationComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt" />
@@ -335,7 +377,6 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Fonts\ocr.fnt" />
-    <None Include="Assets\Fonts\diag_font.fnt" />
     <None Include="Assets\Shaders\unlit_solids_fs.glsl">
       <Filter>Shaders</Filter>
     </None>
@@ -346,6 +387,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\world_point_fs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\animated_solids_vs.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\animated_solids_fs.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

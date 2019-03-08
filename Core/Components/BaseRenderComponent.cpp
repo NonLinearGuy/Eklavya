@@ -2,6 +2,7 @@
 #include "../Scene/BoxNode.h"
 #include "../Scene/SphereNode.h"
 #include "../Scene/SkyNode.h"
+#include "../Scene/ModelNode.h"
 #include "Transform.h"
 #include "GameActor.h"
 #include "../Helpers.h"
@@ -15,6 +16,7 @@ ComponentID SphereRenderComponent::s_ID = 3;
 ComponentID SkyRenderComponent::s_ID = 4;
 ComponentID BoxColliderRenderComponent::s_ID = 5;
 ComponentID SphereColliderRenderComponent::s_ID = 6;
+ComponentID MeshRenderComponent::s_ID = 7;
 
 
 //Base
@@ -181,6 +183,25 @@ void SkyRenderComponent::CreateBaseNode()
 	}
 }
 
+MeshRenderComponent::MeshRenderComponent(const std::string & name)
+	:BaseRenderComponent(),m_ModelName(name)
+{
+	
+}
 
+MeshRenderComponent::~MeshRenderComponent()
+{
+}
 
-
+void MeshRenderComponent::CreateBaseNode()
+{
+	if (m_Owner)
+	{
+		auto sharedTransform = MakeSharedPtr(m_Owner->GetComponent<Transform>(Transform::s_ID));
+		if (sharedTransform)
+		{
+			BaseRenderComponent* weakThis(this);
+			m_BaseNode = std::make_shared<ModelNode>(m_Owner->GetID(), weakThis, ERenderGroup::ANIMATED_SOLID);
+		}
+	}
+}

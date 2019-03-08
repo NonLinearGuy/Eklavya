@@ -13,6 +13,7 @@ PawnActor::PawnActor(const std::string & name, ActorID id)
 
 PawnActor::~PawnActor()
 {
+	
 }
 
 void PawnActor::PollKeyAction()

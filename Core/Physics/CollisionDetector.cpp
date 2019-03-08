@@ -7,8 +7,9 @@
 #include <limits>
 #include "../Random.h"
 
-//INTERSECTION TESTS
 
+#pragma region INTERSECTION_TESTS
+//INTERSECTION TESTS
 bool IntersectionTests::OverlapOnAxis(std::shared_ptr<BoxCollider> one, std::shared_ptr<BoxCollider> two, glm::vec3 axis)
 {
 	if (glm::length2(axis) < .0001f) return true;
@@ -61,6 +62,7 @@ bool IntersectionTests::BoxAndBox(std::shared_ptr<BoxCollider> one, std::shared_
 	return collision;
 		
 }
+
 bool IntersectionTests::BoxAndSphere(std::shared_ptr<BoxCollider>  box, std::shared_ptr<SphereCollider> sphere)
 {
 	glm::vec3 localSpherePosition = box->GetBody()->GetPointInLocalSpace(sphere->GetBody()->GetPosition());
@@ -80,12 +82,9 @@ bool IntersectionTests::SphereAndSphere(std::shared_ptr<SphereCollider> one, std
 	float totalRadius = one->GetRadius() + two->GetRadius();
 	return glm::length2(midline) < totalRadius * totalRadius;
 }
+#pragma endregion
 
-
-
-//CONTACT GENERATION
-
-
+#pragma region CONTACT_GENERATOR
 bool ContactGenerator::SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne, std::shared_ptr<SphereCollider> sphereTwo, std::vector<ContactData>& pContacts)
 {
 	if (!IntersectionTests::SphereAndSphere(sphereOne, sphereTwo)) return false;
@@ -116,8 +115,6 @@ bool ContactGenerator::SphereAndSphere(std::shared_ptr<SphereCollider> sphereOne
 	return true;
 }
 
-
-
 bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::shared_ptr<SphereCollider> sphere, std::vector<ContactData>& pContacts)
 {
 	//early test
@@ -125,8 +122,8 @@ bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::share
 		return false;
 
 	ContactData newContact;
-	newContact.m_BodyB = sphere->GetBody();
 	newContact.m_BodyA = box->GetBody();
+	newContact.m_BodyB = sphere->GetBody();
 
 	glm::vec3 relativePos = box->GetBody()->GetPointInLocalSpace(sphere->GetBody()->GetAxis(3));
 	glm::vec3 halfSize = box->GetHalfSize();
@@ -135,7 +132,7 @@ bool ContactGenerator::SphereAndBox(std::shared_ptr<BoxCollider> box, std::share
 	glm::vec3  closestPointWorld = box->GetBody()->GetPointInWorldSpace(closestPoint);
 
 	newContact.m_Point = closestPointWorld;
-	newContact.m_Normal = glm::normalize(sphere->GetBody()->GetAxis(3) - closestPointWorld);
+	newContact.m_Normal = glm::normalize(closestPointWorld - sphere->GetBody()->GetAxis(3));
 	newContact.m_PenetrationDepth = sphere->GetRadius() - glm::length(closestPoint - relativePos);
 
 	pContacts.push_back(newContact);
@@ -263,21 +260,153 @@ bool ContactGenerator::BoxAndBox(std::shared_ptr<BoxCollider> box1, std::shared_
 	return true;
 }
 
+#pragma endregion
+
+#pragma region CONTACT_AND_RESOLVER
+
+
+void ContactData::CalculateContactToWorld2()
+{
+	glm::vec3 contactTangent[2];
+
+	// Check whether the Z-axis is nearer to the X or Y axis
+	if (glm::abs(m_Normal.x) > glm::abs(m_Normal.y))
+	{
+		// Scaling factor to ensure the results are normalised
+		const float s = (float)1.0f / sqrt(m_Normal.z*m_Normal.z +
+			m_Normal.x*m_Normal.x);
+
+		// The new X-axis is at right angles to the world Y-axis
+		contactTangent[0].x = m_Normal.z*s;
+		contactTangent[0].y = 0;
+		contactTangent[0].z = -m_Normal.x*s;
+
+		// The new Y-axis is at right angles to the new X- and Z- axes
+		contactTangent[1].x = m_Normal.y*contactTangent[0].x;
+		contactTangent[1].y = m_Normal.z*contactTangent[0].x -
+			m_Normal.x*contactTangent[0].z;
+		contactTangent[1].z = -m_Normal.y*contactTangent[0].x;
+	}
+	else
+	{
+		// Scaling factor to ensure the results are normalised
+		const float s = (float)1.0 / sqrt(m_Normal.z*m_Normal.z +
+			m_Normal.y*m_Normal.y);
+
+		// The new X-axis is at right angles to the world X-axis
+		contactTangent[0].x = 0;
+		contactTangent[0].y = -m_Normal.z*s;
+		contactTangent[0].z = m_Normal.y*s;
+
+		// The new Y-axis is at right angles to the new X- and Z- axes
+		contactTangent[1].x = m_Normal.y*contactTangent[0].z -
+			m_Normal.z*contactTangent[0].y;
+		contactTangent[1].y = -m_Normal.x*contactTangent[0].z;
+		contactTangent[1].z = m_Normal.x*contactTangent[0].y;
+	}
+
+	m_ContactToWorld[0] = m_Normal;
+	m_ContactToWorld[1] = contactTangent[0];
+	m_ContactToWorld[2] = contactTangent[1];
+
+	m_WorldToContact = glm::inverse(m_ContactToWorld);
+}
+
+
+void ContactData::CalculateContactToWorld()
+{
+	glm::vec3 tangents[2];
+
+	if (glm::abs(m_Normal.x) > glm::abs(m_Normal.y))
+	{
+		tangents[1] = glm::normalize(glm::cross(m_Normal,glm::vec3(0.0f,1.0f,0.0f)));
+		tangents[0] = glm::cross(tangents[1],m_Normal);
+	
+	}
+	else
+	{
+		tangents[1] = glm::normalize(glm::cross(m_Normal, glm::vec3(0.0f, 0.0f, 1.0f)));
+		tangents[0] = glm::cross(tangents[1], m_Normal);
+	}
+
+	m_ContactToWorld[0] = m_Normal;
+	m_ContactToWorld[1] = tangents[0];
+	m_ContactToWorld[2] = tangents[1];
+
+	m_WorldToContact = glm::inverse(m_ContactToWorld);
+	
+}
+
+void ContactData::PrepareData()
+{
+	CalculateContactToWorld2();
+	m_RelContactPositions[0] = m_Point - m_BodyA->GetAxis(3);
+	m_RelContactPositions[1] = m_Point - m_BodyB->GetAxis(3);
+}
+
+void ContactData::applyImpulse()
+{
+	float deltaVelLocal = m_BodyA->GetInverseMass();
+	deltaVelLocal += m_BodyB->GetInverseMass();
+	
+
+	//calculating closing velocity
+	glm::vec3 closingVel = glm::cross(m_BodyA->GetAngularVel(),m_RelContactPositions[0]);
+	closingVel += m_BodyA->GetVelocity();
+	closingVel += glm::cross(m_BodyB->GetAngularVel(), m_RelContactPositions[1]);
+	closingVel += m_BodyB->GetVelocity();
+
+	glm::vec3 closingVelLocal = m_WorldToContact *  closingVel;
+	
+	//desired change in velocity
+	float velocityLimit = (float)0.25f;
+	// Calculate the acceleration induced velocity accumulated this frame
+	float velocityFromAcc = 0;
+	velocityFromAcc += glm::dot(m_BodyA->GetAccel()* .033f,m_Normal);	
+	velocityFromAcc -= glm::dot(m_BodyB->GetAccel()* .033f, m_Normal);
+
+
+	// If the velocity is very slow, limit the restitution
+	float thisRestitution = .4f;;
+	if (glm::abs(closingVelLocal.x) < velocityLimit)
+	{
+		thisRestitution = (float)0.0f;
+	}
+
+	// Combine the bounce velocity with the removed
+	// acceleration velocity.
+	float desiredVelChange = (-1.0f * closingVelLocal.x - thisRestitution) * (closingVelLocal.x - velocityFromAcc);
+
+	// Calculate the impulse
+	glm::vec3 impulseContact;
+	impulseContact.x = desiredVelChange / deltaVelLocal;
+	impulseContact.y = 0;
+	impulseContact.z = 0;
+
+	glm::vec3 impulseWorld = m_ContactToWorld * impulseContact;
+
+	glm::vec3 impulseA, impulseB;
+	impulseB = impulseWorld;
+	impulseA = impulseWorld * -1.0f;
+
+	glm::vec3 linearChange;
+	//linear
+	linearChange = m_BodyB->GetInverseMass() * impulseB;
+	m_BodyB->AddVelocity(linearChange);
+	
+	//linear
+	linearChange = m_BodyA->GetInverseMass() * impulseA;	
+	
+	m_BodyA->AddVelocity(linearChange);
+}
+
+//MUTHAFUCKIN' CONTACT RESOLVER
 void Resolver::ResolveContacts(std::vector<ContactData> contacts)
 {
-	for (auto contact : contacts)
+	for (auto& contact : contacts)
 	{
-		float pen = contact.m_PenetrationDepth;
-		if (contact.m_BodyB->GetCollider()->GetType() != EColliderType::SPHERE)
-		{
-			contact.m_BodyB->SetVel(-contact.m_Normal * 40.0f * pen);
-			contact.m_BodyB->SetAngularVel(Random::GetInstance()->GetPointOnUnitSphere() * 40.0f);
-		}
-		if (contact.m_BodyB->GetCollider()->GetType() == EColliderType::SPHERE)
-		{
-			contact.m_BodyB->SetVel(pen * contact.m_Normal * 120.0f);
-			contact.m_BodyB->SetAngularVel(Random::GetInstance()->GetPointOnUnitSphere() * 10.0f);
-		}
-		
+		contact.PrepareData();
+		contact.applyImpulse();
 	}
 }
+#pragma endregion

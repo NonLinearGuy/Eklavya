@@ -23,18 +23,40 @@ public:
 
 	void SetMass(float mass);
 	void SetInverseMass(float inverseMass);
+	inline float GetInverseMass() { return m_InverseMass; }
+	glm::mat3 GetTensor() 
+	{ 
+		return m_InverseTensorWorld; 
+	}
 	void UpdateTensor();
 
 	inline void SetPos(glm::vec3 pPosition) { m_Position = pPosition; }
+
 	inline void SetOrientation(const glm::vec3& eulerAngles) { m_Orientation = glm::quat(eulerAngles);  }
 	inline void SetVel(glm::vec3 pVelocity) { m_LinearVelocity = pVelocity; }
 	inline void SetAngularVel(glm::vec3 pVel) { m_Rotation = pVel; };
-	inline void SetAccel(glm::vec3 pAccel) { m_LinearAcceleration = pAccel; }
-	inline void SetAngularAcc(glm::vec3 pAccel) { m_Rotation = pAccel; }
+	inline void SetAccel(glm::vec3 pAccel) 
+	{
+		m_LinearAcceleration = pAccel; 
+	}
+	inline glm::vec3 GetAccel() { return m_LinearAcceleration; }
+	inline void SetAngularAcc(glm::vec3 pAccel) { m_AngularAcceleration = pAccel; }
 	inline glm::vec3 GetVelocity() { return m_LinearVelocity; }
 	inline glm::vec3 GetAngularVel() { return m_Rotation; }
+	inline void ApplyLinearImpulse(const glm::vec3& impulse)
+	{
+		m_IsAwake = true;
+		m_LinearVelocity += impulse;
+	}
 
-	inline glm::vec3 GetPosition() { return m_Position; }
+	void AddVelocity(glm::vec3 value) 
+	{ 
+		m_LinearVelocity += value; 
+		int a = 2 + 3;
+	}
+	void AddAngularVelocity(glm::vec3 value) { m_Rotation += value; }
+
+	inline glm::vec3& GetPosition() { return m_Position; }
 	inline std::shared_ptr<ICollider> GetCollider() { return m_Collider; }
 
 	glm::vec3 GetPointInLocalSpace(const glm::vec3& point);
@@ -60,6 +82,7 @@ private:
 
 	//object props
 	float m_InverseMass;
+	float m_Mass;
 
 	//linear motion
 	glm::vec3 m_LinearVelocity;
@@ -70,6 +93,7 @@ private:
 	//Angular motion
 	
 	glm::vec3 m_Rotation;
+	glm::vec3 m_AngularAcceleration;
 	glm::quat m_Orientation;
 	glm::mat3 m_InverseTensor;
 	glm::mat3 m_InverseTensorWorld;

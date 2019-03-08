@@ -14,9 +14,12 @@
 #include "../Components/BaseRenderComponent.h"
 #include "ArrowNode.h"
 #include "ContactsNode.h"
+#include "BoxNode.h"
+#include "SphereNode.h"
 
 
-//#define DRAW_TRANSFORM
+#define DRAW_TRANSFORM
+#define DRAW_BOUNDS
 
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
@@ -28,6 +31,9 @@ Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::s
 
 	std::shared_ptr<BaseNode> staticGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::SOLID);
 	m_Groups.push_back(staticGroup);
+
+	std::shared_ptr<BaseNode> animatedGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::ANIMATED_SOLID);
+	m_Groups.push_back(animatedGroup);
 
 	std::shared_ptr<BaseNode> waterGroup = std::make_shared<BaseNode>(ACTOR_NOT_NEEDED, nullptr, ERenderGroup::WATER);
 	m_Groups.push_back(waterGroup);
@@ -59,8 +65,6 @@ Scene::~Scene()
 
 void Scene::Init()
 {
-
-
 	m_LightSource.m_Ambient = glm::vec3(1.0f);
 	m_LightSource.m_Diffuse = glm::vec3(.8f);
 	m_LightSource.m_Specular = glm::vec3(1.0f);
@@ -95,6 +99,13 @@ void Scene::OnActorCreated(std::shared_ptr<IEventData> data)
 		auto arrowNode = std::make_shared<ArrowNode>(actor->GetID());
 		arrowNode->Init();
 		AddChild(arrowNode);
+	}
+#endif
+
+#ifdef DRAW_BOUNDS
+	if (baseNode->GetBoundVolume())
+	{
+		
 	}
 #endif
 	
@@ -151,6 +162,7 @@ void Scene::RemoveChild(std::shared_ptr<BaseNode> pNode)
 void Scene::ShadowPassRender()
 {
 	m_Groups[ERenderGroup::SOLID]->Render(this);
+	m_Groups[ERenderGroup::ANIMATED_SOLID]->Render(this);
 }
 
 void Scene::MainPassRender()
@@ -170,6 +182,14 @@ void Scene::MainPassRender()
 			m_Renderer->SetShadowPassValues();
 			m_Renderer->SetLightValues(lightViewSpacePos,&m_LightSource);
 			m_Groups[ERenderGroup::SOLID]->Render(this);
+			break;
+		case ERenderGroup::ANIMATED_SOLID:
+			m_Renderer->SetShaderProgram(EShaderProgram::ANIMATED_SOLID);
+			m_Renderer->SetProjectionMatrix(projection);
+			m_Renderer->SetViewMatrix(view);
+			m_Renderer->SetShadowPassValues();
+			m_Renderer->SetLightValues(lightViewSpacePos, &m_LightSource);
+			m_Groups[ERenderGroup::ANIMATED_SOLID]->Render(this);
 			break;
 		case ERenderGroup::WATER:
 			glEnable(GL_BLEND);

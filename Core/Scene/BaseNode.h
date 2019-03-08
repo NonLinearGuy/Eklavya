@@ -9,6 +9,7 @@ enum ERenderGroup
 {
 	MIN = 0,
 	SOLID = MIN,
+	ANIMATED_SOLID,
 	WATER,
 	BOUND_VOLUME,
 	OUTLINED,

@@ -44,6 +44,7 @@ public:
 	}
 
 	inline ActorID GetID() { return m_ID; }
+	inline std::string GetName() { return m_Name; }
 
 protected:
 	std::string m_Name;

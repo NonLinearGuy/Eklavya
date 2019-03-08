@@ -22,10 +22,11 @@ public:
 	static void CreateSky();
 	static std::shared_ptr<RigidBodyComponent> CreateSphereCollider(const glm::vec3 center,
 		float radius,
-		glm::vec3 direction);
+		glm::vec3 direction,float mass);
 	static std::shared_ptr<RigidBodyComponent> CreateBoxCollider(const glm::vec3 position,
 		const glm::vec3& size, 
 		const glm::vec3& rotation, 
-		glm::vec3 direction,
-		bool movement = false);
+		glm::vec3 direction,float mass,
+		bool infiniteMass = false,bool texture2 = false);
+	static void CreateModelActor(const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation);
 };

@@ -10,6 +10,7 @@
 #include "CollisionDetector.h"
 #include "../Components/BaseRenderComponent.h"
 #include "../Scene/BaseNode.h"
+#include "../Components/BaseComponent.h"
 
 Physics::Physics()
 {
@@ -68,7 +69,6 @@ void Physics::Simulate(float delta)
 {
 	DiagManager::sPhysicsDiagsMap[EMapKeys::KEY_COLLIDERS] = std::to_string(m_Colliders.size());
 	
-	int counter = 0;
 	//Generate Contacts
 	std::vector<ContactData> contacts;
 
@@ -81,89 +81,26 @@ void Physics::Simulate(float delta)
 			auto firstCollider = *first;
 			auto secondCollider = *second;
 
-			if (firstCollider->GetType() == EColliderType::SPHERE && secondCollider->GetType() == EColliderType::SPHERE)
-			{
-				auto sphere1 = std::static_pointer_cast<SphereCollider>(firstCollider);
-				auto sphere2 = std::static_pointer_cast<SphereCollider>(secondCollider);
-				
-				if (ContactGenerator::SphereAndSphere(sphere1, sphere2,contacts))
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f,0.0f,0.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//sphere1->GetBody()->SetAwake(false);
-					//sphere2->GetBody()->SetAwake(false);
-				}
-				else
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-				}
-			}
-
-			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::SPHERE)
-			{
-				auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
-				auto sphere2 = std::static_pointer_cast<SphereCollider>(secondCollider);
-
-				if (ContactGenerator::SphereAndBox(box1, sphere2, contacts))
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//box1->GetBody()->SetAwake(false);
-				//	sphere2->GetBody()->SetAwake(false);
-				}
-				else
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-				}
-			}
-
-			if (firstCollider->GetType() == EColliderType::SPHERE && secondCollider->GetType() == EColliderType::BOX)
-			{
-				auto box = std::static_pointer_cast<BoxCollider>(secondCollider);
-				auto sphere = std::static_pointer_cast<SphereCollider>(firstCollider);
-
-				if (ContactGenerator::SphereAndBox(box, sphere, contacts))
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//box->GetBody()->SetAwake(false);
-					//sphere->GetBody()->SetAwake(false);
-				}
-				else
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-				}
-			}
-
 			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::BOX)
 			{
-				auto box1 = std::static_pointer_cast<BoxCollider>(secondCollider);
-				auto box2 = std::static_pointer_cast<BoxCollider>(firstCollider);
+				auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
+				auto box2 = std::static_pointer_cast<BoxCollider>(secondCollider);
 
 				if (ContactGenerator::BoxAndBox(box1,box2,contacts))
 				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 0.0f, 0.0f));
 					box1->GetBody()->SetAwake(false);
 					box2->GetBody()->SetAwake(false);
-				}
-				else
-				{
-					//m_BaseNodeMap[firstCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-					//m_BaseNodeMap[secondCollider]->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+					
+					std::shared_ptr<EventCollision> data = std::make_shared<EventCollision>();
+					data->mFirstActorID = box1->GetBody()->GetOwnerID();
+					data->mSecondActorID = box1->GetBody()->GetOwnerID();
+					EventDispatcher::GetInstance().TriggerEvent(EEventType::COLLISION,data);
 				}
 			}
-			
+
 		}
 	}
 
-	auto data = std::make_shared<EventContactsUpdated>();
-	data->m_ContactsWorld = contacts;
-	EventDispatcher::GetInstance().TriggerEvent(EEventType::CONTACTS_UPDATED,data);
-
-	Resolver::ResolveContacts(contacts);
+	
 	//Resolve Constraints
 }

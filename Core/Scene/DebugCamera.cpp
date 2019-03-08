@@ -21,7 +21,7 @@ DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	m_Senstivity(.005),
 	m_Pitch(90.0f),
 	m_Yaw(0.0f),
-	m_Position(0.0f,150.0f,200.0f),
+	m_Position(0.0f,500.0f,500.0f),
 	m_Front(0.0f,-0.5f,-1.0f),
 	m_CursorStartedMoving(true),
 	m_Speed(650),
@@ -33,7 +33,7 @@ DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	m_Interpolating(false),
 	m_InterpWeight(0.0f)
 {
-
+	UpdateCamera();
 }
 
 
@@ -83,6 +83,7 @@ void DebugCamera::UpdateCamera()
 
 void DebugCamera::PollKeyAction()
 {
+	
 	float dt = Timer::GetInstance()->GetDeltaTimeInSeconds();
 	
 	if (m_Interpolating) return;
@@ -98,6 +99,7 @@ void DebugCamera::PollKeyAction()
 
 void DebugCamera::OnKeyAction(int key, int action)
 {
+	
 	if (GLFW_KEY_LEFT_SHIFT == key && GLFW_PRESS == action)
 	{
 		m_Debug = !m_Debug;
@@ -137,8 +139,6 @@ void DebugCamera::Tick(Scene* scene, float deltaTime)
 			m_InterpWeight = 0.0f;
 			m_Yaw = result.y;
 			m_Pitch = 180 - result.x;
-			
-			return;
 		}
 	}
 }

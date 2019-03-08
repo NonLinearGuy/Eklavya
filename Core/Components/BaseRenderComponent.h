@@ -90,3 +90,18 @@ private:
 	int m_Sectors;
 	float m_Radius;
 };
+
+class MeshRenderComponent : public BaseRenderComponent
+{
+public:
+	MeshRenderComponent(const std::string& name);
+	~MeshRenderComponent();
+	static ComponentID s_ID;
+	inline std::string GetModelName() { return m_ModelName; }
+	void CreateBaseNode() override;
+private:
+	std::string m_ModelName;
+	int m_Stacks;
+	int m_Sectors;
+	float m_Radius;
+};

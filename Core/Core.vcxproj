@@ -203,10 +203,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActorFactory.cpp" />
+    <ClCompile Include="Animation\Animation.cpp" />
+    <ClCompile Include="Animation\Joint.cpp" />
+    <ClCompile Include="Animation\KeyFrame.cpp" />
+    <ClCompile Include="Components\AnimationComponent.cpp" />
     <ClCompile Include="Components\BaseComponent.cpp" />
     <ClCompile Include="Components\BaseRenderComponent.cpp" />
     <ClCompile Include="Components\GameActor.cpp" />
     <ClCompile Include="Components\PawnActor.cpp" />
+    <ClCompile Include="Components\PlayerMovementComponent.cpp" />
     <ClCompile Include="Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
     <ClCompile Include="Debugging\Diagnostics.cpp" />
@@ -217,6 +222,7 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Physics\CollisionDetector.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
@@ -239,6 +245,7 @@
     <ClCompile Include="Scene\ContactsNode.cpp" />
     <ClCompile Include="Scene\DebugCamera.cpp" />
     <ClCompile Include="Scene\Frustum.cpp" />
+    <ClCompile Include="Scene\ModelNode.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scene\SkyNode.cpp" />
     <ClCompile Include="Scene\SphereNode.cpp" />
@@ -249,11 +256,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorFactory.h" />
+    <ClInclude Include="Animation\Animation.h" />
+    <ClInclude Include="Animation\Joint.h" />
+    <ClInclude Include="Animation\KeyFrame.h" />
+    <ClInclude Include="Components\AnimationComponent.h" />
     <ClInclude Include="Components\BaseComponent.h" />
     <ClInclude Include="Components\GameActor.h" />
     <ClInclude Include="Components\BaseRenderComponent.h" />
-    <ClInclude Include="Components\MovementComponent.h" />
     <ClInclude Include="Components\PawnActor.h" />
+    <ClInclude Include="Components\PlayerMovementComponent.h" />
     <ClInclude Include="Components\RigidBodyComponent.h" />
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="Debugging\Diagnostics.h" />
@@ -265,6 +276,8 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Physics\Constants.h" />
     <ClInclude Include="Physics\CollisionDetector.h" />
@@ -283,12 +296,14 @@
     <ClInclude Include="Scene\ArrowNode.h" />
     <ClInclude Include="Scene\BaseNode.h" />
     <ClInclude Include="Scene\BoundingVolume.h" />
+    <ClInclude Include="Scene\BoundNodes.h" />
     <ClInclude Include="Scene\BoxNode.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\ContactsNode.h" />
     <ClInclude Include="Scene\DebugCamera.h" />
     <ClInclude Include="Scene\defines.h" />
     <ClInclude Include="Scene\Frustum.h" />
+    <ClInclude Include="Scene\ModelNode.h" />
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scene\SkyNode.h" />
     <ClInclude Include="Scene\SphereNode.h" />
@@ -303,8 +318,9 @@
     <Text Include="log.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Fonts\diag_font.fnt" />
     <None Include="Assets\Fonts\ocr.fnt" />
+    <None Include="Assets\Shaders\animated_solids_fs.glsl" />
+    <None Include="Assets\Shaders\animated_solids_vs.glsl" />
     <None Include="Assets\Shaders\outlined_fs.glsl" />
     <None Include="Assets\Shaders\outlined_vs.glsl" />
     <None Include="Assets\Shaders\world_point_fs.glsl" />

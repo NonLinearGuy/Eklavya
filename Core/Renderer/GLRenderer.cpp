@@ -65,6 +65,7 @@ bool GLRenderer::Initialize()
 	m_Programs[EShaderProgram::OUTLINED] = LoadShaderProgram("outlined");
 	m_Programs[EShaderProgram::UNLIT_SOLID] = LoadShaderProgram("unlit_solids");
 	m_Programs[EShaderProgram::CONTACTS] = LoadShaderProgram("world_point");
+	m_Programs[EShaderProgram::ANIMATED_SOLID] = LoadShaderProgram("animated_solids");
 	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
 	m_ActiveProgram->Use();
 

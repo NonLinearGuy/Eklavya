@@ -20,7 +20,8 @@ BaseNode::BaseNode(ActorID actorID,BaseRenderComponent* renderComponent,ERenderG
 	m_ToWorld(1.0f),
 	m_BoundVolume(nullptr),
 	m_Color(.7f),
-	m_Opacity(1.0f)
+	m_Opacity(1.0f),
+	m_Material()
 {
 
 }

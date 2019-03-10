@@ -29,7 +29,7 @@ void AnimationComponent::Init()
 	// read file via ASSIMP
 	
 	
-	m_Scene = m_Importer.ReadFile("Assets/Animations/idle.dae", aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+	m_Scene = m_Importer.ReadFile("Assets/Animations/dancing.dae", aiProcess_Triangulate | 
 		aiProcess_FlipUVs);
 	// check for errors
 	if (!m_Scene || !m_Scene->mRootNode) // if is Not Zero

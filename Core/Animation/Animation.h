@@ -35,17 +35,10 @@ private:
 	int m_TicksPerSecond;
 	float m_CurrentAnimationTime;
 	Joint* m_RootJoint;
-	std::vector<Joint*> m_JointList;
-	glm::mat4 m_InitialTransform;
 	const aiScene* m_Scene;
 	glm::mat4 m_GlobalInverseTransformation;
 	const aiAnimation* m_Animation;
 	std::vector<Joint*> m_Joints;
 private:
-	void SetupHierarchy(const aiAnimation* animation,const aiScene* scene);
-	const aiNode* GetJointParentNodeFromScene(const std::string& jointName,const aiScene* scene,bool& isRootNode);
-	bool IsPresentInList(const std::string& jointName);
-	Joint* GetJointFromList(const std::string& jointName);
-	bool IsJointInvolved(const aiAnimation* animation,const std::string& jointName);
-	void UpdateFinalTransformRescursively(Joint* rootJoint,glm::mat4 parentTransform);
+	
 };

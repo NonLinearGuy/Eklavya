@@ -25,7 +25,6 @@ KeyFrame::KeyFrame(const aiQuaternion& orientation, const aiVector3D& position, 
 	m_Scale.y = scale.y;
 	m_Scale.z = scale.z;
 
-	
 }
 
 KeyFrame::~KeyFrame()

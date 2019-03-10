@@ -19,6 +19,10 @@ class Animation
 public:
 	Animation(const aiAnimation* animation,const aiScene* scene);
 	~Animation();
+	void SetupJoints();
+	Joint* FindJoint(const std::string& name);
+	void ReadNodeHierarchy(float animationTime,aiNode* node,glm::mat4 parentTransform);
+	aiNodeAnim* GetChannel();
 	void Tick(float delta);
 	glm::mat4 toGlmMat(aiMatrix4x4 mat);
 	std::map<int, glm::mat4,MyComparator> GetFinalTransform() { return m_FinalTransforms; }
@@ -33,6 +37,10 @@ private:
 	Joint* m_RootJoint;
 	std::vector<Joint*> m_JointList;
 	glm::mat4 m_InitialTransform;
+	const aiScene* m_Scene;
+	glm::mat4 m_GlobalInverseTransformation;
+	const aiAnimation* m_Animation;
+	std::vector<Joint*> m_Joints;
 private:
 	void SetupHierarchy(const aiAnimation* animation,const aiScene* scene);
 	const aiNode* GetJointParentNodeFromScene(const std::string& jointName,const aiScene* scene,bool& isRootNode);

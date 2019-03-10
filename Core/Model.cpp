@@ -1,6 +1,8 @@
 #include"Model.h"
+#include"Utils/Logger.h"
 
 std::map<std::string, int> Model::m_BoneIdMap;
+std::map<std::string, glm::mat4> Model::boneOffsetMap;
 
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
@@ -36,7 +38,7 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	}
 	else
 	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
+		Logger::GetInstance()->Log(("Texture failed to load at path: " + std::string(path)));;
 		stbi_image_free(data);
 	}
 

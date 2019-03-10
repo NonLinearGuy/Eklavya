@@ -2,6 +2,7 @@
 #include "Animation.h"
 #include "../Utils/Logger.h"
 #include <iostream>
+#include "../Model.h"
 
 Joint::Joint(const std::string& name, int ID, const aiNodeAnim* channel)
 	:
@@ -14,8 +15,9 @@ Joint::Joint(const std::string& name, int ID, const aiNodeAnim* channel)
 	{
 		aiQuaternion orientation = channel->mRotationKeys[index].mValue;
 		aiVector3D position = channel->mPositionKeys[index].mValue;
+		aiVector3D scale = channel->mScalingKeys[index].mValue;
 		float timeStamp = channel->mPositionKeys[index].mTime;
-		KeyFrame newKeyFrame(orientation,position,timeStamp);
+		KeyFrame newKeyFrame(orientation,position,scale,timeStamp);
 		m_KeyFrames.push_back(newKeyFrame);
 	}
 }
@@ -62,11 +64,15 @@ glm::mat4 Joint::Interpolate(const KeyFrame& last, const KeyFrame& next, float s
 {
 	glm::quat finalOrientation =  glm::slerp(last.m_Orientation,next.m_Orientation,scale);
 	glm::vec3 finalPosition = glm::mix(last.m_Position,next.m_Position,scale);
+	glm::vec3 finalScale = glm::mix(last.m_Scale,next.m_Scale,scale);
+
+	finalOrientation = glm::normalize(finalOrientation);
 
 	glm::mat4 rotation = glm::toMat4(finalOrientation);
+	glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f),finalScale);
 	glm::mat4 translation = glm::translate(glm::mat4(1.0f),finalPosition);
 
-	return (translation * rotation);
+	return translation*rotation * scaleMat;
 }
 
 
@@ -77,10 +83,7 @@ void Joint::Update(float animationTime)
 	GetLastAndNextFrames(lastFrame,nextFrame,animationTime);
 	float scale = CalculateProgression(lastFrame,nextFrame,animationTime);
 	m_LocalTransform = Interpolate(lastFrame, nextFrame, scale);
-	for (auto child : m_Children)
-	{
-		child->Update(animationTime);
-	}
+	
 }
 
 void Joint::PrintHeirarchy()

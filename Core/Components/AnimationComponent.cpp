@@ -1,9 +1,8 @@
 #include "AnimationComponent.h"
-#include <assimp/scene.h>
-#include <assimp/Importer.hpp>
+
 #include "../Utils/Logger.h"
 #include <assimp/postprocess.h>
-
+#include "../Model.h"
 #include "../Animation/Animation.h"
 
 ComponentID AnimationComponent::s_ID = 9;
@@ -12,9 +11,9 @@ AnimationComponent::AnimationComponent(const std::string & animationName)
 	:
 	m_AnimName(animationName)
 {
-	m_Transforms.reserve(100);
+	m_Transforms.reserve(110);
 
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 110; i++)
 		m_Transforms.push_back(glm::mat4(1.0f));
 
 	
@@ -28,19 +27,18 @@ AnimationComponent::~AnimationComponent()
 void AnimationComponent::Init()
 {
 	// read file via ASSIMP
-	Assimp::Importer importer;
-	const aiScene* scene;
-	scene = importer.ReadFile(("Assets/Animations/" + m_AnimName).c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals |
+	
+	
+	m_Scene = m_Importer.ReadFile("Assets/Animations/idle.dae", aiProcess_Triangulate | aiProcess_GenSmoothNormals |
 		aiProcess_FlipUVs);
 	// check for errors
-	if (!scene || !scene->mRootNode) // if is Not Zero
+	if (!m_Scene || !m_Scene->mRootNode) // if is Not Zero
 	{
-		Logger::GetInstance()->Log("ERROR::ASSIMP:: " + std::string(importer.GetErrorString()));
+		Logger::GetInstance()->Log("ERROR::ASSIMP:: " + std::string(m_Importer.GetErrorString()));
 		return;
 	}
 
-	m_Animation = new Animation(scene->mAnimations[0],scene);
-
+	m_Animation = new Animation(m_Scene->mAnimations[0],m_Scene);
 }
 
 void AnimationComponent::Destroy()
@@ -51,6 +49,10 @@ void AnimationComponent::Destroy()
 void AnimationComponent::Tick(float dt)
 {
 	m_Animation->Tick(dt);
+
+	m_Transforms.clear();
+	m_Transforms.resize(110);
+	auto boneMap = Model::m_BoneIdMap;
 	auto jointTransformMap = m_Animation->GetFinalTransform();
 	for (auto pair : jointTransformMap)
 		m_Transforms[pair.first] = pair.second;

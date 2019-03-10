@@ -30,6 +30,7 @@
 		void SetVec3(const std::string& name, const glm::vec3& value);
 		void SetVec4(const std::string& name, const glm::vec4& value);
 		void SetMat4(const std::string& name, glm::mat4& value);
+		void SetNMat4(const std::string& name,std::vector<glm::mat4> transforms,int num);
 
 		inline bool IsCurrentlyActive() { return m_IsCurrentlyActive; }
 		/*Sets whether this shader is currently in use or not*/

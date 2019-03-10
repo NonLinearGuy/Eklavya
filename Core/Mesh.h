@@ -132,7 +132,7 @@ private:
 
 		// ids
 		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 4, GL_INT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+		glVertexAttribIPointer(4, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 	
 		glBindVertexArray(0);
 	}

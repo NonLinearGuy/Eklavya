@@ -148,6 +148,14 @@
 
 	void ShaderProgram::SetMat4(const std::string& pName,glm::mat4& pMat)
 	{
+		int id = glGetUniformLocation(m_ID,pName.c_str());
 		glUniformMatrix4fv(glGetUniformLocation(m_ID, pName.c_str()),
 			1, GL_FALSE, glm::value_ptr(pMat));
+	}
+
+	void ShaderProgram::SetNMat4(const std::string& pName, std::vector<glm::mat4> transforms,int size)
+	{
+		int id = glGetUniformLocation(m_ID, pName.c_str());
+		glUniformMatrix4fv(id,
+			size, GL_FALSE,(GLfloat*)&transforms[0]);
 	}

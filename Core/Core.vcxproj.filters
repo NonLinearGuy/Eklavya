@@ -214,9 +214,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\defines.h" />
-    <ClInclude Include="Components\BaseRenderComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\BoxNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -320,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="Components\AnimationComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\BaseRenderComponent.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

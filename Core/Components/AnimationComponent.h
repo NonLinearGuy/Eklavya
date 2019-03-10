@@ -4,6 +4,8 @@
 #include <glm/glm.hpp>
 #include <map>
 #include <vector>
+#include <assimp/scene.h>
+#include <assimp/Importer.hpp>
 
 class Animation;
 
@@ -28,4 +30,6 @@ private:
 	std::vector<glm::mat4> m_Transforms;
 	Animation* m_Animation;
 	std::string m_AnimName;
+	Assimp::Importer m_Importer;
+	const aiScene* m_Scene;
 };

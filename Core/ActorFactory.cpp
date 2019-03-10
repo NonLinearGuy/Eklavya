@@ -148,7 +148,7 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 
 	//RENDER
 	std::shared_ptr<BaseRenderComponent> renderComponent;
-	renderComponent = std::make_shared<MeshRenderComponent>("mannequin/mannequin.dae");
+	renderComponent = std::make_shared<MeshRenderComponent>("passive_marker_man.dae");
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
 	newActor->AddComponent(renderComponent);

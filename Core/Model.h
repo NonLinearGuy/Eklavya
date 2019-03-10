@@ -23,6 +23,7 @@
 #include <map>
 #include <vector>
 #include "Utils/Logger.h"
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace std;
 
@@ -39,6 +40,7 @@ public:
 
 	//mothafuckin' bone map
 	static std::map<std::string, int> m_BoneIdMap;
+	static std::map<std::string, glm::mat4> boneOffsetMap;
 	int m_BoneCount;
 
 	/*  Functions   */
@@ -108,7 +110,7 @@ private:
 	{
 		for (int i = 0; i < MAX_BONE_WEIGHTS; i++)
 		{
-			vertex.m_BoneIDs[i] = 0;
+			vertex.m_BoneIDs[i] = -1;
 			vertex.m_Weights[i] = 0.0f;
 		}
 	}
@@ -168,8 +170,6 @@ private:
 		// specular: texture_specularN
 		// normal: texture_normalN
 
-		ExtractBoneWeightForVertices(vertices,mesh,scene);
-
 		// 1. diffuse maps
 		vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
@@ -184,6 +184,8 @@ private:
 		textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
 		// return a mesh object created from the extracted mesh data
+
+		ExtractBoneWeightForVertices(vertices, mesh, scene);
 		return Mesh(vertices, indices, textures);
 	}
 
@@ -191,7 +193,7 @@ private:
 	{
 		for (int i = 0; i < MAX_BONE_WEIGHTS; ++i)
 		{
-			if (vertex.m_BoneIDs[i] == 0)
+			if (vertex.m_BoneIDs[i] < 0) 
 			{
 				vertex.m_Weights[i] = weight;
 				vertex.m_BoneIDs[i] = boneID;
@@ -200,23 +202,36 @@ private:
 		}
 	}
 
+	glm::mat4 toGlmMat(aiMatrix4x4 from)
+	{
+		glm::mat4 to;
+		//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+		to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+		to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+		to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+		to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+		return to;
+	}
+
+
 	void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh,const aiScene* scene)
 	{
 		for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
 		{
-			int boneID;
+			int boneID =-1;
 			std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
 			if (m_BoneIdMap.find(boneName) == m_BoneIdMap.end())
 			{
 				m_BoneIdMap[boneName] = m_BoneCount;
 				boneID = m_BoneCount;
+				boneOffsetMap[boneName] = toGlmMat(mesh->mBones[boneIndex]->mOffsetMatrix);
 				m_BoneCount++;
 			}
 			else
 			{
 				boneID = m_BoneIdMap[boneName];
 			}
-
+			assert(boneID != -1);
 			auto weights = mesh->mBones[boneIndex]->mWeights;
 			int numWeights = mesh->mBones[boneIndex]->mNumWeights;
 
@@ -224,6 +239,7 @@ private:
 			{
 				int vertexId = weights[weightIndex].mVertexId;
 				float weight = weights[weightIndex].mWeight;
+				assert(vertexId <= vertices.size());
 				SetVertexBoneData(vertices[vertexId],boneID,weight);
 			}
 		}

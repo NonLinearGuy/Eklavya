@@ -41,7 +41,7 @@ void ModelNode::Render(Scene * scene)
 		auto boneMap = Model::m_BoneIdMap;
 		auto transforms = transform->GetPoseTransforms();
 		for (int i = 0; i < transforms.size(); ++i)
-			shader->SetMat4("boneTransforms[" + std::to_string(i) + "]", transforms[i]);
+			shader->SetMat4("gBones[" + std::to_string(i) + "]", transforms[i]);
 	}
 	m_Model->Draw(shader);
 }

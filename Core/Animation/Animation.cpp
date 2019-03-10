@@ -1,17 +1,110 @@
 #include "Animation.h"
 #include "Joint.h"
 #include "../Model.h"
-
+#include <glm/gtc/type_ptr.hpp>
+#include "../Debugging/Diagnostics.h"
 
 Animation::Animation(const aiAnimation * animation,const aiScene* scene)
 	:
 	m_CurrentAnimationTime(0.0f)
 {
-	
+	m_Animation = animation;
+	m_Scene = scene;
 	m_Duration = animation->mDuration;
 	m_TicksPerSecond = animation->mTicksPerSecond;
-	SetupHierarchy(animation,scene);
+	aiMatrix4x4 globalTransformation = m_Scene->mRootNode->mTransformation;
+	globalTransformation = globalTransformation.Inverse();
+	m_GlobalInverseTransformation = toGlmMat(globalTransformation);
+	SetupJoints();
 }
+
+Animation::~Animation()
+{
+}
+
+void Animation::SetupJoints()
+{
+	int size = m_Animation->mNumChannels;
+
+	for (int i = 0; i < size; i++)
+	{
+		auto channel = m_Animation->mChannels[i];
+		m_Joints.push_back(new Joint(channel->mNodeName.data,Model::m_BoneIdMap[channel->mNodeName.data],channel));
+	}
+}
+
+Joint* Animation::FindJoint(const std::string& name)
+{
+	auto iter = std::find_if(m_Joints.begin(), m_Joints.end(),
+		[&](Joint* joint)
+	{
+		return joint->GetJointName() == name;
+	}
+	);
+	if (iter == m_Joints.end()) return nullptr;
+	else return *iter;
+}
+
+void Animation::ReadNodeHierarchy(float animationTime, aiNode* node, glm::mat4 parentTransform)
+{
+	std::string nodeName = node->mName.data;
+	glm::mat4 nodeTransform = toGlmMat(node->mTransformation);
+	Joint* joint = FindJoint(node->mName.data);
+	if (joint)
+	{
+		joint->Update(animationTime);
+		nodeTransform = joint->GetLocalTransform();
+	}
+
+	glm::mat4 globalTransformation = parentTransform * nodeTransform;
+	auto& boneIDMap = Model::m_BoneIdMap;
+	if (boneIDMap.find(nodeName) != boneIDMap.end()) 
+	{
+		int index = boneIDMap[nodeName];
+		auto boneMap = Model::boneOffsetMap;
+		glm::mat4 offset = boneMap[nodeName];
+		m_FinalTransforms[index] = m_GlobalInverseTransformation * globalTransformation * offset;
+	}
+
+
+	for (int i = 0; i < node->mNumChildren; i++)
+	{
+		ReadNodeHierarchy(animationTime, node->mChildren[i], globalTransformation);
+	}
+
+}
+
+void Animation::Tick(float delta)
+{
+	m_FinalTransforms.clear();
+	m_CurrentAnimationTime += delta;
+	m_CurrentAnimationTime = fmod(m_CurrentAnimationTime,m_Duration);
+	DiagManager::sGeneralDiagsMap[KEY_DELTA] = std::to_string(m_CurrentAnimationTime);
+	ReadNodeHierarchy(m_CurrentAnimationTime, m_Scene->mRootNode, glm::mat4(1.0f));
+}
+
+
+/*THANKS TO THIS GUY FOR FIGURING OUT THE CONVERSION :
+https://lechior.blogspot.com/2017/05/skeletal-animation-using-assimp-opengl.html*/
+
+glm::mat4 Animation::toGlmMat(aiMatrix4x4 from)
+{
+	glm::mat4 to;
+	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
+	to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
+	to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
+	to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
+	to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
+	return to;
+}
+
+
+
+
+
+
+
+
 
 const aiNode * Animation::GetJointParentNodeFromScene(const std::string & boneName, const aiScene * scene,bool& isRootNode)
 {
@@ -33,7 +126,6 @@ const aiNode * Animation::GetJointParentNodeFromScene(const std::string & boneNa
 
 	return parent;
 }
-
 bool Animation::IsPresentInList(const std::string & jointName)
 {
 	auto iter = std::find_if(m_JointList.begin(), m_JointList.end(), 
@@ -45,12 +137,10 @@ bool Animation::IsPresentInList(const std::string & jointName)
 
 	return iter != m_JointList.end();
 }
-
 void Animation::PrintHierarchy()
 {
 	m_RootJoint->PrintHeirarchy();
 }
-
 Joint* Animation::GetJointFromList(const std::string& jointName)
 {
 	auto iter = std::find_if(m_JointList.begin(), m_JointList.end(),
@@ -62,7 +152,6 @@ Joint* Animation::GetJointFromList(const std::string& jointName)
 
 	return *iter;
 }
-
 bool Animation::IsJointInvolved(const aiAnimation* animation,const std::string& jointName)
 {
 	for (int channelIndex = 0; channelIndex < animation->mNumChannels; ++channelIndex)
@@ -72,8 +161,6 @@ bool Animation::IsJointInvolved(const aiAnimation* animation,const std::string& 
 	}
 	return false;
 }
-
-
 void Animation::SetupHierarchy(const aiAnimation* animation,const aiScene* scene)
 {
 	   /*
@@ -147,48 +234,9 @@ void Animation::SetupHierarchy(const aiAnimation* animation,const aiScene* scene
 	}
 
 	PrintHierarchy();
-
-	m_InitialTransform = toGlmMat(scene->mRootNode->mTransformation);
 }
-
-
-Animation::~Animation()
-{
-}
-
 void Animation::UpdateFinalTransformRescursively(Joint * rootJoint, glm::mat4 parentTransform)
 {
-	glm::mat4 modelSpaceTransform = parentTransform * rootJoint->GetLocalTransform();
-	int id = rootJoint->GetJointID();
-	m_FinalTransforms[id] = glm::inverse(modelSpaceTransform);
-	auto children = rootJoint->GetChildren();
-	for (auto child : children)
-	{
-		UpdateFinalTransformRescursively(child, modelSpaceTransform);
-	}
+
 }
 
-void Animation::Tick(float delta)
-{
-	m_FinalTransforms.clear();
-	m_CurrentAnimationTime += delta;
-	m_CurrentAnimationTime = glm::modf(m_CurrentAnimationTime,m_Duration);
-	m_RootJoint->Update(m_CurrentAnimationTime);
-	UpdateFinalTransformRescursively(m_RootJoint,m_InitialTransform);
-}
-
-
-/*THANKS TO THIS GUY FOR FIGURING OUT THE CONVERSION :
-https://lechior.blogspot.com/2017/05/skeletal-animation-using-assimp-opengl.html*/
-
-glm::mat4 Animation::toGlmMat(aiMatrix4x4 from)
-{
-	glm::mat4 to;
-	//the a,b,c,d in assimp is the row ; the 1,2,3,4 is the column
-	to[0][0] = from.a1; to[1][0] = from.a2; to[2][0] = from.a3; to[3][0] = from.a4;
-	to[0][1] = from.b1; to[1][1] = from.b2; to[2][1] = from.b3; to[3][1] = from.b4;
-	to[0][2] = from.c1; to[1][2] = from.c2; to[2][2] = from.c3; to[3][2] = from.c4;
-	to[0][3] = from.d1; to[1][3] = from.d2; to[2][3] = from.d3; to[3][3] = from.d4;
-	to = glm::transpose(to);
-	return to;
-}

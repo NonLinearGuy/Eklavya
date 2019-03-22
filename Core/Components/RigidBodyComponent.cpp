@@ -97,7 +97,7 @@ void RigidBodyComponent::Tick(float deltaTime)
 
 	//Damping 
 	m_LinearVelocity *= pow(m_LinearDamping, 2.0f);
-	m_Rotation *= pow(m_AngularDamping,2.0f);
+	m_Rotation *= pow(m_AngularDamping,3.0f);
 
 	m_Position += m_LinearVelocity * delta;
 
@@ -167,9 +167,9 @@ void RigidBodyComponent::SetTensorForCuboid()
 	float scalar = 0.3f*m_Mass;
 	glm::vec3 halfSize = std::static_pointer_cast<BoxCollider>(m_Collider)->GetHalfSize();
 
-	tensor[0][0] = scalar * (halfSize.y * halfSize.y + halfSize.z * halfSize.z);
-	tensor[1][1] = scalar * (halfSize.x * halfSize.x + halfSize.z * halfSize.z);
-	tensor[2][2] = scalar * (halfSize.x * halfSize.x + halfSize.y * halfSize.y);
+	tensor[0][0] = 20.0f;
+	tensor[1][1] = 20.0f;
+	tensor[2][2] = 20.0f;
 
 	m_InverseTensor = glm::inverse(tensor);
 }

@@ -20,8 +20,9 @@ ModelNode::~ModelNode()
 
 bool ModelNode::Init()
 {
-	std::string modelName = (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
-	m_Model = new Model("Assets/Models/" + modelName);
+	std::vector<std::string> m_ModelNames;// (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
+	//m_Hands = new Model("Assets/Models/Hands.fbx");
+	m_Shotgun = new Model("Assets/Models/Shoulder-Launched_Missile.fbx");
 	
 	return true;
 }
@@ -38,10 +39,10 @@ void ModelNode::Render(Scene * scene)
 	std::shared_ptr<AnimationComponent> transform = MakeSharedPtr(gameActor->GetComponent<AnimationComponent>(AnimationComponent::s_ID));
 	if (transform)
 	{
-		auto boneMap = Model::m_BoneIdMap;
 		auto transforms = transform->GetPoseTransforms();
 		for (int i = 0; i < transforms.size(); ++i)
 			shader->SetMat4("gBones[" + std::to_string(i) + "]", transforms[i]);
 	}
-	m_Model->Draw(shader);
+	//m_Hands->Draw(shader);
+	m_Shotgun->Draw(shader);
 }

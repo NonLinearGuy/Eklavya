@@ -25,7 +25,8 @@ public:
 	void CalculateContactToWorld();
 	void CalculateContactToWorld2();
 	void PrepareData();
-	void applyImpulse();
+	void ApplyImpulse();
+	void PushOut();
 };
 
 

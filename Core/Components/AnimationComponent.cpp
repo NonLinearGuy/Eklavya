@@ -11,9 +11,9 @@ AnimationComponent::AnimationComponent(const std::string & animationName)
 	:
 	m_AnimName(animationName)
 {
-	m_Transforms.reserve(110);
+	m_Transforms.reserve(70);
 
-	for (int i = 0; i < 110; i++)
+	for (int i = 0; i < 70; i++)
 		m_Transforms.push_back(glm::mat4(1.0f));
 
 	
@@ -29,7 +29,7 @@ void AnimationComponent::Init()
 	// read file via ASSIMP
 	
 	
-	m_Scene = m_Importer.ReadFile("Assets/Animations/dancing.dae", aiProcess_Triangulate | 
+	m_Scene = m_Importer.ReadFile("Assets/Animations/06_Shoulder-Launched_Missile@Fire.fbx", aiProcess_Triangulate | 
 		aiProcess_FlipUVs);
 	// check for errors
 	if (!m_Scene || !m_Scene->mRootNode) // if is Not Zero
@@ -51,7 +51,7 @@ void AnimationComponent::Tick(float dt)
 	m_Animation->Tick(dt);
 
 	m_Transforms.clear();
-	m_Transforms.resize(110);
+	m_Transforms.resize(70);
 	auto boneMap = Model::m_BoneIdMap;
 	auto jointTransformMap = m_Animation->GetFinalTransform();
 	for (auto pair : jointTransformMap)

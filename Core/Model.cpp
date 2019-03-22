@@ -3,6 +3,7 @@
 
 std::map<std::string, int> Model::m_BoneIdMap;
 std::map<std::string, glm::mat4> Model::boneOffsetMap;
+int Model::m_BoneCount = 0;
 
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)

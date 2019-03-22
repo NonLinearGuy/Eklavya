@@ -19,5 +19,6 @@ public:
 private:
 	GLuint mVAO;
 	GLuint mVBO;
-	class Model* m_Model;
+	class Model* m_Hands;
+	class Model* m_Shotgun;
 };

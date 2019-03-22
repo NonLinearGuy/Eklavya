@@ -52,7 +52,7 @@ bool WaterNode::Init()
 	m_NormalMap.CreateTexture("Assets/Textures/waterNormalMap.png",true);
 
 	m_Model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-	m_Model = glm::scale(m_Model,glm::vec3(1000,1.0f,1000.0f));
+	m_Model = glm::scale(m_Model,glm::vec3(5000,1.0f,5000.0f));
 	m_Model = glm::rotate(m_Model,-90.0f,glm::vec3(1.0f,0.0f,0.0f));
 	
 	m_MoveOffset = 0.0f;

@@ -77,7 +77,7 @@ void Animation::ReadNodeHierarchy(float animationTime, aiNode* node, glm::mat4 p
 void Animation::Tick(float delta)
 {
 	m_FinalTransforms.clear();
-	m_CurrentAnimationTime += delta;
+	m_CurrentAnimationTime += m_TicksPerSecond * delta;
 	m_CurrentAnimationTime = fmod(m_CurrentAnimationTime,m_Duration);
 	DiagManager::sGeneralDiagsMap[KEY_DELTA] = std::to_string(m_CurrentAnimationTime);
 	ReadNodeHierarchy(m_CurrentAnimationTime, m_Scene->mRootNode, glm::mat4(1.0f));

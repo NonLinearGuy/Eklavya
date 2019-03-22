@@ -26,7 +26,7 @@ public:
 	inline float GetInverseMass() { return m_InverseMass; }
 	glm::mat3 GetTensor() 
 	{ 
-		return m_InverseTensorWorld; 
+		return m_InverseTensorWorld;
 	}
 	void UpdateTensor();
 

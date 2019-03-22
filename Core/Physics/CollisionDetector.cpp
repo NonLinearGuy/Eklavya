@@ -339,74 +339,51 @@ void ContactData::CalculateContactToWorld()
 
 void ContactData::PrepareData()
 {
-	CalculateContactToWorld2();
 	m_RelContactPositions[0] = m_Point - m_BodyA->GetAxis(3);
 	m_RelContactPositions[1] = m_Point - m_BodyB->GetAxis(3);
 }
 
-void ContactData::applyImpulse()
+void ContactData::ApplyImpulse()
 {
-	float deltaVelLocal = m_BodyA->GetInverseMass();
-	deltaVelLocal += m_BodyB->GetInverseMass();
-	
-
-	//calculating closing velocity
-	glm::vec3 closingVel = glm::cross(m_BodyA->GetAngularVel(),m_RelContactPositions[0]);
-	closingVel += m_BodyA->GetVelocity();
-	closingVel += glm::cross(m_BodyB->GetAngularVel(), m_RelContactPositions[1]);
-	closingVel += m_BodyB->GetVelocity();
-
-	glm::vec3 closingVelLocal = m_WorldToContact *  closingVel;
-	
-	//desired change in velocity
-	float velocityLimit = (float)0.25f;
-	// Calculate the acceleration induced velocity accumulated this frame
-	float velocityFromAcc = 0;
-	velocityFromAcc += glm::dot(m_BodyA->GetAccel()* .033f,m_Normal);	
-	velocityFromAcc -= glm::dot(m_BodyB->GetAccel()* .033f, m_Normal);
-
-
-	// If the velocity is very slow, limit the restitution
-	float thisRestitution = .4f;;
-	if (glm::abs(closingVelLocal.x) < velocityLimit)
-	{
-		thisRestitution = (float)0.0f;
-	}
-
-	// Combine the bounce velocity with the removed
-	// acceleration velocity.
-	float desiredVelChange = (-1.0f * closingVelLocal.x - thisRestitution) * (closingVelLocal.x - velocityFromAcc);
-
-	// Calculate the impulse
-	glm::vec3 impulseContact;
-	impulseContact.x = desiredVelChange / deltaVelLocal;
-	impulseContact.y = 0;
-	impulseContact.z = 0;
-
-	glm::vec3 impulseWorld = m_ContactToWorld * impulseContact;
-
-	glm::vec3 impulseA, impulseB;
-	impulseB = impulseWorld;
-	impulseA = impulseWorld * -1.0f;
-
-	glm::vec3 linearChange;
+	float e = .5f;
 	//linear
-	linearChange = m_BodyB->GetInverseMass() * impulseB;
-	m_BodyB->AddVelocity(linearChange);
+	float rest = -(1.0f + e);
+
+	glm::vec3 invertedNormal = -1.0f * m_Normal;
+	float d = glm::dot(m_BodyB->GetVelocity(),invertedNormal);
+	float j = glm::max(rest * d, 0.0f);
+	glm::vec3 linearImpulse = j * (invertedNormal);
+	//m_BodyA->AddVelocity(linearImpulse);
+
+	m_BodyB->AddVelocity(linearImpulse);
+
+	//angular
 	
-	//linear
-	linearChange = m_BodyA->GetInverseMass() * impulseA;	
-	
-	m_BodyA->AddVelocity(linearChange);
+	glm::vec3 velPointB = glm::cross(m_BodyB->GetAngularVel(), m_RelContactPositions[1]);
+	float num = rest * glm::max(glm::dot(velPointB, invertedNormal),1.0f);
+	glm::vec3 a = glm::cross(m_RelContactPositions[1], invertedNormal);
+	glm::vec3 denoSup = m_BodyB->GetTensor() * glm::cross(a,m_RelContactPositions[1]);
+	float deno = glm::dot(denoSup,invertedNormal) + m_BodyB->GetInverseMass();
+	float angularImpulse = num / deno;
+	m_BodyB->AddAngularVelocity(angularImpulse * invertedNormal);
+}
+
+void ContactData::PushOut()
+{
+	glm::vec3 invNorm = -1.0f * m_Normal;
+	glm::vec3 offset = invNorm * m_PenetrationDepth;
+	m_BodyB->SetPos(m_BodyB->GetPosition() + offset);
 }
 
 //MUTHAFUCKIN' CONTACT RESOLVER
 void Resolver::ResolveContacts(std::vector<ContactData> contacts)
 {
+	float e = 1.0f;
 	for (auto& contact : contacts)
 	{
 		contact.PrepareData();
-		contact.applyImpulse();
+		contact.PushOut();
+		contact.ApplyImpulse();
 	}
 }
 #pragma endregion

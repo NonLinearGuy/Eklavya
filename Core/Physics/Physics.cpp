@@ -74,7 +74,7 @@ void Physics::Simulate(float delta)
 
 	for (auto first = m_Colliders.begin(); first != m_Colliders.end() ;  ++first)
 	{
-		for (auto second = m_Colliders.begin(); second != m_Colliders.end();  ++second)
+		for (auto second = first + 1; second != m_Colliders.end();  ++second)
 		{
 			if (*first == *second) continue;
 
@@ -101,6 +101,8 @@ void Physics::Simulate(float delta)
 		}
 	}
 
-	
-	//Resolve Constraints
+	//auto data = std::make_shared<EventContactsUpdated>();
+	//data->m_ContactsWorld = contacts;
+	//EventDispatcher::GetInstance().TriggerEvent(EEventType::CONTACTS_UPDATED,data);
+	//Resolver::ResolveContacts(contacts);
 }

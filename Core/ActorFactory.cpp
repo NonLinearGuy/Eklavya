@@ -54,7 +54,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateSphereCollider(const glm
 	renderComponent->SetColor(glm::vec3(1.0f));
 	newActor->AddComponent(renderComponent);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("pixar.jpg");
+	renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
 
 	auto collider = std::make_shared<SphereCollider>();
 	collider->SetRadius(radius);
@@ -79,7 +79,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateSphereCollider(const glm
 }
 
 std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::vec3 position, 
-	const glm::vec3& halfSize, 
+	const glm::vec3& size, 
 	const glm::vec3& rotation, 
 	glm::vec3 direction,float mass,bool infiniteMass,bool texture2)
 {
@@ -88,7 +88,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	s_ActorIDCount++;
 
 	auto newActor = std::make_shared<GameActor>(name, id);
-	auto transformComponent = std::make_shared<Transform>(position,halfSize);
+	auto transformComponent = std::make_shared<Transform>(position,size);
 	transformComponent->SetOwner(newActor);
 	newActor->AddComponent(transformComponent);
 	std::shared_ptr<BaseRenderComponent> renderComponent;
@@ -101,7 +101,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	//physics component
 
 		auto collider = std::make_shared<BoxCollider>();
-		collider->SetHalfSize(halfSize);
+		collider->SetHalfSize(size);
 		auto rbComp = std::make_shared<RigidBodyComponent>(collider);
 		collider->SetBody(rbComp);
 		rbComp->SetPos(position);
@@ -144,7 +144,7 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 
 	//RENDER
 	std::shared_ptr<BaseRenderComponent> renderComponent;
-	renderComponent = std::make_shared<MeshRenderComponent>("ankit.dae");
+	renderComponent = std::make_shared<MeshRenderComponent>("Shoulder-Launched_Missile.fbx");
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
 	newActor->AddComponent(renderComponent);
@@ -152,13 +152,13 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 	
 	//RIGIDBODY
 	auto collider = std::make_shared<BoxCollider>();
-	collider->SetHalfSize(glm::vec3(500.0f));
+	collider->SetHalfSize(glm::vec3(300.0f));
 	auto rbComp = std::make_shared<RigidBodyComponent>(collider);
 	collider->SetBody(rbComp);
 	rbComp->SetPos(position);
 	rbComp->SetOrientation(rotation);
 	rbComp->SetMass(20.0f);
-	rbComp->SetAccel(glm::vec3(0.0f,-1.0f,0.0f) * 100.0f);
+	rbComp->SetAccel(glm::vec3(0.0f,-10.0f,0.0f) * 100.0f);
 	//rbComp->SetAngularAcc(glm::vec3(.1f,0.0f,0.0f));
 	rbComp->SetOwner(newActor);
 	rbComp->SetAwake(true);
@@ -178,10 +178,10 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
 
 	//Animation
-	auto animationComponent = std::make_shared<AnimationComponent>("left_turn_90.dae");
-	animationComponent->Init();
-	animationComponent->SetOwner(newActor);
-	newActor->AddComponent(animationComponent);
+	//auto animationComponent = std::make_shared<AnimationComponent>("left_turn_90.dae");
+	//animationComponent->Init();
+	//animationComponent->SetOwner(newActor);
+	//newActor->AddComponent(animationComponent);
 
 
 }

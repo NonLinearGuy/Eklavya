@@ -237,7 +237,10 @@
     <ClCompile Include="Renderer\ShaderProgram.cpp" />
     <ClCompile Include="Renderer\Texture2D.cpp" />
     <ClCompile Include="Renderer\VertexArrayObject.cpp" />
-    <ClCompile Include="Scene\ArrowNode.cpp" />
+    <ClCompile Include="Scene\BoxBoundNode.cpp" />
+    <ClCompile Include="Scene\BoxColliderNode.cpp" />
+    <ClCompile Include="Scene\SphereColliderNode.cpp" />
+    <ClCompile Include="Scene\TransformNode.cpp" />
     <ClCompile Include="Scene\BaseNode.cpp" />
     <ClCompile Include="Scene\BoundingVolume.cpp" />
     <ClCompile Include="Scene\BoxNode.cpp" />
@@ -293,7 +296,10 @@
     <ClInclude Include="Renderer\ShaderProgram.h" />
     <ClInclude Include="Renderer\Texture2D.h" />
     <ClInclude Include="Renderer\VertexArrayObject.h" />
-    <ClInclude Include="Scene\ArrowNode.h" />
+    <ClInclude Include="Scene\BoxBoundNode.h" />
+    <ClInclude Include="Scene\BoxColliderNode.h" />
+    <ClInclude Include="Scene\SphereColliderNode.h" />
+    <ClInclude Include="Scene\TransformNode.h" />
     <ClInclude Include="Scene\BaseNode.h" />
     <ClInclude Include="Scene\BoundingVolume.h" />
     <ClInclude Include="Scene\BoundNodes.h" />

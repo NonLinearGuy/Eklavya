@@ -37,6 +37,7 @@
 			return "";
 	}
 
+#pragma optimize("", off)
 	bool ShaderProgram::AddAndCompile(const std::string & shaderPath, EShaderType type)
 	{
 		std::string shaderCode = Load(shaderPath);
@@ -73,6 +74,7 @@
 		m_ShaderIDs.push_back(shaderID);
 		return true;
 	}
+#pragma optimize("", on)
 
 	bool ShaderProgram::Build()
 	{

@@ -4,12 +4,12 @@
 #include <glad/glad.h>
 class Scene;
 
-class ArrowNode : public BaseNode
+class TransformNode : public BaseNode
 {
 public:
 
-	ArrowNode(ActorID actorID);
-	~ArrowNode();
+	TransformNode(ActorID actorID);
+	~TransformNode();
 	bool Init()override;
 	void Destroy()override;
 	void PreRender(Scene* scene)override;

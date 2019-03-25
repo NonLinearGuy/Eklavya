@@ -15,15 +15,18 @@ enum class EColliderType
 	MAX
 };
 
+class Physics;
 class ICollider
 {
+	friend class Physics;
+
 public:
 	ICollider(EColliderType type);
 	virtual ~ICollider();
 	EColliderType GetType() { return m_Type; }
 	inline void SetBody(std::shared_ptr<RigidBodyComponent> pBody) { m_Body = pBody; }
 	inline std::shared_ptr<RigidBodyComponent> GetBody() { return m_Body; }
-	protected:
+protected:
 	EColliderType m_Type;
 	std::shared_ptr<RigidBodyComponent> m_Body;
 };

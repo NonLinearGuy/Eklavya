@@ -27,11 +27,16 @@ public:
 	std::shared_ptr<GameActor> m_GameActor;
 };
 
-class EventCollision : public IEventData
+class EventOnCollisionEnter : public IEventData
 {
 public:
-	unsigned mFirstActorID;
-	unsigned mSecondActorID;
+	unsigned ActorID;
+};
+
+class EventOnCollisionExit : public IEventData
+{
+public:
+	unsigned ActorID;
 };
 
 class EventContactsUpdated : public IEventData

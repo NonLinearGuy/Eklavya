@@ -38,6 +38,7 @@ public:
 	inline void SetAccel(glm::vec3 pAccel) 
 	{
 		m_LinearAcceleration = pAccel; 
+		m_LinearVelocity *= 0.0f;
 	}
 	inline glm::vec3 GetAccel() { return m_LinearAcceleration; }
 	inline void SetAngularAcc(glm::vec3 pAccel) { m_AngularAcceleration = pAccel; }

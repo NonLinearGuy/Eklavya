@@ -18,20 +18,26 @@ void PlayerMovementComponent::Init()
 	if(m_Owner)
 		m_Body = MakeSharedPtr(m_Owner->GetComponent<RigidBodyComponent>(RigidBodyComponent::s_ID));
 
-	RegisterToEvent<PlayerMovementComponent>(this, &PlayerMovementComponent::OnCollision, EEventType::COLLISION);
+	RegisterToEvent<PlayerMovementComponent>(this, &PlayerMovementComponent::OnCollision, EEventType::ON_COLLISION_ENTER);
 }
 
 void PlayerMovementComponent::Destroy()
 {
-	UnRegisterToEvent<PlayerMovementComponent>(this,&PlayerMovementComponent::OnCollision,EEventType::COLLISION);
+	UnRegisterToEvent<PlayerMovementComponent>(this,&PlayerMovementComponent::OnCollision,EEventType::ON_COLLISION_ENTER);
 }
 
+#pragma optimize("",off)
 void PlayerMovementComponent::OnCollision(std::shared_ptr<IEventData> data)
 {
-	auto collisionData = std::static_pointer_cast<EventCollision>(data);
-	if(collisionData->mFirstActorID == m_Owner->GetID() || collisionData->mSecondActorID == m_Owner->GetID())
-		m_IsInAir = false;
+	auto collisionData = std::static_pointer_cast<EventOnCollisionEnter>(data);
+	int id = collisionData->ActorID;
+	if (collisionData->ActorID == m_Owner->GetID())
+	{
+		m_Body->SetAccel(m_Body->GetAccel() * -1.0f);
+	}
 }
+#pragma optimize("",on)
+
 
 void PlayerMovementComponent::OnKeyAction(int key,int action)
 {

@@ -13,6 +13,14 @@ class GLRenderer;
 class IEventData;
 class ContactsNode;
 
+
+/*
+Draw all opaque objects first.
+Sort all the transparent objects.
+Draw all the transparent objects in sorted order.
+*/
+
+
 struct LightSource
 {
 	glm::vec3 m_Position;
@@ -107,8 +115,6 @@ private:
 	
 	std::vector< std::shared_ptr<BaseNode> > m_Nodes;
 	
-	
 	std::shared_ptr<ContactsNode> m_ContactsNode;
-
 };
 

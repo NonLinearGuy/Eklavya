@@ -7,6 +7,7 @@
 #include "../Components/AnimationComponent.h"
 #include "../Engine.h"
 #include "../Helpers.h"
+#include "BoundingVolume.h"
 
 ModelNode::ModelNode(ActorID pActorID, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
 	:
@@ -20,10 +21,10 @@ ModelNode::~ModelNode()
 
 bool ModelNode::Init()
 {
-	std::vector<std::string> m_ModelNames;// (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
+	std::string name =  (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
 	//m_Hands = new Model("Assets/Models/Hands.fbx");
-	m_Shotgun = new Model("Assets/Models/Shoulder-Launched_Missile.fbx");
-	
+	m_Shotgun = new Model("Assets/Models/" + name);
+	m_BoundVolume = std::make_shared<BoxBound>(glm::vec3(250.0f,500.0f,100.0f));
 	return true;
 }
 

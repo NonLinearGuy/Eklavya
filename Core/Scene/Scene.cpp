@@ -12,14 +12,19 @@
 #include "../Event/Events.h"
 #include <functional>
 #include "../Components/BaseRenderComponent.h"
-#include "ArrowNode.h"
+#include "../Components/RigidBodyComponent.h"
+#include "../Components/Transform.h"
+#include "TransformNode.h"
 #include "ContactsNode.h"
 #include "BoxNode.h"
+#include "BoxBoundNode.h"
 #include "SphereNode.h"
+#include "BoxColliderNode.h"
 
 
 #define DRAW_TRANSFORM
-#define DRAW_BOUNDS
+//#define DRAW_BOUNDS
+//#define DRAW_COLLIDERS
 
 Scene::Scene(Engine* engineRef,std::shared_ptr<GLRenderer> renderer,const std::string& pName) : 
 	m_Name(pName), 
@@ -67,7 +72,7 @@ void Scene::Init()
 {
 	m_LightSource.m_Ambient = glm::vec3(1.0f);
 	m_LightSource.m_Diffuse = glm::vec3(.8f);
-	m_LightSource.m_Specular = glm::vec3(1.0f);
+	m_LightSource.m_Specular = glm::vec3(0.0f);
 
 	m_LightSource.m_Position = glm::vec3(glm::vec3(-250.0f, 200.0f, 200.0f));
 
@@ -94,18 +99,45 @@ void Scene::OnActorCreated(std::shared_ptr<IEventData> data)
 	AddChild(baseNode);
 
 #ifdef DRAW_TRANSFORM
-	if (baseNode->GetRenderGroup() != ERenderGroup::SKYBOX)
+	auto transform = MakeSharedPtr(actor->GetComponent<Transform>(Transform::s_ID));
+	if (transform)
 	{
-		auto arrowNode = std::make_shared<ArrowNode>(actor->GetID());
-		arrowNode->Init();
-		AddChild(arrowNode);
+		if (baseNode->GetRenderGroup() != ERenderGroup::SKYBOX)
+		{
+			auto arrowNode = std::make_shared<TransformNode>(actor->GetID());
+			arrowNode->Init();
+			AddChild(arrowNode);
+		}
 	}
 #endif
 
 #ifdef DRAW_BOUNDS
-	if (baseNode->GetBoundVolume())
+	auto boundVolume = baseNode->GetBoundVolume();
+	if (boundVolume)
 	{
-		
+		if (boundVolume->GetType() == EBoundType::BOX)
+		{
+			glm::vec3 extents = std::static_pointer_cast<BoxBound>(boundVolume)->GetExtents();
+			auto boundNode = std::make_shared<BoxBoundNode>(actor->GetID(),extents);
+			boundNode->Init();
+			boundNode->SetColor(glm::vec3(.6f,0.0f,.6f));
+			AddChild(boundNode);
+		}
+	}
+#endif
+
+#ifdef DRAW_COLLIDERS
+	auto collider = MakeSharedPtr(actor->GetComponent<RigidBodyComponent>(RigidBodyComponent::s_ID))->GetCollider();
+	if (collider)
+	{
+		if (collider->GetType() == EColliderType::BOX)
+		{
+			glm::vec3 halfSize = std::static_pointer_cast<BoxCollider>(collider)->GetHalfSize();
+			auto colliderNode = std::make_shared<BoxColliderNode>(actor->GetID(), halfSize * 2.0f);
+			colliderNode->Init();
+			colliderNode->SetColor(glm::vec3(0.0f, 0.6f, 0.0f));
+			AddChild(colliderNode);
+		}
 	}
 #endif
 	
@@ -198,11 +230,16 @@ void Scene::MainPassRender()
 			glDisable(GL_BLEND);
 			break;
 		case ERenderGroup::BOUND_VOLUME:
+			glDepthFunc(GL_ALWAYS);
+			glEnable(GL_BLEND);
+		 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			m_Renderer->SetShaderProgram(EShaderProgram::UNLIT_SOLID);
 			m_Renderer->SetProjectionMatrix(projection);
 			view = m_Camera->GetView();
 			m_Renderer->SetViewMatrix(view);
 			m_Groups[ERenderGroup::BOUND_VOLUME]->Render(this);
+			glDisable(GL_BLEND);
+			glDepthFunc(GL_LEQUAL);
 			break;
 		case ERenderGroup::OUTLINED:
 			glDepthFunc(GL_ALWAYS);

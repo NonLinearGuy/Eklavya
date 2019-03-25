@@ -81,12 +81,6 @@
     <ClCompile Include="Components\BaseRenderComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\BoxNode.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SphereNode.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\SkyNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -134,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="ActorFactory.cpp" />
     <ClCompile Include="Globals.cpp" />
-    <ClCompile Include="Scene\ArrowNode.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Components\RigidBodyComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -169,6 +160,24 @@
       <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Scene\BoxNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SphereNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\TransformNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SphereColliderNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\BoxBoundNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\BoxColliderNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -214,12 +223,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\defines.h" />
-    <ClInclude Include="Scene\BoxNode.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene\SphereNode.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Scene\SkyNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -279,9 +282,6 @@
     </ClInclude>
     <ClInclude Include="ActorFactory.h" />
     <ClInclude Include="Globals.h" />
-    <ClInclude Include="Scene\ArrowNode.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Components\RigidBodyComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -320,6 +320,24 @@
     </ClInclude>
     <ClInclude Include="Components\BaseRenderComponent.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BoxNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SphereNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\TransformNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\SphereColliderNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BoxBoundNode.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\BoxColliderNode.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

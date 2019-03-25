@@ -60,7 +60,8 @@
 	{
 		ActorFactory::CreateSky();
 		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(2000.0f,100.0f,2000.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
-		ActorFactory::CreateModelActor(glm::vec3(0.0f,1000.0f,0.0f),glm::vec3(.5f),glm::vec3(0.0,0.0f,0.0f));
+		ActorFactory::CreateModelActor(glm::vec3(0.0f,1000.0f,0.0f),glm::vec3(1.0f),glm::vec3(0.0,0.0f,0.0f));
+		//ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 1500.0f, 0.0f), glm::vec3(2000.0f, 100.0f, 2000.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, true, true);
 		//ActorFactory::CreateModelActor(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0, 0.0f, 0.0f));
 		//ActorFactory::CreateBoxCollider(glm::vec3(.0f, 20.0f, 240.0f), glm::vec3(500.0f, 300.0f, 10.0f), glm::vec3(0.0f));
 	

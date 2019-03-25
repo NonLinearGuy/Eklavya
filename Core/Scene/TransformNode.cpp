@@ -1,4 +1,4 @@
-#include "ArrowNode.h"
+#include "TransformNode.h"
 #include "../Renderer/VertexArrayObject.h"
 #include "Scene.h"
 #include "../Components/GameActor.h"
@@ -8,17 +8,17 @@
 #include "../Renderer/GLRenderer.h"
 
 
-ArrowNode::ArrowNode(ActorID actorID) :BaseNode(actorID, nullptr, ERenderGroup::OUTLINED)
+TransformNode::TransformNode(ActorID actorID) :BaseNode(actorID, nullptr, ERenderGroup::OUTLINED)
 {
 
 }
 
-ArrowNode::~ArrowNode()
+TransformNode::~TransformNode()
 {
 
 }
 
-bool ArrowNode::Init() 
+bool TransformNode::Init() 
 {
 
 	float scale = 1.0f;
@@ -50,13 +50,13 @@ bool ArrowNode::Init()
 	return true;
 }
 
-void ArrowNode::Destroy()
+void TransformNode::Destroy()
 {
 	glDeleteBuffers(1,&mVBO);
 	glDeleteVertexArrays(1,&mVAO);
 }
 
-void ArrowNode::PreRender(Scene* scene)
+void TransformNode::PreRender(Scene* scene)
 {
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<Transform> transform = MakeSharedPtr(gameActor->GetComponent<Transform>(Transform::s_ID));
@@ -68,7 +68,7 @@ void ArrowNode::PreRender(Scene* scene)
 	scene->PushMatrix(m_ToWorld);
 }
 
-void ArrowNode::Render(Scene * scene)
+void TransformNode::Render(Scene * scene)
 {
 	glBindVertexArray(mVAO);
 	glDrawArrays(GL_LINES,0,6);
@@ -76,7 +76,7 @@ void ArrowNode::Render(Scene * scene)
 }
 
 
-void ArrowNode::PostRender(Scene* scene)
+void TransformNode::PostRender(Scene* scene)
 {
 	scene->PopMatrix();
 }

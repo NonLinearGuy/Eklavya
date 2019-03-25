@@ -65,6 +65,7 @@ void Physics::OnActorDestroyed(std::shared_ptr<IEventData> data)
 	//I DOUBLE DARE YOU TO USE iter AGAIN!!!!!!!!!!!!!!!!!!!
 }
 
+#pragma optimize("",off)
 void Physics::Simulate(float delta)
 {
 	DiagManager::sPhysicsDiagsMap[EMapKeys::KEY_COLLIDERS] = std::to_string(m_Colliders.size());
@@ -74,30 +75,42 @@ void Physics::Simulate(float delta)
 
 	for (auto first = m_Colliders.begin(); first != m_Colliders.end() ;  ++first)
 	{
-		for (auto second = first + 1; second != m_Colliders.end();  ++second)
-		{
-			if (*first == *second) continue;
+		bool isColliding = false;
 
-			auto firstCollider = *first;
+		auto firstCollider = *first;
+		auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
+
+		for (auto second = m_Colliders.begin(); second != m_Colliders.end();  ++second)
+		{
 			auto secondCollider = *second;
+			if (firstCollider == secondCollider) continue;
 
 			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::BOX)
 			{
-				auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
+				
 				auto box2 = std::static_pointer_cast<BoxCollider>(secondCollider);
 
 				if (ContactGenerator::BoxAndBox(box1,box2,contacts))
 				{
-					box1->GetBody()->SetAwake(false);
-					box2->GetBody()->SetAwake(false);
-					
-					std::shared_ptr<EventCollision> data = std::make_shared<EventCollision>();
-					data->mFirstActorID = box1->GetBody()->GetOwnerID();
-					data->mSecondActorID = box1->GetBody()->GetOwnerID();
-					EventDispatcher::GetInstance().TriggerEvent(EEventType::COLLISION,data);
+					int id = firstCollider->GetBody()->GetOwnerID();
+					isColliding = true;
+					//box1->GetBody()->SetAwake(false);
+					//box2->GetBody()->SetAwake(false);
 				}
 			}
 
+		}
+		if (isColliding)
+		{
+			std::shared_ptr<EventOnCollisionEnter> data = std::make_shared<EventOnCollisionEnter>();
+			data->ActorID = firstCollider->GetBody()->GetOwnerID();
+			EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_ENTER, data);
+		}
+		else
+		{
+			std::shared_ptr<EventOnCollisionExit> data = std::make_shared<EventOnCollisionExit>();
+			data->ActorID = firstCollider->GetBody()->GetOwnerID();
+			EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_EXIT, data);
 		}
 	}
 
@@ -106,3 +119,5 @@ void Physics::Simulate(float delta)
 	//EventDispatcher::GetInstance().TriggerEvent(EEventType::CONTACTS_UPDATED,data);
 	//Resolver::ResolveContacts(contacts);
 }
+
+#pragma optimize("",on)

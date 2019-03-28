@@ -204,8 +204,14 @@
   <ItemGroup>
     <ClCompile Include="ActorFactory.cpp" />
     <ClCompile Include="Animation\Animation.cpp" />
+    <ClCompile Include="Animation\Animator.cpp" />
     <ClCompile Include="Animation\Joint.cpp" />
-    <ClCompile Include="Animation\KeyFrame.cpp" />
+    <ClCompile Include="AssetManager\AssetManager.cpp" />
+    <ClCompile Include="AssetManager\Cubemap.cpp" />
+    <ClCompile Include="AssetManager\IAsset.cpp" />
+    <ClCompile Include="AssetManager\IAssetFactory.cpp" />
+    <ClCompile Include="AssetManager\ShaderProgram.cpp" />
+    <ClCompile Include="AssetManager\Texture2D.cpp" />
     <ClCompile Include="Components\AnimationComponent.cpp" />
     <ClCompile Include="Components\BaseComponent.cpp" />
     <ClCompile Include="Components\BaseRenderComponent.cpp" />
@@ -228,14 +234,11 @@
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Physics\ProjectileComponent.cpp" />
     <ClCompile Include="Random.cpp" />
-    <ClCompile Include="Renderer\Cubemap.cpp" />
     <ClCompile Include="Renderer\Framebuffer.cpp" />
     <ClCompile Include="Renderer\GLRenderer.cpp" />
     <ClCompile Include="Renderer\Material.cpp" />
     <ClCompile Include="Renderer\RenderPass.cpp" />
     <ClCompile Include="Renderer\RenderState.cpp" />
-    <ClCompile Include="Renderer\ShaderProgram.cpp" />
-    <ClCompile Include="Renderer\Texture2D.cpp" />
     <ClCompile Include="Renderer\VertexArrayObject.cpp" />
     <ClCompile Include="Scene\BoxBoundNode.cpp" />
     <ClCompile Include="Scene\BoxColliderNode.cpp" />
@@ -260,8 +263,14 @@
   <ItemGroup>
     <ClInclude Include="ActorFactory.h" />
     <ClInclude Include="Animation\Animation.h" />
+    <ClInclude Include="Animation\Animator.h" />
     <ClInclude Include="Animation\Joint.h" />
-    <ClInclude Include="Animation\KeyFrame.h" />
+    <ClInclude Include="AssetManager\AssetManager.h" />
+    <ClInclude Include="AssetManager\Cubemap.h" />
+    <ClInclude Include="AssetManager\IAsset.h" />
+    <ClInclude Include="AssetManager\IAssetFactory.h" />
+    <ClInclude Include="AssetManager\ShaderProgram.h" />
+    <ClInclude Include="AssetManager\Texture2D.h" />
     <ClInclude Include="Components\AnimationComponent.h" />
     <ClInclude Include="Components\BaseComponent.h" />
     <ClInclude Include="Components\GameActor.h" />
@@ -287,14 +296,11 @@
     <ClInclude Include="Physics\Physics.h" />
     <ClInclude Include="Physics\ProjectileComponent.h" />
     <ClInclude Include="Random.h" />
-    <ClInclude Include="Renderer\Cubemap.h" />
     <ClInclude Include="Renderer\Framebuffer.h" />
     <ClInclude Include="Renderer\GLRenderer.h" />
     <ClInclude Include="Renderer\Material.h" />
     <ClInclude Include="Renderer\RenderPass.h" />
     <ClInclude Include="Renderer\RenderState.h" />
-    <ClInclude Include="Renderer\ShaderProgram.h" />
-    <ClInclude Include="Renderer\Texture2D.h" />
     <ClInclude Include="Renderer\VertexArrayObject.h" />
     <ClInclude Include="Scene\BoxBoundNode.h" />
     <ClInclude Include="Scene\BoxColliderNode.h" />
@@ -319,6 +325,7 @@
     <ClInclude Include="UI\TextRenderer.hpp" />
     <ClInclude Include="UserInputListener.h" />
     <ClInclude Include="Utils\Logger.h" />
+    <ClInclude Include="Utils\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="log.txt" />

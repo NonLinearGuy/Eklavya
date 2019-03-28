@@ -93,7 +93,7 @@
 				return false;
 			}
 
-			Logger::GetInstance()->Init("============HIP HOP 1.0=============");
+			Logger::GetInstance().Init("============HIP HOP 1.0=============");
 
 			m_CurrentContext = new GLWindowContext();
 			bool success = m_CurrentContext->Create(pName,4,3,pWndWidth,pWndHeight,pFullScreen);

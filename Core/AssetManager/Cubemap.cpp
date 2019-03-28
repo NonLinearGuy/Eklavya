@@ -1,12 +1,18 @@
 #include "Cubemap.h"
 #include <stb_image.h>
+#include "../Utils/Logger.h"
+#include <cassert>
 
-Cubemap::Cubemap()
+Cubemap::Cubemap( const std::string& assetName )
+	:
+	IAsset(EAssetType::CUBEMAP,assetName)
 {
 }
 
 Cubemap::~Cubemap()
 {
+	LOG("%s Destroyed",m_Name);
+	glDeleteTextures(GL_TEXTURE_CUBE_MAP, &m_ID);
 }
 
 void Cubemap::Create(const std::vector<std::string>& orderedFaceNames)
@@ -19,7 +25,13 @@ void Cubemap::Create(const std::vector<std::string>& orderedFaceNames)
 
 	for (int index = 0; index < 6; ++index)
 	{
-		image = stbi_load(("Assets/Skybox/" + orderedFaceNames[index] + ".tga").c_str(), &width, &height, &channels, 0);
+		image = stbi_load(orderedFaceNames[index].c_str(), &width, &height, &channels, 0);
+		if (!image)
+		{
+			Logger::GetInstance().Log("couldn't load Image : %s", m_Name.c_str());
+			assert(0);
+		}
+
 		GLenum format = channels == 4 ? GL_RGBA : GL_RGB;
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
 		stbi_image_free(image);
@@ -40,7 +52,3 @@ void Cubemap::BindToUnit(GLenum textureUnit)
 	glBindTexture(GL_TEXTURE_CUBE_MAP,m_ID);
 }
 
-void Cubemap::Delete()
-{
-	glDeleteTextures(GL_TEXTURE_CUBE_MAP,&m_ID);
-}

@@ -3,7 +3,11 @@
 #include <cstdio>
 #include<glm/gtc/type_ptr.hpp>
 
-	ShaderProgram::ShaderProgram() : m_IsReadyToUse(false), m_ErrorInfo("N/A")
+	ShaderProgram::ShaderProgram(const std::string& assetName) 
+		:
+		IAsset(EAssetType::SHADER,assetName),
+		m_IsReadyToUse(false), 
+		m_ErrorInfo("N/A")
 	{
 		m_ShaderIDs.reserve(4);
 	}
@@ -44,7 +48,7 @@
 		if ("" == shaderCode)
 		{
 			m_ErrorInfo = "Error : couldn't load file from path: " + shaderPath;
-			Logger::GetInstance()->Log(m_ErrorInfo.c_str());
+			Logger::GetInstance().Log(m_ErrorInfo.c_str());
 			return false;
 		}
 		
@@ -105,8 +109,9 @@
 				glGetProgramInfoLog(id, 512, 0, errInfo);
 				std::string prefix = linking?"Linking" : "Compilation";
 				m_ErrorInfo = prefix + " Error :: " + std::string(errInfo);
-				Logger::GetInstance()->Log(m_ErrorInfo.c_str());
+				Logger::GetInstance().Log(m_ErrorInfo.c_str());
 				return true;
+				assert(0);
 			}
 			return false;
 	}

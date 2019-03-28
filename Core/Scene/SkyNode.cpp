@@ -7,7 +7,7 @@
 #include "DebugCamera.h"
 #include "../Engine.h"
 #include "Scene.h"
-
+#include "../AssetManager/AssetManager.h"
 
 
 SkyNode::SkyNode(ActorID id, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
@@ -71,22 +71,15 @@ bool SkyNode::Init()
 	m_VAO.Create(skyboxVertices,sizeof(skyboxVertices),0);
 	m_VAO.SetPosPtr(3,0,0);
 
-	std::vector<std::string> faceNames;
-	faceNames.push_back("right");
-	faceNames.push_back("left");
-	faceNames.push_back("top");
-	faceNames.push_back("bottom");
-	faceNames.push_back("back");
-	faceNames.push_back("front");
-
-	m_Cubemap.Create(faceNames);
+	m_Cubemap = AssetManager::GetInstance().GetAsset<Cubemap>("day");
+	assert(m_Cubemap);
 
 	return true;
 }
 
 void SkyNode::Destroy()
 {
-	m_Cubemap.Delete();
+	
 }
 
 void SkyNode::PreRender(Scene * scene)
@@ -97,7 +90,7 @@ void SkyNode::PreRender(Scene * scene)
 	if (transform)
 		model = transform->GetModelMatrix();
 	scene->PushMatrix(model);
-	m_Cubemap.BindToUnit(GL_TEXTURE0);
+	m_Cubemap->BindToUnit(GL_TEXTURE0);
 }
 
 void SkyNode::Render(Scene * scene)

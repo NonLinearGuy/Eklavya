@@ -1,5 +1,5 @@
 #include "GLRenderer.h"
-#include "ShaderProgram.h"
+#include "../AssetManager/ShaderProgram.h"
 #include "RenderPass.h"
 #include <glad/glad.h>
 #include "../Scene/Scene.h"
@@ -191,11 +191,11 @@ void GLRenderer::SetShadowPassValues()
 	glBindTexture(GL_TEXTURE_2D,texture);
 }
 
-void GLRenderer::SetWaterPassValues(ShaderProgram shader)
+void GLRenderer::SetWaterPassValues(std::shared_ptr<ShaderProgram> shader)
 {
 	GLuint refractionTexture = static_cast<WaterTexturePass*>(m_RenderPasses[1])->GetColorAttachment();
 	//GLuint reflectionTexture = static_cast<WaterTexturePass*>(m_RenderPasses[2])->GetColorAttachment();
-	shader.SetInt("refractionTexture",2);
+	shader->SetInt("refractionTexture",2);
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D,refractionTexture);
 //	shader.SetInt("reflectionTexture", 3);

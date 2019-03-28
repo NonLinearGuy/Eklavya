@@ -2,8 +2,8 @@
 
 #include "BaseNode.h"
 #include "../Renderer/VertexArrayObject.h"
-#include "../Renderer/ShaderProgram.h"
-#include "../Renderer/Texture2D.h"
+#include "../AssetManager/ShaderProgram.h"
+#include "../AssetManager/Texture2D.h"
 
 class Scene;
 
@@ -20,9 +20,9 @@ public:
 	void PostRender(Scene* scene)override;
 private:
 	GLuint m_VAO;
-	ShaderProgram m_Shader;
-	Texture2D m_DuDvMap; 
-	Texture2D m_NormalMap;
+	std::shared_ptr<ShaderProgram> m_Shader;
+	std::shared_ptr<Texture2D> m_DuDvMap; 
+	std::shared_ptr<Texture2D> m_NormalMap;
 	glm::mat4 m_Model;
 	float m_MoveOffset;
 

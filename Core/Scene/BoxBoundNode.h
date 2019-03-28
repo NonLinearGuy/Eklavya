@@ -4,7 +4,7 @@
 
 #include "BaseNode.h"
 
-#include "../Renderer/Texture2D.h"
+#include "../AssetManager/Texture2D.h"
 #include "../Renderer/VertexArrayObject.h"
 
 class CuboidVAO;

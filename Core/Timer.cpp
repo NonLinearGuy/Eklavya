@@ -6,7 +6,15 @@
 
 	using namespace std;
 
-	Timer::Timer() : m_DeltaTime(0.0), m_ElapsedTime(0.0f)
+	Timer::Timer() : 
+		Singleton(),
+		m_DeltaTime(0.0), 
+		m_ElapsedTime(0.0f)
+	{
+
+	}
+
+	Timer::~Timer()
 	{
 
 	}

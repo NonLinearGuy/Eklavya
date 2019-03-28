@@ -94,8 +94,8 @@ void Physics::Simulate(float delta)
 				{
 					int id = firstCollider->GetBody()->GetOwnerID();
 					isColliding = true;
-					//box1->GetBody()->SetAwake(false);
-					//box2->GetBody()->SetAwake(false);
+					box1->GetBody()->SetAwake(false);
+					box2->GetBody()->SetAwake(false);
 				}
 			}
 
@@ -104,13 +104,13 @@ void Physics::Simulate(float delta)
 		{
 			std::shared_ptr<EventOnCollisionEnter> data = std::make_shared<EventOnCollisionEnter>();
 			data->ActorID = firstCollider->GetBody()->GetOwnerID();
-			EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_ENTER, data);
+			//EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_ENTER, data);
 		}
 		else
 		{
 			std::shared_ptr<EventOnCollisionExit> data = std::make_shared<EventOnCollisionExit>();
 			data->ActorID = firstCollider->GetBody()->GetOwnerID();
-			EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_EXIT, data);
+			//EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_EXIT, data);
 		}
 	}
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ShaderProgram.h"
+#include "../AssetManager/ShaderProgram.h"
 #include <memory>
 
 class IRenderState

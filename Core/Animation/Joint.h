@@ -1,10 +1,11 @@
 #pragma once
 
-#include "KeyFrame.h"
 #include <vector>
 #include <assimp/scene.h>
 #include <list>
-
+#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 struct KeyPosition
 {
@@ -32,7 +33,7 @@ public:
 	~Joint();
 	void Update(float animationTime);
 	glm::mat4 GetLocalTransform() { return m_LocalTransform; }
-	std::string GetJointName() { return m_Name; }
+	std::string GetJointName() const { return m_Name; }
 	int GetJointID() { return m_ID; }
 	std::vector<Joint*> GetChildren() { return m_Children; }
 	void AddChild(Joint* child);
@@ -48,7 +49,6 @@ private:
 	glm::mat4 InterpolateRotation(float animationTime);
 	glm::mat4 InterpolateScaling(float animationTime);
 
-	std::vector<KeyFrame> m_KeyFrames;
 	std::vector<KeyPosition> m_Positions;
 	std::vector<KeyRotation> m_Rotations;
 	std::vector<KeyScale> m_Scales;

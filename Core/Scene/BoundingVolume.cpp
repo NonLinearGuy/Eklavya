@@ -5,7 +5,7 @@
 #include "../Renderer/VertexArrayObject.h"
 #include "../Renderer/Material.h"
 #include "../Renderer/GLRenderer.h"
-#include "../Renderer/ShaderProgram.h"
+#include "../AssetManager/ShaderProgram.h"
 #include "Scene.h"
 
 IBoundVolume::IBoundVolume(EBoundType type) : m_Type(type)

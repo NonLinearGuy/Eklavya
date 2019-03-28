@@ -17,7 +17,7 @@ bool ShadowPassFB::Setup()
 {
 	if (m_DepthSize != 24 && m_DepthSize != 16 && m_DepthSize != 32)
 	{
-		Logger::GetInstance()->Log("Main Pass FB error : depth size is invalid");
+		Logger::GetInstance().Log("Main Pass FB error : depth size is invalid");
 		return false;
 	}
 	glGenFramebuffers(1, &m_ID);
@@ -49,7 +49,7 @@ bool ShadowPassFB::Setup()
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		Logger::GetInstance()->Log("ERROR:: SHADOW PASS FRAMEBUFFER:: Framebuffer is not complete!");
+		Logger::GetInstance().Log("ERROR:: SHADOW PASS FRAMEBUFFER:: Framebuffer is not complete!");
 		return false;
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -88,7 +88,7 @@ bool GeneralFB::Setup()
 {
 	if (m_DepthSize != 24 && m_DepthSize != 16 && m_DepthSize != 32)
 	{
-		Logger::GetInstance()->Log("Main Pass FB error : depth size is invalid");
+		Logger::GetInstance().Log("Main Pass FB error : depth size is invalid");
 		return false;
 	}
 
@@ -124,7 +124,7 @@ bool GeneralFB::Setup()
 	
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		Logger::GetInstance()->Log("ERROR:: MAIN PASS FRAMEBUFFER:: Framebuffer is not complete!");
+		Logger::GetInstance().Log("ERROR:: MAIN PASS FRAMEBUFFER:: Framebuffer is not complete!");
 		return false;
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

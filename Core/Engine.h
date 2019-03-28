@@ -40,6 +40,8 @@ class Physics;
 		
 		void PrepareScene();
 
+		void LoadResources();
+
 	private:
 
 		std::shared_ptr<GLRenderer> m_Renderer;

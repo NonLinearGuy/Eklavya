@@ -2,7 +2,10 @@
 #include"Logger.h"
 #include<cstdio>
 
-	Logger::Logger(): m_File(nullptr)
+
+	Logger::Logger(): 
+		Singleton(),
+		m_File(nullptr)
 	{
 
 	}
@@ -40,8 +43,10 @@
 
 	void Logger::Log(const char * pFormat, ...)
 	{
+#ifdef _DEBUG
 		LogToConsole(pFormat);
 		LogToFile(pFormat);
+#endif
 	}
 
 	void Logger::Log(const std::string & logString)

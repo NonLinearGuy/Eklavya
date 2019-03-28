@@ -6,18 +6,16 @@
 #define _INC_TIMER_HPP
 
 #include<chrono>
+#include"Utils/Singleton.h"
 
 	using Clock = std::chrono::steady_clock;
 	using TimeStamp = std::chrono::steady_clock::time_point;
 
-	class Timer
+	class Timer : public Singleton<Timer>
 	{
 	public:
-		static Timer* GetInstance()
-		{
-			static Timer* instance = new Timer();
-			return instance;
-		}
+		Timer();
+		~Timer();
 		inline double GetDeltaTimeInMS() { return m_DeltaTime; }
 		inline double GetDeltaTimeInSeconds() { return m_DeltaTime * .001f; }
 		inline int GetFramesPerSecond() { return m_FPS; }
@@ -27,10 +25,8 @@
 
 		void UpdateDelta();
 		void UpdateFPS();
-
-		Timer();
 		
-		//for dt
+		//for frame delta
 		TimeStamp mCurrentTime, mLastTime;
 		double m_DeltaTime;
 		

@@ -171,7 +171,7 @@ void Joint::Update(float animationTime)
 void Joint::PrintHeirarchy()
 {
 	static int tabs = 1;
-	//Logger::GetInstance()->Log("\t%s\n",m_Name.c_str());
+	//Logger::GetInstance().Log("\t%s\n",m_Name.c_str());
 	
 	for (int i = 0; i < tabs; i++)
 		std::cout << " -";

@@ -144,7 +144,7 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 
 	//RENDER
 	std::shared_ptr<BaseRenderComponent> renderComponent;
-	renderComponent = std::make_shared<MeshRenderComponent>("Shoulder-Launched_Missile.fbx");
+	renderComponent = std::make_shared<MeshRenderComponent>("shotgun.fbx");
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
 	newActor->AddComponent(renderComponent);
@@ -178,10 +178,9 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
 
 	//Animation
-	//auto animationComponent = std::make_shared<AnimationComponent>("left_turn_90.dae");
-	//animationComponent->Init();
-	//animationComponent->SetOwner(newActor);
-	//newActor->AddComponent(animationComponent);
-
+	auto animationComponent = std::make_shared<AnimationComponent>("left_turn_90.dae");
+	animationComponent->Init();
+	animationComponent->SetOwner(newActor);
+	newActor->AddComponent(animationComponent);
 
 }

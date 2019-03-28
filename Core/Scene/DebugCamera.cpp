@@ -84,7 +84,7 @@ void DebugCamera::UpdateCamera()
 void DebugCamera::PollKeyAction()
 {
 	
-	float dt = Timer::GetInstance()->GetDeltaTimeInSeconds();
+	float dt = Timer::GetInstance().GetDeltaTimeInSeconds();
 	
 	if (m_Interpolating) return;
 	if (IsKeyPressed(GLFW_KEY_W))

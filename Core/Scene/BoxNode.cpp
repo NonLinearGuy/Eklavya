@@ -7,7 +7,7 @@
 #include "../Engine.h"
 #include "../Helpers.h"
 #include "../Renderer/GLRenderer.h"
-#include "../Renderer/ShaderProgram.h"
+#include "../AssetManager/ShaderProgram.h"
 #include "../Renderer/Material.h"
 #include "BoundingVolume.h"
 #include "../Components/BaseRenderComponent.h"

@@ -17,8 +17,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "../Renderer/ShaderProgram.h"
-#include "../Renderer/Texture2D.h"
+#include "../AssetManager/ShaderProgram.h"
+#include "../AssetManager/Texture2D.h"
 
 
 	class TextRenderer

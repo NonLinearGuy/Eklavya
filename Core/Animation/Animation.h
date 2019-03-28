@@ -5,40 +5,33 @@
 #include <assimp/scene.h>
 #include "Joint.h"
 #include <functional>
+#include "../Model.h"
 
-struct MyComparator
-{
-	bool operator()(int first, int second) const
-	{
-		return first < second;
-	}
-};
+
 
 class Animation
 {
 public:
+	Animation() = default;
 	Animation(const aiAnimation* animation,const aiScene* scene);
 	~Animation();
-	void SetupJoints();
+	void SetupJoints(const aiAnimation* animation);
 	Joint* FindJoint(const std::string& name);
-	void ReadNodeHierarchy(float animationTime,aiNode* node,glm::mat4 parentTransform);
 	aiNodeAnim* GetChannel();
-	void Tick(float delta);
-	glm::mat4 toGlmMat(aiMatrix4x4 mat);
-	std::map<int, glm::mat4,MyComparator> GetFinalTransform() { return m_FinalTransforms; }
-	void PrintHierarchy();
+	
+	//getters
+	inline glm::mat4 GetGlobalInverse() { return m_GlobalInverseTransform; }
+	inline float GetTicksPerSecond() { return m_TicksPerSecond; }
+	inline float GetDuration() { return m_Duration;}
+	inline const aiNode* GetRootNode() { return m_RootNode; }
+	inline std::map<std::string,int> GetBoneIDMap() { return Model::m_BoneIdMap; }
+	inline std::map<std::string, glm::mat4> GetOffsetMap() { return Model::boneOffsetMap; }
 
 private:
 	
-	std::map<int, glm::mat4,MyComparator> m_FinalTransforms;
 	float m_Duration;
 	int m_TicksPerSecond;
-	float m_CurrentAnimationTime;
-	Joint* m_RootJoint;
-	const aiScene* m_Scene;
-	glm::mat4 m_GlobalInverseTransformation;
-	const aiAnimation* m_Animation;
-	std::vector<Joint*> m_Joints;
-private:
-	
+	aiNode* m_RootNode;
+	glm::mat4 m_GlobalInverseTransform;
+	std::vector<Joint> m_Joints;
 };

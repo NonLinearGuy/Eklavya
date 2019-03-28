@@ -17,6 +17,8 @@
 #include "Random.h"
 #include "Components/RigidBodyComponent.h"
 
+#include "AssetManager/AssetManager.h"
+
 
 	Engine::Engine()
 	{
@@ -34,8 +36,8 @@
 		GLFWGame::HideMouse();
 		
 
-		Logger::GetInstance()->Init("HIPHOP TEST");
-		Timer::GetInstance()->Reset();
+		Logger::GetInstance().Init("HIPHOP TEST");
+		Timer::GetInstance().Reset();
 
 		m_Text = std::make_shared<TextRenderer>("diag_font");
 		m_Diagnostics = std::make_shared<DiagManager>(m_Text);
@@ -45,9 +47,12 @@
 
 		m_Physics = std::make_shared<Physics>();
 
+		LoadResources();
+
 		m_Scene = new Scene(this, m_Renderer, "TestScene");
 		m_Scene->Init();
-
+		
+		
 		PrepareScene();
 
 		deltaScale = 1.0f;
@@ -61,18 +66,23 @@
 		ActorFactory::CreateSky();
 		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(2000.0f,100.0f,2000.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
 		ActorFactory::CreateModelActor(glm::vec3(0.0f,1000.0f,0.0f),glm::vec3(1.0f),glm::vec3(0.0,0.0f,0.0f));
-		//ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 1500.0f, 0.0f), glm::vec3(2000.0f, 100.0f, 2000.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, true, true);
-		//ActorFactory::CreateModelActor(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0, 0.0f, 0.0f));
-		//ActorFactory::CreateBoxCollider(glm::vec3(.0f, 20.0f, 240.0f), glm::vec3(500.0f, 300.0f, 10.0f), glm::vec3(0.0f));
-	
+		
+	}
+
+	void Engine::LoadResources()
+	{
+		AssetManager::GetInstance().LoadAsset(EAssetType::TEXTURE, "waterNormalMap");
+		AssetManager::GetInstance().LoadAsset(EAssetType::TEXTURE, "waterDistortMap");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "water");
+		AssetManager::GetInstance().LoadAsset(EAssetType::CUBEMAP, "day");
 	}
 
 	void Engine::Tick()
 	{
-		Timer::GetInstance()->Update();
+		Timer::GetInstance().Update();
 		InputHandler::GetInstance()->PollKeyActions();
-		double dt = Timer::GetInstance()->GetDeltaTimeInSeconds() * deltaScale;
-		int fps = Timer::GetInstance()->GetFramesPerSecond();
+		double dt = Timer::GetInstance().GetDeltaTimeInSeconds() * deltaScale;
+		int fps = Timer::GetInstance().GetFramesPerSecond();
 
 		DiagManager::sGeneralDiagsMap[EMapKeys::KEY_FPS] = std::to_string(fps);
 		DiagManager::sGeneralDiagsMap[EMapKeys::KEY_DELTA] = std::to_string(dt);

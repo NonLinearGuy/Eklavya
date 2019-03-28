@@ -13,7 +13,7 @@
 #include <assimp/postprocess.h>
 
 
-#include"Renderer/ShaderProgram.h"
+#include "AssetManager/ShaderProgram.h"
 #include "Mesh.h"
 #include "Helpers.h"
 
@@ -60,7 +60,7 @@ private:
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
 		{
-			Logger::GetInstance()->Log("ERROR::ASSIMP:: " + std::string(importer.GetErrorString()));
+			Logger::GetInstance().Log("ERROR::ASSIMP:: " + std::string(importer.GetErrorString()));
 			return;
 		}
 		directory = path.substr(0, path.find_last_of('/'));

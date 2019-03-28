@@ -72,7 +72,7 @@ void Scene::Init()
 {
 	m_LightSource.m_Ambient = glm::vec3(1.0f);
 	m_LightSource.m_Diffuse = glm::vec3(.8f);
-	m_LightSource.m_Specular = glm::vec3(0.0f);
+	m_LightSource.m_Specular = glm::vec3(1.0f);
 
 	m_LightSource.m_Position = glm::vec3(glm::vec3(-250.0f, 200.0f, 200.0f));
 

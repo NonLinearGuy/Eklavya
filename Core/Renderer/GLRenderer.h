@@ -44,7 +44,7 @@ public:
 	void SetProjectionMatrix(glm::mat4& projection);
 	void SetViewport(int, int, int, int);
 	void SetShadowPassValues();
-	void SetWaterPassValues(ShaderProgram shader);
+	void SetWaterPassValues(std::shared_ptr<ShaderProgram> shader);
 	void SetLightValues(glm::vec3 viewSpacePos,class LightSource* light);
 
 	

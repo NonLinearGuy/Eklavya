@@ -34,6 +34,9 @@
     <Filter Include="Animation">
       <UniqueIdentifier>{c242e46b-2664-483e-a2d9-1d383e4b5e08}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AssetManagement">
+      <UniqueIdentifier>{5a1661ba-42f0-446b-b33d-34ca5b64cf00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\BaseComponent.cpp">
@@ -47,12 +50,6 @@
     </ClCompile>
     <ClCompile Include="UI\TextRenderer.cpp">
       <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\ShaderProgram.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Texture2D.cpp">
-      <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\VertexArrayObject.cpp">
       <Filter>Renderer</Filter>
@@ -83,9 +80,6 @@
     </ClCompile>
     <ClCompile Include="Scene\SkyNode.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Cubemap.cpp">
-      <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\GLRenderer.cpp">
       <Filter>Renderer</Filter>
@@ -156,9 +150,6 @@
     <ClCompile Include="Animation\Joint.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Animation\KeyFrame.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Scene\BoxNode.cpp">
       <Filter>Scene</Filter>
@@ -178,6 +169,27 @@
     <ClCompile Include="Scene\BoxColliderNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\Animator.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\AssetManager.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\Cubemap.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\ShaderProgram.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\Texture2D.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\IAsset.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\IAssetFactory.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\BaseComponent.h">
@@ -191,12 +203,6 @@
     </ClInclude>
     <ClInclude Include="UI\TextRenderer.hpp">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\ShaderProgram.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Texture2D.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\VertexArrayObject.h">
       <Filter>Renderer</Filter>
@@ -225,9 +231,6 @@
     <ClInclude Include="Scene\defines.h" />
     <ClInclude Include="Scene\SkyNode.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\Cubemap.h">
-      <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Renderer\GLRenderer.h">
       <Filter>Renderer</Filter>
@@ -309,9 +312,6 @@
     <ClInclude Include="Animation\Animation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Animation\KeyFrame.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
     <ClInclude Include="Animation\Joint.h">
       <Filter>Animation</Filter>
     </ClInclude>
@@ -338,6 +338,30 @@
     </ClInclude>
     <ClInclude Include="Scene\BoxColliderNode.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Animator.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\AssetManager.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Singleton.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\IAsset.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\Cubemap.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\ShaderProgram.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\Texture2D.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\IAssetFactory.h">
+      <Filter>AssetManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

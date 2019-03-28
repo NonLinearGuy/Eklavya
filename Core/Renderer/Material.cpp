@@ -1,6 +1,6 @@
 #include "Material.h"
-#include "ShaderProgram.h"
-#include "Texture2D.h"
+#include "../AssetManager/ShaderProgram.h"
+#include "../AssetManager/Texture2D.h"
 
 Material::Material()
 	:

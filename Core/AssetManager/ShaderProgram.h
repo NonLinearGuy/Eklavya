@@ -5,19 +5,21 @@
 #include<cstdint>
 #include<glm/glm.hpp>
 #include<glad/glad.h>
+#include "../AssetManager/IAsset.h"
 
 
-	enum class EShaderType : std::uint16_t
+	enum  EShaderType 
 	{
 		VERTEX = 0,
 		FRAGMENT,
-		MAX
+		SHADER_TYPE_MAX
 	};
 
-	class ShaderProgram
+	class ShaderProgram : public IAsset
 	{
 	public:
-		ShaderProgram();
+		ShaderProgram() = default;
+		ShaderProgram(const std::string& name);
 		~ShaderProgram();
 
 		bool AddAndCompile(const std::string& shaderPath, EShaderType type);

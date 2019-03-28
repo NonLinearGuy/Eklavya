@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseNode.h"
-#include "../Renderer/Cubemap.h"
+#include "../AssetManager/Cubemap.h"
 #include "../Renderer/VertexArrayObject.h"
 
 class Scene;
@@ -18,6 +18,6 @@ public:
 private:
 	VertexArrayObject m_VAO;
 	int m_IndicesSize;
-	Cubemap m_Cubemap;
+	std::shared_ptr<Cubemap> m_Cubemap;
 };
 

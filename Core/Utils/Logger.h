@@ -15,13 +15,23 @@ public:
 	void Init(const char* header);
 	void LogToConsole(const char* pFormat,...);
 	void LogToFile(const char* pFormat,...);
-	void Log(const char*pFormat,...);
-	void Log(const std::string& logString);
-
 private:
 	FILE* m_File;
 };
 
-#define LOG(format,data) Logger::GetInstance().Log(format,data)
+#define FILE_LOG
+
+#ifdef FILE_LOG
+#define LOG(format)			     Logger::GetInstance().LogToFile(format);
+#define LOG_STRING(format)	     Logger::GetInstance().LogToFile((format).c_str());
+#define LOG_FSTRING(format,data) Logger::GetInstance().LogToFile((format).c_str(),data);
+#define LOG_F(format,data)       Logger::GetInstance().LogToFile(format,data);
+#else
+#define LOG(format)			     Logger::GetInstance().LogToConsole(format);
+#define LOG_STRING(format)	     Logger::GetInstance().LogToConsole((format).c_str());
+#define LOG_FSTRING(format,data) Logger::GetInstance().LogToConsole((format).c_str(),data);
+#define LOG_F(format,data)       Logger::GetInstance().LogToConsole(format,data);
+#endif
+
 
 #endif

@@ -17,12 +17,11 @@ Texture2D::Texture2D(const std::string& assetName)
 	:
 	IAsset(EAssetType::TEXTURE,assetName)
 {
-
+	
 }
 
 Texture2D::~Texture2D()
 {
-	Logger::GetInstance().Log("Destroying %s ...",m_Name.c_str());
 	glDeleteTextures(1, &mID);
 	stbi_image_free(mImage);
 }
@@ -53,6 +52,7 @@ GLuint Texture2D::CreateTexture(const std::string& path, bool repeat)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, mFormat, width, height, 0, mFormat, GL_UNSIGNED_BYTE, mImage);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
 	return mID;
 }
 

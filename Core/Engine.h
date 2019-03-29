@@ -40,7 +40,8 @@ class Physics;
 		
 		void PrepareScene();
 
-		void LoadResources();
+		void LoadAssets();
+		void ReleaseAssets();
 
 	private:
 

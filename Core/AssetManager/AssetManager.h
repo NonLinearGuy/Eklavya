@@ -4,7 +4,6 @@
 #include <map>
 #include <list>
 #include <memory>
-#include <typeinfo>
 #include <type_traits>
 
 #include "IAsset.h"
@@ -26,7 +25,7 @@ public:
 	void LoadAsset(EAssetType type,const std::string& name);
 
 	template<typename Type>
-	std::shared_ptr<Type> GetAsset(const std::string& name)
+	std::weak_ptr<Type> GetAsset(const std::string& name)
 	{
 		EAssetType type = ASSET_TYPE_MAX;
 

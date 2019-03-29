@@ -1,5 +1,7 @@
 #pragma once
 
+/* Container for bone data */
+
 #include <vector>
 #include <assimp/scene.h>
 #include <list>

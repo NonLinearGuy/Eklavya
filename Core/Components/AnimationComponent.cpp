@@ -35,7 +35,7 @@ void AnimationComponent::Init()
 	// check for errors
 	if (!m_Scene || !m_Scene->mRootNode) // if is Not Zero
 	{
-		Logger::GetInstance().Log("ERROR::ASSIMP:: " + std::string(m_Importer.GetErrorString()));
+		LOG_STRING("ERROR::ASSIMP:: " + std::string(m_Importer.GetErrorString()));
 		return;
 	}
 

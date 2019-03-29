@@ -47,7 +47,7 @@
 
 		m_Physics = std::make_shared<Physics>();
 
-		LoadResources();
+		LoadAssets();
 
 		m_Scene = new Scene(this, m_Renderer, "TestScene");
 		m_Scene->Init();
@@ -69,12 +69,23 @@
 		
 	}
 
-	void Engine::LoadResources()
+	void Engine::LoadAssets()
 	{
+		LOG("Loading Textures...");
 		AssetManager::GetInstance().LoadAsset(EAssetType::TEXTURE, "waterNormalMap");
 		AssetManager::GetInstance().LoadAsset(EAssetType::TEXTURE, "waterDistortMap");
+
+		LOG("Loading Shaders...");
 		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "water");
+
+		LOG("Loading Skybox...");
 		AssetManager::GetInstance().LoadAsset(EAssetType::CUBEMAP, "day");
+	}
+
+	void Engine::ReleaseAssets()
+	{
+		LOG("Releasing Assets...");
+		AssetManager::GetInstance().RemoveAll();
 	}
 
 	void Engine::Tick()
@@ -132,6 +143,7 @@
 			if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
 			{
 				CloseWindow();
+				ReleaseAssets();
 			}
 			if (GLFW_KEY_KP_SUBTRACT == key )
 				deltaScale -= .1;

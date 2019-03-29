@@ -14,7 +14,7 @@
 
 	ShaderProgram::~ShaderProgram()
 	{
-		
+		glDeleteProgram(m_ID);
 	}
 
 	std::string ShaderProgram::Load(const std::string& path)
@@ -48,7 +48,7 @@
 		if ("" == shaderCode)
 		{
 			m_ErrorInfo = "Error : couldn't load file from path: " + shaderPath;
-			Logger::GetInstance().Log(m_ErrorInfo.c_str());
+			LOG(m_ErrorInfo.c_str());
 			return false;
 		}
 		
@@ -109,7 +109,7 @@
 				glGetProgramInfoLog(id, 512, 0, errInfo);
 				std::string prefix = linking?"Linking" : "Compilation";
 				m_ErrorInfo = prefix + " Error :: " + std::string(errInfo);
-				Logger::GetInstance().Log(m_ErrorInfo.c_str());
+				LOG(m_ErrorInfo.c_str());
 				return true;
 				assert(0);
 			}

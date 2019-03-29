@@ -11,7 +11,6 @@ Cubemap::Cubemap( const std::string& assetName )
 
 Cubemap::~Cubemap()
 {
-	LOG("%s Destroyed",m_Name);
 	glDeleteTextures(GL_TEXTURE_CUBE_MAP, &m_ID);
 }
 
@@ -28,7 +27,7 @@ void Cubemap::Create(const std::vector<std::string>& orderedFaceNames)
 		image = stbi_load(orderedFaceNames[index].c_str(), &width, &height, &channels, 0);
 		if (!image)
 		{
-			Logger::GetInstance().Log("couldn't load Image : %s", m_Name.c_str());
+			LOG("couldn't load Image : %s", m_Name.c_str());
 			assert(0);
 		}
 

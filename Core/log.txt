@@ -1,2 +1,15 @@
 ============HIP HOP 1.0=============
-D--
+waterNormalMap Loaded
+    waterDistortMap Loaded
+Loading Shaders...
+    water Loaded
+Loading Skybox...
+    day Loaded
+Releasing Assets...
+   waterNormalMap Destroyed
+   waterDistortMap Destroyed
+   water Destroyed
+   day Destroyed
+    Destroyed
+    Destroyed
+---END--

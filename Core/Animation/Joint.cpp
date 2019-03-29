@@ -12,17 +12,8 @@ Joint::Joint(const std::string& name, int ID, const aiNodeAnim* channel)
 	m_Parent(nullptr),
 	m_LocalTransform(1.0f)
 {
-	/*for (int index = 0; index < channel->mNumPositionKeys; ++index)
-	{
-		aiQuaternion orientation = channel->mRotationKeys[index].mValue;
-		aiVector3D position = channel->mPositionKeys[index].mValue;
-		aiVector3D scale = channel->mScalingKeys[index].mValue;
-		float timeStamp = channel->mPositionKeys[index].mTime;
-		KeyFrame newKeyFrame(orientation,position,scale,timeStamp);
-		m_KeyFrames.push_back(newKeyFrame);
-	}*/
-
 	m_NumPositions = channel->mNumPositionKeys;
+
 	for (int positionIndex = 0; positionIndex < m_NumPositions; ++positionIndex)
 	{
 		aiVector3D aiPosition = channel->mPositionKeys[positionIndex].mValue;
@@ -171,7 +162,7 @@ void Joint::Update(float animationTime)
 void Joint::PrintHeirarchy()
 {
 	static int tabs = 1;
-	//Logger::GetInstance().Log("\t%s\n",m_Name.c_str());
+	//LOG("\t%s\n",m_Name.c_str());
 	
 	for (int i = 0; i < tabs; i++)
 		std::cout << " -";

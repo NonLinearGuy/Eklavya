@@ -53,6 +53,7 @@ void AssetManager::LoadAsset(EAssetType type, const std::string & name)
 	{
 		auto newAsset = m_AssetFactories[type]->Create(name);
 		m_AssetMap[type].push_back(newAsset);
+		LOG_STRING(("    " + name + " Loaded"));
 	}
 }
 
@@ -75,10 +76,11 @@ void AssetManager::RemoveAll()
 	for (int type = ASSET_TYPE_MIN; type < ASSET_TYPE_MAX; ++type)
 	{
 		auto& list = m_AssetMap[(EAssetType)type];
-		for (auto assetPtr : list)
+		for (auto& assetPtr : list)
 			assetPtr.reset(); // will call respective destructors
 		list.clear();
 	}
 	m_AssetMap.clear();
+	int a;
 }
 

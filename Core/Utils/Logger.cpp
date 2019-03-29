@@ -34,29 +34,18 @@
 
 	void Logger::LogToFile(const char* pFormat,...)
 	{
+#ifdef _DEBUG
 		va_list list;
 		va_start(list,pFormat);
 		vfprintf(m_File,pFormat,list);
 		fprintf(m_File, "\n");
 		va_end(list);
-	}
-
-	void Logger::Log(const char * pFormat, ...)
-	{
-#ifdef _DEBUG
-		LogToConsole(pFormat);
-		LogToFile(pFormat);
 #endif
-	}
-
-	void Logger::Log(const std::string & logString)
-	{
-		LogToConsole(logString.c_str());
-		LogToFile(logString.c_str());
 	}
 
 
 	void Logger::LogToConsole(const char* pFormat, ...)
 	{
+		printf("\n");
 		printf(pFormat);
 	}

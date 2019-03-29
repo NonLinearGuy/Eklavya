@@ -17,7 +17,7 @@ class IAsset
 public:
 	IAsset() = default; 
 	IAsset(EAssetType type, const std::string& name);
-	virtual ~IAsset() {}
+	virtual ~IAsset();
 
 	inline EAssetType GetType() const { return m_Type; }
 	inline std::string GetName() const { return m_Name; }

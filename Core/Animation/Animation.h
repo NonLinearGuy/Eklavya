@@ -8,7 +8,6 @@
 #include "../Model.h"
 
 
-
 class Animation
 {
 public:

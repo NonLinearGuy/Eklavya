@@ -39,7 +39,7 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
 	}
 	else
 	{
-		Logger::GetInstance().Log(("Texture failed to load at path: " + std::string(path)));;
+		LOG_STRING(("Texture failed to load at path: " + std::string(path)));;
 		stbi_image_free(data);
 	}
 

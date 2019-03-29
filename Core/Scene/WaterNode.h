@@ -20,9 +20,9 @@ public:
 	void PostRender(Scene* scene)override;
 private:
 	GLuint m_VAO;
-	std::shared_ptr<ShaderProgram> m_Shader;
-	std::shared_ptr<Texture2D> m_DuDvMap; 
-	std::shared_ptr<Texture2D> m_NormalMap;
+	std::weak_ptr<ShaderProgram> m_Shader;
+	std::weak_ptr<Texture2D> m_DuDvMap; 
+	std::weak_ptr<Texture2D> m_NormalMap;
 	glm::mat4 m_Model;
 	float m_MoveOffset;
 

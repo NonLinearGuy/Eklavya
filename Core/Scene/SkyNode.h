@@ -18,6 +18,6 @@ public:
 private:
 	VertexArrayObject m_VAO;
 	int m_IndicesSize;
-	std::shared_ptr<Cubemap> m_Cubemap;
+	std::weak_ptr<Cubemap> m_Cubemap;
 };
 

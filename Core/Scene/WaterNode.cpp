@@ -4,6 +4,7 @@
 #include "DebugCamera.h"
 #include "../Renderer/GLRenderer.h"
 #include "../AssetManager/AssetManager.h"
+#include "../Helpers.h"
 
 WaterNode::WaterNode()
 	:
@@ -50,7 +51,7 @@ bool WaterNode::Init()
 	m_DuDvMap = AssetManager::GetInstance().GetAsset<Texture2D>("waterDistortMap");
 	m_NormalMap = AssetManager::GetInstance().GetAsset<Texture2D>("waterNormalMap");
 
-	assert(m_NormalMap && m_DuDvMap && m_Shader);
+	assert( !m_NormalMap.expired() && !m_DuDvMap.expired() && !m_Shader.expired());
 
 	m_Model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	m_Model = glm::scale(m_Model,glm::vec3(5000,1.0f,5000.0f));
@@ -76,17 +77,25 @@ void WaterNode::PreRender(Scene * scene)
 	glm::mat4 projection = scene->GetCamera()->GetProjection();
 	glm::mat4 view = scene->GetCamera()->GetView();
 
-	m_Shader->Use();
-	m_Shader->SetMat4("projection",projection);
-	m_Shader->SetMat4("view",view);
-	m_Shader->SetMat4("model",m_Model);
-	m_Shader->SetVec3("cameraPosition",scene->GetCamera()->GetPosition());
-	m_Shader->SetFloat("moveOffset",m_MoveOffset);
-	scene->GetRenderer()->SetWaterPassValues(m_Shader);
-	m_Shader->SetInt("dudvMap",4);
-	m_DuDvMap->BindToUnit(GL_TEXTURE4);
-	m_Shader->SetInt("normalMap",5);
-	m_NormalMap->BindToUnit(GL_TEXTURE5);
+	auto strongShaderPtr = MakeSharedPtr(m_Shader);
+	if (strongShaderPtr)
+	{
+		strongShaderPtr->Use();
+		strongShaderPtr->SetMat4("projection", projection);
+		strongShaderPtr->SetMat4("view", view);
+		strongShaderPtr->SetMat4("model", m_Model);
+		strongShaderPtr->SetVec3("cameraPosition", scene->GetCamera()->GetPosition());
+		strongShaderPtr->SetFloat("moveOffset", m_MoveOffset);
+		scene->GetRenderer()->SetWaterPassValues(strongShaderPtr);
+		strongShaderPtr->SetInt("dudvMap", 4);
+		strongShaderPtr->SetInt("normalMap", 5);
+	}
+
+	if(!m_DuDvMap.expired())
+		MakeSharedPtr(m_DuDvMap)->BindToUnit(GL_TEXTURE4);
+	
+	if(!m_NormalMap.expired())
+		MakeSharedPtr(m_NormalMap)->BindToUnit(GL_TEXTURE5);
 }
 
 void WaterNode::Render(Scene * scene)

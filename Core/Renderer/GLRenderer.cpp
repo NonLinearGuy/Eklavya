@@ -6,7 +6,7 @@
 #include "../GLFWGame.h"
 #include "../Engine.h"
 #include "VertexArrayObject.h"
-
+#include "../AssetManager/AssetManager.h"
 
 
 GLRenderer::GLRenderer(GLWindowContext* context)
@@ -51,21 +51,19 @@ bool GLRenderer::Initialize()
 
 	glBindVertexArray(0);
 
-	m_MainOutputShader = std::make_shared<ShaderProgram>();
-	m_MainOutputShader->AddAndCompile("Assets/Shaders/main_output_vs.glsl", EShaderType::VERTEX);
-	m_MainOutputShader->AddAndCompile("Assets/Shaders/main_output_fs.glsl", EShaderType::FRAGMENT);
-	m_MainOutputShader->Build();
-
+	m_MainOutputShader = AssetManager::GetInstance().GetAsset<ShaderProgram>("main_output");
+	
 	//Load all the shaders
 
-	m_Programs[EShaderProgram::SOLID] = LoadShaderProgram("solids");
-	m_Programs[EShaderProgram::SKYBOX] = LoadShaderProgram("skybox");
-	m_Programs[EShaderProgram::SHADOW] = LoadShaderProgram("shadow_map");
-	m_Programs[EShaderProgram::WATER_PASS] = LoadShaderProgram("water_pass");
-	m_Programs[EShaderProgram::OUTLINED] = LoadShaderProgram("outlined");
-	m_Programs[EShaderProgram::UNLIT_SOLID] = LoadShaderProgram("unlit_solids");
-	m_Programs[EShaderProgram::CONTACTS] = LoadShaderProgram("world_point");
-	m_Programs[EShaderProgram::ANIMATED_SOLID] = LoadShaderProgram("animated_solids");
+	m_Programs[EShaderProgram::SOLID] = AssetManager::GetInstance().GetAsset<ShaderProgram>("solids");
+	m_Programs[EShaderProgram::SKYBOX] = AssetManager::GetInstance().GetAsset<ShaderProgram>("skybox");
+	m_Programs[EShaderProgram::SHADOW] = AssetManager::GetInstance().GetAsset<ShaderProgram>("shadow_map");
+	m_Programs[EShaderProgram::WATER_PASS] = AssetManager::GetInstance().GetAsset<ShaderProgram>("water_pass");
+	m_Programs[EShaderProgram::OUTLINED] = AssetManager::GetInstance().GetAsset<ShaderProgram>("outlined");
+	m_Programs[EShaderProgram::UNLIT_SOLID] = AssetManager::GetInstance().GetAsset<ShaderProgram>("unlit_solids");
+	m_Programs[EShaderProgram::CONTACTS] = AssetManager::GetInstance().GetAsset<ShaderProgram>("world_point");
+	m_Programs[EShaderProgram::ANIMATED_SOLID] = AssetManager::GetInstance().GetAsset<ShaderProgram>("animated_solids");
+
 	m_ActiveProgram = m_Programs[EShaderProgram::SOLID];
 	m_ActiveProgram->Use();
 
@@ -92,19 +90,19 @@ bool GLRenderer::Initialize()
 
 void GLRenderer::Destroy()
 {
+	m_Programs[EShaderProgram::SOLID].reset();
+	m_Programs[EShaderProgram::SKYBOX].reset();
+	m_Programs[EShaderProgram::SHADOW].reset();
+	m_Programs[EShaderProgram::WATER_PASS].reset();
+	m_Programs[EShaderProgram::OUTLINED].reset();
+	m_Programs[EShaderProgram::UNLIT_SOLID].reset();
+	m_Programs[EShaderProgram::CONTACTS].reset();
+	m_Programs[EShaderProgram::ANIMATED_SOLID].reset();
+	
+	m_MainOutputShader.reset();
 
 }
 
-std::shared_ptr<ShaderProgram> GLRenderer::LoadShaderProgram(const std::string& name)
-{
-	std::shared_ptr<ShaderProgram> newShader(new ShaderProgram());
-	newShader->AddAndCompile("Assets/Shaders/" + name + "_vs.glsl", EShaderType::VERTEX);
-	newShader->AddAndCompile("Assets/Shaders/" + name + "_fs.glsl", EShaderType::FRAGMENT);
-	if (newShader->Build())
-		return newShader;
-	else
-		return std::shared_ptr<ShaderProgram>();
-}
 
 
 void GLRenderer::RunAllPasses(Scene* scene)

@@ -308,7 +308,6 @@
     <ClInclude Include="Scene\TransformNode.h" />
     <ClInclude Include="Scene\BaseNode.h" />
     <ClInclude Include="Scene\BoundingVolume.h" />
-    <ClInclude Include="Scene\BoundNodes.h" />
     <ClInclude Include="Scene\BoxNode.h" />
     <ClInclude Include="Scene\CameraNode.h" />
     <ClInclude Include="Scene\ContactsNode.h" />

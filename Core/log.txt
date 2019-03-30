@@ -3,12 +3,31 @@ waterNormalMap Loaded
     waterDistortMap Loaded
 Loading Shaders...
     water Loaded
+    solids Loaded
+    skybox Loaded
+    shadow_map Loaded
+    water_pass Loaded
+    outlined Loaded
+    unlit_solids Loaded
+    world_point Loaded
+    animated_solids Loaded
+    main_output Loaded
 Loading Skybox...
     day Loaded
+    Destroyed
 Releasing Assets...
    waterNormalMap Destroyed
    waterDistortMap Destroyed
    water Destroyed
+   solids Destroyed
+   skybox Destroyed
+   shadow_map Destroyed
+   water_pass Destroyed
+   outlined Destroyed
+   unlit_solids Destroyed
+   world_point Destroyed
+   animated_solids Destroyed
+   main_output Destroyed
    day Destroyed
     Destroyed
     Destroyed

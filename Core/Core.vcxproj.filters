@@ -298,9 +298,6 @@
     <ClInclude Include="Scene\ContactsNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\BoundNodes.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Scene\ModelNode.h">

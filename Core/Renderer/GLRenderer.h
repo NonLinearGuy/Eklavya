@@ -13,7 +13,7 @@ class IRenderPass;
 
 enum class EShaderProgram
 {
-	SOLID,
+	SOLID = 0,
 	ANIMATED_SOLID,
 	UNLIT_SOLID,
 	SKYBOX,
@@ -47,21 +47,17 @@ public:
 	void SetWaterPassValues(std::shared_ptr<ShaderProgram> shader);
 	void SetLightValues(glm::vec3 viewSpacePos,class LightSource* light);
 
-	
-
 private:
-
 	
 	void SetClearColor(float r, float g, float b, float a);
 	void SwapBuffers();
 
-	std::shared_ptr<ShaderProgram> LoadShaderProgram(const std::string& name);
 
 	IRenderState* m_CurrentState;
 	GLuint m_VAO;
 	GLWindowContext* m_Context;
-	std::map<EShaderProgram, std::shared_ptr<ShaderProgram>> m_Programs;
+	std::map<EShaderProgram,std::shared_ptr<ShaderProgram>> m_Programs;
 	std::shared_ptr < ShaderProgram > m_ActiveProgram;
-	std::shared_ptr	< ShaderProgram > m_MainOutputShader;
+	std::shared_ptr < ShaderProgram > m_MainOutputShader;
 	std::vector<IRenderPass*> m_RenderPasses;
 };

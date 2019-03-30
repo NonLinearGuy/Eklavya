@@ -81,6 +81,5 @@ void AssetManager::RemoveAll()
 		list.clear();
 	}
 	m_AssetMap.clear();
-	int a;
 }
 

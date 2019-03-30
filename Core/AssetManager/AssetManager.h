@@ -1,5 +1,14 @@
 #pragma once
 
+/* 
+	Keeps all assets of different type in a map.
+	different systems will ask for asset when required 
+	will ownership of asset will be given to the system.
+	The system which using the asset SHOULD GIVE UP ownership 
+	when not using the asset so It can be destroyed by AssetManager in 
+	the end.
+*/
+
 #include <string>
 #include <map>
 #include <list>
@@ -25,7 +34,7 @@ public:
 	void LoadAsset(EAssetType type,const std::string& name);
 
 	template<typename Type>
-	std::weak_ptr<Type> GetAsset(const std::string& name)
+	std::shared_ptr<Type> GetAsset(const std::string& name)
 	{
 		EAssetType type = ASSET_TYPE_MAX;
 

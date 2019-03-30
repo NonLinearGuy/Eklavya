@@ -164,10 +164,13 @@
 
 	void GLFWGame::GameLoop()
 	{
-		while (!glfwWindowShouldClose(m_CurrentContext->GetWindow()))
+		while (true)
 		{
 			glfwPollEvents();
-			this->Tick();
+			if (!glfwWindowShouldClose(m_CurrentContext->GetWindow()))
+				this->Tick();
+			else 
+				break;
 		}
 	}
 

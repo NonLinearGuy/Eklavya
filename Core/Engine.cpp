@@ -41,13 +41,13 @@
 
 		m_Text = std::make_shared<TextRenderer>("diag_font");
 		m_Diagnostics = std::make_shared<DiagManager>(m_Text);
+		LoadAssets();
 
 		m_Renderer = std::make_shared<GLRenderer>(m_CurrentContext);
 		m_Renderer->Initialize();
 
 		m_Physics = std::make_shared<Physics>();
 
-		LoadAssets();
 
 		m_Scene = new Scene(this, m_Renderer, "TestScene");
 		m_Scene->Init();
@@ -77,6 +77,15 @@
 
 		LOG("Loading Shaders...");
 		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "water");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER,"solids");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "skybox");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "shadow_map");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "water_pass");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "outlined");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "unlit_solids");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "world_point");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "animated_solids");
+		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "main_output");
 
 		LOG("Loading Skybox...");
 		AssetManager::GetInstance().LoadAsset(EAssetType::CUBEMAP, "day");
@@ -142,7 +151,11 @@
 		{
 			if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
 			{
-				CloseWindow();
+				glfwSetWindowShouldClose(m_CurrentContext->GetWindow(),GL_TRUE);
+				m_Scene->Destroy();
+				delete m_Scene;
+				m_Renderer->Destroy();
+				m_Renderer.reset();
 				ReleaseAssets();
 			}
 			if (GLFW_KEY_KP_SUBTRACT == key )

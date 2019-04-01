@@ -17,13 +17,13 @@ void main()
 {
 
 	vec2 texCoords[] = vec2[](
-		vec2(tex.x,tex.y),
-		vec2(tex.x+tex.z,tex.y),
 		vec2(tex.x,tex.y+tex.w),
-		vec2(tex.x+tex.z,tex.y+tex.w)
+		vec2(tex.x+tex.z,tex.y+tex.w),
+		vec2(tex.x,tex.y),
+		vec2(tex.x+tex.z,tex.y)
 	);
 	
-	tex_coords = texCoords[gl_VertexID];
+	tex_coords = texCoords[ gl_VertexID ];
 
 	vec4 position = vec4(pos,0.0f,1.0f);
 	position.xy*=scale;

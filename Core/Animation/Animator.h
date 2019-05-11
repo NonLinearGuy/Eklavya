@@ -5,7 +5,7 @@
 #include <assimp/scene.h>
 #include <functional>
 #include <glm/glm.hpp>
-#include "Animation.h"
+#include "../AssetManager/Animation.h"
 #include <memory>
 
 struct MyComparator
@@ -22,7 +22,7 @@ public:
 	Animator();
 	~Animator();
 
-	void CalculateJointTransform(const aiNode* node, glm::mat4 parentTransform);
+	void CalculateJointTransform(const AssimpNodeData& node, glm::mat4 parentTransform);
 	void PlayAnimation(std::shared_ptr<Animation> pAnimation);
 	void Tick(float delta);
 

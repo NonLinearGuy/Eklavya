@@ -345,40 +345,42 @@ void ContactData::PrepareData()
 
 void ContactData::ApplyImpulse()
 {
-	float e = .5f;
+	glm::vec3 offset = m_Normal * (m_PenetrationDepth/2.0f);
 	//linear
-	float rest = -(1.0f + e);
+	if (EBodyType::DYNAMIC_BODY == m_BodyA->GetBodyType())
+	{
+		m_BodyA->SetPos(m_BodyA->GetPosition() + offset);
+		float e = m_BodyA->GetRestitution();
+		float rest = -(1.0f + e);
+		float d = glm::dot(m_BodyA->GetVelocity(), m_Normal);
+		float j = glm::max(rest * d, 0.0f);
+		glm::vec3 linearImpulse = j * (m_Normal);
+		m_BodyA->AddVelocity(linearImpulse);
+	}
 
-	glm::vec3 invertedNormal = -1.0f * m_Normal;
-	float d = glm::dot(m_BodyB->GetVelocity(),invertedNormal);
-	float j = glm::max(rest * d, 0.0f);
-	glm::vec3 linearImpulse = j * (invertedNormal);
-	//m_BodyA->AddVelocity(linearImpulse);
-
-	m_BodyB->AddVelocity(linearImpulse);
-
-	//angular
-	
-	glm::vec3 velPointB = glm::cross(m_BodyB->GetAngularVel(), m_RelContactPositions[1]);
-	float num = rest * glm::max(glm::dot(velPointB, invertedNormal),1.0f);
-	glm::vec3 a = glm::cross(m_RelContactPositions[1], invertedNormal);
-	glm::vec3 denoSup = m_BodyB->GetTensor() * glm::cross(a,m_RelContactPositions[1]);
-	float deno = glm::dot(denoSup,invertedNormal) + m_BodyB->GetInverseMass();
-	float angularImpulse = num / deno;
-	m_BodyB->AddAngularVelocity(angularImpulse * invertedNormal);
+	if (EBodyType::DYNAMIC_BODY == m_BodyB->GetBodyType())
+	{
+		m_BodyB->SetPos(m_BodyB->GetPosition() - offset);
+		float e = m_BodyB->GetRestitution();
+		float rest = -(1.0f + e);
+		glm::vec3 invertedNormal = -1.0f * m_Normal;
+		float d = glm::dot(m_BodyB->GetVelocity(), invertedNormal);
+		float j = glm::max(rest * d, 0.0f);
+		glm::vec3 linearImpulse = j * (invertedNormal);
+		m_BodyB->AddVelocity(linearImpulse);
+	}
 }
 
 void ContactData::PushOut()
 {
-	glm::vec3 invNorm = -1.0f * m_Normal;
-	glm::vec3 offset = invNorm * m_PenetrationDepth;
-	m_BodyB->SetPos(m_BodyB->GetPosition() + offset);
+	
+	
 }
 
 //MUTHAFUCKIN' CONTACT RESOLVER
 void Resolver::ResolveContacts(std::vector<ContactData> contacts)
 {
-	float e = 1.0f;
+	
 	for (auto& contact : contacts)
 	{
 		contact.PrepareData();
@@ -386,4 +388,5 @@ void Resolver::ResolveContacts(std::vector<ContactData> contacts)
 		contact.ApplyImpulse();
 	}
 }
+
 #pragma endregion

@@ -78,7 +78,6 @@ void Physics::Simulate(float delta)
 		bool isColliding = false;
 
 		auto firstCollider = *first;
-		auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
 
 		for (auto second = m_Colliders.begin(); second != m_Colliders.end();  ++second)
 		{
@@ -87,15 +86,37 @@ void Physics::Simulate(float delta)
 
 			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::BOX)
 			{
-				
+				auto box1 = std::static_pointer_cast<BoxCollider>(firstCollider);
 				auto box2 = std::static_pointer_cast<BoxCollider>(secondCollider);
 
 				if (ContactGenerator::BoxAndBox(box1,box2,contacts))
 				{
 					int id = firstCollider->GetBody()->GetOwnerID();
 					isColliding = true;
-					box1->GetBody()->SetAwake(false);
-					box2->GetBody()->SetAwake(false);
+				}
+			}
+
+			if (firstCollider->GetType() == EColliderType::BOX && secondCollider->GetType() == EColliderType::SPHERE)
+			{
+				auto box = std::static_pointer_cast<BoxCollider>(firstCollider);
+				auto sphere = std::static_pointer_cast<SphereCollider>(secondCollider);
+
+				if (ContactGenerator::SphereAndBox(box,sphere, contacts))
+				{
+					int id = firstCollider->GetBody()->GetOwnerID();
+					isColliding = true;
+				}
+			}
+
+			if (firstCollider->GetType() == EColliderType::SPHERE && secondCollider->GetType() == EColliderType::BOX)
+			{
+				auto box = std::static_pointer_cast<BoxCollider>(secondCollider);
+				auto sphere = std::static_pointer_cast<SphereCollider>(firstCollider);
+
+				if (ContactGenerator::SphereAndBox(box, sphere, contacts))
+				{
+					int id = firstCollider->GetBody()->GetOwnerID();
+					isColliding = true;
 				}
 			}
 
@@ -104,20 +125,20 @@ void Physics::Simulate(float delta)
 		{
 			std::shared_ptr<EventOnCollisionEnter> data = std::make_shared<EventOnCollisionEnter>();
 			data->ActorID = firstCollider->GetBody()->GetOwnerID();
-			//EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_ENTER, data);
+			EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_ENTER, data);
 		}
 		else
 		{
 			std::shared_ptr<EventOnCollisionExit> data = std::make_shared<EventOnCollisionExit>();
 			data->ActorID = firstCollider->GetBody()->GetOwnerID();
-			//EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_EXIT, data);
+			EventDispatcher::GetInstance().TriggerEvent(EEventType::ON_COLLISION_EXIT, data);
 		}
 	}
 
-	//auto data = std::make_shared<EventContactsUpdated>();
-	//data->m_ContactsWorld = contacts;
-	//EventDispatcher::GetInstance().TriggerEvent(EEventType::CONTACTS_UPDATED,data);
-	//Resolver::ResolveContacts(contacts);
+	auto data = std::make_shared<EventContactsUpdated>();
+	data->m_ContactsWorld = contacts;
+	EventDispatcher::GetInstance().TriggerEvent(EEventType::CONTACTS_UPDATED,data);
+	Resolver::ResolveContacts(contacts);
 }
 
 #pragma optimize("",on)

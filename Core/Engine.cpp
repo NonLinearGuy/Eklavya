@@ -64,31 +64,32 @@
 	void Engine::PrepareScene()
 	{
 		ActorFactory::CreateSky();
-		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(2000.0f,100.0f,2000.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
-		ActorFactory::CreateModelActor(glm::vec3(0.0f,1000.0f,0.0f),glm::vec3(1.0f),glm::vec3(0.0,0.0f,0.0f));
-		
+		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(7000.0f,300.0f,7000.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
+		ActorFactory::CreateModelActor(glm::vec3(0.0f,400.0f,0.0f),glm::vec3(100.0f),glm::vec3(0.0,0.0f,0.0f));
 	}
 
 	void Engine::LoadAssets()
 	{
 		LOG("Loading Textures...");
-		AssetManager::GetInstance().LoadAsset(EAssetType::TEXTURE, "waterNormalMap");
-		AssetManager::GetInstance().LoadAsset(EAssetType::TEXTURE, "waterDistortMap");
-
+		AssetManager::GetInstance().LoadTexture("waterNormalMap","png",true);
+		AssetManager::GetInstance().LoadTexture( "waterDistortMap","png",true);
+		AssetManager::GetInstance().LoadTexture( "debug","png",true);
+		
 		LOG("Loading Shaders...");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "water");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER,"solids");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "skybox");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "shadow_map");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "water_pass");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "outlined");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "unlit_solids");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "world_point");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "animated_solids");
-		AssetManager::GetInstance().LoadAsset(EAssetType::SHADER, "main_output");
+		AssetManager::GetInstance().LoadShader( "water");
+		AssetManager::GetInstance().LoadShader("solids");
+		AssetManager::GetInstance().LoadShader( "skybox");
+		AssetManager::GetInstance().LoadShader( "shadow_map");
+		AssetManager::GetInstance().LoadShader( "water_pass");
+		AssetManager::GetInstance().LoadShader( "outlined");
+		AssetManager::GetInstance().LoadShader( "unlit_solids");
+		AssetManager::GetInstance().LoadShader( "world_point");
+		AssetManager::GetInstance().LoadShader( "animated_solids");
+		AssetManager::GetInstance().LoadShader( "main_output");
 
 		LOG("Loading Skybox...");
-		AssetManager::GetInstance().LoadAsset(EAssetType::CUBEMAP, "day");
+		AssetManager::GetInstance().LoadCubemap( "day","tga");
+		
 	}
 
 	void Engine::ReleaseAssets()
@@ -105,7 +106,7 @@
 		int fps = Timer::GetInstance().GetFramesPerSecond();
 
 		DiagManager::sGeneralDiagsMap[EMapKeys::KEY_FPS] = std::to_string(fps);
-		DiagManager::sGeneralDiagsMap[EMapKeys::KEY_DELTA] = std::to_string(dt);
+		//DiagManager::sGeneralDiagsMap[EMapKeys::KEY_DELTA] = std::to_string(dt);
 
 		for (auto actor : m_Actors)
 			actor->Tick(dt);
@@ -159,9 +160,9 @@
 				ReleaseAssets();
 			}
 			if (GLFW_KEY_KP_SUBTRACT == key )
-				deltaScale -= .1;
+				deltaScale -= .03;
 			if (GLFW_KEY_KP_ADD == key )
-				deltaScale += .1;
+				deltaScale += .03;
 
 			if (key == GLFW_KEY_DELETE )
 			{
@@ -188,8 +189,24 @@
 				//else
 					//ActorFactory::CreateBoxCollider(glm::vec3(0.0f,300.0f,0.0f), glm::vec3(radius), glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f),true);
 	
-				//ActorFactory::CreateBoxCollider(glm::vec3(0.0f,1000.0f,0.0f),glm::vec3(200.0f),glm::vec3(0.0f,1.0f,1.0f),glm::vec3(0.0,-1.0f,0.0f),100.0f,false,false);
-				//ActorFactory::CreateBoxCollider(glm::vec3(0.0f, 1000.0f, 0.0f), glm::vec3(200.0f), glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(0.0, -1.0f, 0.0f), 100.0f, false, false);
+	//			ActorFactory::CreateSphereCollider(glm::vec3(0.0f, 500.0f, 0.0f),
+		//			radius * .5f,
+			//		glm::vec3(0.0f,-1.0f,0.0f),100.0f);
+
+				/*ActorFactory::CreateBoxCollider(glm::vec3(0.0f,30.0f,0.0f),
+					glm::vec3(100.0f),
+					glm::vec3(0.0f,0.0f,0.0f),
+					glm::vec3(0.0,-1.0f,0.0f),
+					100.0f,
+					false,
+					false);*/
+				/*ActorFactory::CreateBoxCollider(glm::vec3(0.0f,200.0f, 0.0f),
+					glm::vec3(100.0f), 
+					glm::vec3(0.0f, 0.0f, 0.0f),
+					glm::vec3(0.0, 1.0f, 0.0f),
+					100.0f, 
+					false, 
+					false);*/
 
 			}
 

@@ -55,7 +55,7 @@ float GetShadowValue(float cosTheta)
 	}
 
 
-	return (shadow / 81.0f );
+	return (shadow / 50.0f );
 }
 
 void main()
@@ -75,7 +75,7 @@ void main()
 	if(!material.bApplyColor)
 	{
 		vec3 color = texture(material.albedoMap,fragParams.texCoords).rgb;
-		ambient = light.ambient * color * .6;
+		ambient = light.ambient * color;
 		diffuse = color * diff * light.diffuse;
 	}
 	else
@@ -85,6 +85,6 @@ void main()
 	}
 
 	float shadow = diff < -.5f ? 0.0f : GetShadowValue(diff);
-	finalColor = vec4((1.0f - shadow) * (diffuse + ambient),material.opacity);
+	finalColor = vec4(ambient + (1.0f - shadow) * (diffuse),material.opacity);
 	
 }

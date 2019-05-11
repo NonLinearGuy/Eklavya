@@ -82,8 +82,8 @@ bool GLRenderer::Initialize()
 	SetClearColor(0.0f,0.0f,0.0f,1.0f);
 
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CCW);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
 
 	return true;
 }
@@ -207,5 +207,4 @@ void GLRenderer::SetLightValues(glm::vec3 viewSpacePos, LightSource* light)
 	m_ActiveProgram->SetVec3("light.diffuse", light->m_Diffuse);
 	m_ActiveProgram->SetVec3("light.specular", light->m_Specular);
 	m_ActiveProgram->SetVec3("light.ambient", light->m_Ambient);
-
 }

@@ -74,7 +74,7 @@ void Scene::Init()
 	m_LightSource.m_Diffuse = glm::vec3(.8f);
 	m_LightSource.m_Specular = glm::vec3(1.0f);
 
-	m_LightSource.m_Position = glm::vec3(glm::vec3(-250.0f, 200.0f, 200.0f));
+	m_LightSource.m_Position = glm::vec3(-500.0f, 500.0f, 500.0f);
 
 	float aspectRatio = m_EngineRef->GetCurrentContext()->GetAspectRatio();
 	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 10000.0f);
@@ -97,6 +97,12 @@ void Scene::OnActorCreated(std::shared_ptr<IEventData> data)
 	auto baseNode = MakeSharedPtr(actor->GetComponent<BaseRenderComponent>(BaseRenderComponent::s_ID))->GetBaseNode();
 	baseNode->Init();
 	AddChild(baseNode);
+
+	if (actor->GetName() == "Player")
+	{
+		m_Camera->SetTarget(baseNode);
+		m_PlayerNode = baseNode;
+	}
 
 #ifdef DRAW_TRANSFORM
 	auto transform = MakeSharedPtr(actor->GetComponent<Transform>(Transform::s_ID));
@@ -163,6 +169,10 @@ void Scene::Tick(float deltaTime)
 {
 	for (unsigned int index = 0; index < m_Groups.size(); ++index)
 		m_Groups[index]->Tick(this,deltaTime);
+
+	m_LightSource.m_Position = m_PlayerNode->GetPosition() + glm::vec3(-500.0f, 500.0f, 500.0f);
+
+	
 }
 
 void Scene::AddChild(std::shared_ptr<BaseNode> pNewNode)
@@ -201,6 +211,7 @@ void Scene::MainPassRender()
 {
 	glm::mat4 view = m_Camera->GetView();
 	glm::mat4 projection = m_Camera->GetProjection();
+	
 	glm::vec3 lightViewSpacePos = glm::vec3(view * glm::vec4(m_LightSource.m_Position, 1.0f));	
 
 	for (int groupIndex = 0; groupIndex < ERenderGroup::MAX; ++groupIndex)

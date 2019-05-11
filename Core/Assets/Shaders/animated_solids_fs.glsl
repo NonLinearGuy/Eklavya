@@ -41,17 +41,24 @@ uniform sampler2D shadowPassOutput;
 
 void main()
 {
-	vec3 normal = texture(material.texture_normal,fragParams.texCoords).rgb;
-	normal = normalize(normal*2.0 - 1.0); // [-1,1] ---> [0,1]
-	normal = normalize(fragParams.TBN * normal);
 
+
+	vec3 normal = fragParams.viewSpaceNormal;
+		if(material.bApplyNormalMap)
+		{
+			normal = texture(material.texture_normal,fragParams.texCoords).rgb;
+			normal = normalize(normal*2.0 - 1.0); // [-1,1] ---> [0,1]
+			normal = normalize(fragParams.TBN * normal);
+		}
+	
+ 
 	vec3 ambient,diffuse,specular;
 	vec3 lightDirection = normalize(light.position - fragParams.viewSpaceFragPos);
 	float diff = dot(lightDirection,normal);
 	
 	vec3 viewDir    = normalize(-fragParams.viewSpaceFragPos);
 	vec3 halfwayDir = normalize(lightDirection + viewDir);
-	float spec = pow(max(dot(normal, halfwayDir), 0.0), 128);
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), 1024);
 	
 	specular =  texture(material.texture_specular,fragParams.texCoords).rgb * spec * light.specular;
 		

@@ -43,8 +43,8 @@ void ShadowMapPass::Run(Scene * scene)
 	m_Renderer->SetShaderProgram(EShaderProgram::SHADOW);
 
 	glm::vec3 lightPosition = scene->GetLightSource().m_Position;
-	glm::mat4 projection = glm::ortho(-400.0f, 400.0f, -400.0f, 400.0f, -1000.0f, 1000.0f);
-	glm::mat4 view = glm::lookAt(lightPosition,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+	glm::mat4 projection = glm::ortho(-2000.0f, 2000.0f, -2000.0f, 2000.0f, -2000.0f, 2000.0f);
+	glm::mat4 view = glm::lookAt(lightPosition,scene->m_PlayerNode->GetPosition(),glm::vec3(0.0f,1.0f,0.0f));
 	m_LightProjectionView = projection * view;
 	m_Renderer->GetActiveProgram()->SetMat4("lightProjectionView",m_LightProjectionView);
 

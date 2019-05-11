@@ -5,10 +5,10 @@
 
 #include "BaseNode.h"
 #include <glad/glad.h>
-
+#include "../UserInputListener.h"
 class Scene;
 
-class ModelNode : public BaseNode
+class ModelNode : public BaseNode,public UserInputListener
 {
 public:
 	ModelNode(ActorID pActorID, BaseRenderComponent* renderComponent, ERenderGroup renderPass);
@@ -16,9 +16,8 @@ public:
 	bool Init()override;
 	void Destroy()override;
 	void Render(Scene* scene)override;
+	void OnKeyAction(int key, int action)override;
 private:
-	GLuint mVAO;
-	GLuint mVBO;
-	class Model* m_Hands;
 	class Model* m_Shotgun;
+	bool mApplyNormaMap = false;
 };

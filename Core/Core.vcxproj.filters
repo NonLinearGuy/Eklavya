@@ -37,6 +37,15 @@
     <Filter Include="AssetManagement">
       <UniqueIdentifier>{5a1661ba-42f0-446b-b33d-34ca5b64cf00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="State Machines">
+      <UniqueIdentifier>{66661b5d-9427-4bba-a1ff-014c2286eb50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State Machines\FPSPlayer">
+      <UniqueIdentifier>{88b4a0bb-eece-4fb8-ada1-784b67c89d27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="State Machines\Enemy">
+      <UniqueIdentifier>{db55b4e7-7b25-4b64-b9df-7272e6846522}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Components\BaseComponent.cpp">
@@ -138,19 +147,12 @@
     <ClCompile Include="Scene\ModelNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Components\PlayerMovementComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Components\AnimationComponent.cpp">
       <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Animation\Animation.cpp">
-      <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="Animation\Joint.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Scene\BoxNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -187,7 +189,19 @@
     <ClCompile Include="AssetManager\IAsset.cpp">
       <Filter>AssetManagement</Filter>
     </ClCompile>
-    <ClCompile Include="AssetManager\IAssetFactory.cpp">
+    <ClCompile Include="AssetManager\Model.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\MovementComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\AnimationData.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\Animation.cpp">
+      <Filter>AssetManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager\AssetFactory.cpp">
       <Filter>AssetManagement</Filter>
     </ClCompile>
   </ItemGroup>
@@ -298,25 +312,14 @@
     <ClInclude Include="Scene\ContactsNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="Scene\ModelNode.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\PlayerMovementComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation\Animation.h">
-      <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="Animation\Joint.h">
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="Components\AnimationComponent.h">
       <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="Components\BaseRenderComponent.h">
-      <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="Scene\BoxNode.h">
       <Filter>Scene</Filter>
@@ -357,7 +360,22 @@
     <ClInclude Include="AssetManager\Texture2D.h">
       <Filter>AssetManagement</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManager\IAssetFactory.h">
+    <ClInclude Include="AssetManager\Model.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\BaseRenderComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\MovementComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\AnimationData.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\Animation.h">
+      <Filter>AssetManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager\AssetFactory.h">
       <Filter>AssetManagement</Filter>
     </ClInclude>
   </ItemGroup>

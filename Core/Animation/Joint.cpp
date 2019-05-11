@@ -1,8 +1,8 @@
 #include "Joint.h"
-#include "Animation.h"
+#include "../AssetManager/Animation.h"
 #include "../Utils/Logger.h"
 #include <iostream>
-#include "../Model.h"
+#include "../AssetManager/Model.h"
 #include "../Helpers.h"
 
 Joint::Joint(const std::string& name, int ID, const aiNodeAnim* channel)

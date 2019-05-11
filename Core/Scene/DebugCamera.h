@@ -25,6 +25,11 @@ public:
 	DebugCamera(float fov,float ratio,float nearDist,float farDist);
 	~DebugCamera();
 
+	inline void SetTarget(std::shared_ptr<BaseNode> pTarget)
+	{
+		m_Target = pTarget;
+	}
+
 	void OnCursorMove(double x, double y) override;
 	void PollKeyAction() override;
 	void OnKeyAction(int key,int action)override;
@@ -63,6 +68,7 @@ private:
 	bool m_Interpolating;
 	float m_InterpSpeed;
 	float m_InterpWeight;
+	std::shared_ptr< BaseNode > m_Target;
 };
 
 #endif

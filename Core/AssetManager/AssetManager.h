@@ -21,17 +21,22 @@
 #include "Texture2D.h"
 #include "ShaderProgram.h"
 #include "Cubemap.h"
+#include "AssetFactory.h"
+#include "../Utils/Logger.h"
 
 using AssetList = std::list<std::shared_ptr<IAsset>>;
-
-class IAssetFactory;
 
 class AssetManager : public Singleton<AssetManager>
 {
 public:
 	AssetManager();
 	~AssetManager();
-	void LoadAsset(EAssetType type,const std::string& name);
+	
+	void LoadTexture(std::string assetName, std::string ext, bool repeat = false);
+	void LoadShader(std::string shaderName);
+	void LoadCubemap(std::string folderName, std::string ext);
+	void LoadModel(std::string modelName, std::string ext, int modelID);
+	void LoadAnimation(std::string animName, std::string ext, int modelID);
 
 	template<typename Type>
 	std::shared_ptr<Type> GetAsset(const std::string& name)
@@ -65,13 +70,6 @@ public:
 	void RemoveAll();
 
 private:
-
-	std::map<EAssetType, AssetList> m_AssetMap;
 	
-	IAssetFactory* m_AssetFactories[ASSET_TYPE_MAX];
-
-	static const std::string s_TexturesDirPath;
-	static const std::string s_CubemapsDirPath;
-	static const std::string s_ShadersDirPath;
-
+	std::map<EAssetType, AssetList> m_AssetMap;
 };

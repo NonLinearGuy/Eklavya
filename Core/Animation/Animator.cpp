@@ -1,6 +1,6 @@
 #include "Animator.h"
 #include "Joint.h"
-#include "../Model.h"
+#include "../AssetManager/Model.h"
 #include <glm/gtc/type_ptr.hpp>
 #include "../Debugging/Diagnostics.h"
 #include "../Helpers.h"
@@ -23,11 +23,11 @@ void Animator::PlayAnimation(std::shared_ptr<Animation> pAnimation)
 }
 
 
-void Animator::CalculateJointTransform(const aiNode* node, glm::mat4 parentTransform)
+void Animator::CalculateJointTransform(const AssimpNodeData& node, glm::mat4 parentTransform)
 {
-	std::string nodeName = node->mName.data;
-	glm::mat4 nodeTransform = GetGLMMat(node->mTransformation);
-	Joint* joint = m_CurrentAnimation->FindJoint(node->mName.data);
+	std::string nodeName = node.name;
+	glm::mat4 nodeTransform = node.transformation;
+	Joint* joint = m_CurrentAnimation->FindJoint(nodeName);
 	if (joint)
 	{
 		joint->Update(m_CurrentTime);
@@ -35,19 +35,16 @@ void Animator::CalculateJointTransform(const aiNode* node, glm::mat4 parentTrans
 	}
 
 	glm::mat4 globalTransformation = parentTransform * nodeTransform;
-	auto boneIDMap = m_CurrentAnimation->GetBoneIDMap();
-	if (boneIDMap.find(nodeName) != boneIDMap.end())
+	auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
 	{
-		int index = boneIDMap[nodeName];
-		auto boneMap = m_CurrentAnimation->GetOffsetMap();
-		glm::mat4 offset = boneMap[nodeName];
+		int index = boneInfoMap[nodeName].id;
+		glm::mat4 offset = boneInfoMap[nodeName].offset;
 		m_FinalTransforms[index] = m_CurrentAnimation->GetGlobalInverse() * globalTransformation * offset;
 	}
 
-
-	for (int i = 0; i < node->mNumChildren; i++)
-		CalculateJointTransform(node->mChildren[i], globalTransformation);
-
+	for (int i = 0; i < node.childrenCount; i++)
+		CalculateJointTransform(node.children[i], globalTransformation);
 }
 
 void Animator::Tick(float delta)

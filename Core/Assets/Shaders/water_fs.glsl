@@ -44,5 +44,5 @@ vec3 viewDirection = normalize(cameraPosition - fragPos);
 	vec3 specular = 1.0 * spec * lightColor;  
 
 	//fragColor = mix(refractColor,reflectColor,refractiveIndex) ;
-	fragColor = mix(refractColor,vec4(0.0f,0.4,1.0f,2.0f),.5f) + vec4(specular,0.0);	
+	fragColor = mix(refractColor,vec4(0.2f,0.4,.6f,1.0f),.3f) + vec4(specular,0.0);	
 }

@@ -116,5 +116,8 @@ private:
 	std::vector< std::shared_ptr<BaseNode> > m_Nodes;
 	
 	std::shared_ptr<ContactsNode> m_ContactsNode;
+
+public:
+	std::shared_ptr<BaseNode> m_PlayerNode;
 };
 

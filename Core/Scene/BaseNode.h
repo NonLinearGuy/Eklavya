@@ -60,6 +60,8 @@ public:
 	void SetNormalName(std::string name) { m_NormalName = name; }
 	void SetColor(glm::vec3 color);
 	void SetOpacity(float opacity) { m_Opacity = opacity; }
+	glm::vec3 GetPosition() { return m_ToWorld[3]; }
+
 protected:
 	
 	glm::mat4 m_ToWorld;

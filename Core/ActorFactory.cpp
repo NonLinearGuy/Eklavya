@@ -8,9 +8,9 @@
 #include "Globals.h"
 #include "Engine.h"
 #include "Components/RigidBodyComponent.h"
-#include "Components/PlayerMovementComponent.h"
+#include "Components/MovementComponent.h"
 #include "Random.h"
-#include "Animation/Animation.h"
+#include "AssetManager/Animation.h"
 #include "Components/AnimationComponent.h"
 
 ActorID ActorFactory::s_ActorIDCount = 0;
@@ -54,7 +54,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateSphereCollider(const glm
 	renderComponent->SetColor(glm::vec3(1.0f));
 	newActor->AddComponent(renderComponent);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
+	renderComponent->GetBaseNode()->SetAlbedoName("pixar.jpg");
 
 	auto collider = std::make_shared<SphereCollider>();
 	collider->SetRadius(radius);
@@ -62,8 +62,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateSphereCollider(const glm
 	collider->SetBody(rbComp);
 	rbComp->SetPos(center);
 	rbComp->SetInverseMass(mass);
-	rbComp->SetAccel(direction * 100.0f);
-	rbComp->SetAngularAcc(Random::GetInstance()->GetPointOnUnitSphere() * 10.0f);
+	rbComp->SetAccel(direction * 300.0f);
 	rbComp->SetOwner(newActor);
 	rbComp->SetAwake(true);
 	newActor->AddComponent(rbComp);
@@ -95,7 +94,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	renderComponent = std::make_shared<BoxColliderRenderComponent>();
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("debug.png");
+	renderComponent->GetBaseNode()->SetAlbedoName("wall_albedo.png");
 	newActor->AddComponent(renderComponent);
 
 	//physics component
@@ -112,13 +111,23 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 		}
 		else
 		{
+			rbComp->SetBodyType(EBodyType::STATIC_BODY);
 			rbComp->SetInverseMass(0.0f);
 		}
-		rbComp->SetAccel(direction * 200.0f);
+		rbComp->SetAccel(direction * 1000.0f);
 		rbComp->SetOwner(newActor);
 		rbComp->SetAwake(!infiniteMass);
 		newActor->AddComponent(rbComp);
-	
+
+		if (!infiniteMass)
+		{
+			//PLAYER MOVEMENT
+			auto movementComp = std::make_shared<MovementComponent>();
+			movementComp->SetOwner(newActor);
+			movementComp->Init();
+			newActor->AddComponent(movementComp);
+		}
+
 	g_Engine->AddActor(newActor);
 
 	auto data = std::make_shared<EventActorCreated>();
@@ -131,7 +140,7 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 
 void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 & scale, const glm::vec3 & rotation)
 {
-	std::string name = "ModelLoader#" + std::to_string(s_ActorIDCount);
+	std::string name = "Player";
 	ActorID id = s_ActorIDCount;
 	s_ActorIDCount++;
 
@@ -144,7 +153,7 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 
 	//RENDER
 	std::shared_ptr<BaseRenderComponent> renderComponent;
-	renderComponent = std::make_shared<MeshRenderComponent>("shotgun.fbx");
+	renderComponent = std::make_shared<MeshRenderComponent>("Berserker/berserker.fbx");
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
 	newActor->AddComponent(renderComponent);
@@ -152,33 +161,34 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 	
 	//RIGIDBODY
 	auto collider = std::make_shared<BoxCollider>();
-	collider->SetHalfSize(glm::vec3(300.0f));
+	collider->SetHalfSize(glm::vec3(5.0f));
 	auto rbComp = std::make_shared<RigidBodyComponent>(collider);
+	rbComp->SetBodyType(DYNAMIC_BODY);
 	collider->SetBody(rbComp);
 	rbComp->SetPos(position);
 	rbComp->SetOrientation(rotation);
-	rbComp->SetMass(20.0f);
-	rbComp->SetAccel(glm::vec3(0.0f,-10.0f,0.0f) * 100.0f);
+	rbComp->SetMass(10.0f);
+	rbComp->SetAccel(glm::vec3(0.0f,-1.0f,0.0f) * 800.0f);
 	//rbComp->SetAngularAcc(glm::vec3(.1f,0.0f,0.0f));
 	rbComp->SetOwner(newActor);
 	rbComp->SetAwake(true);
 	newActor->AddComponent(rbComp);
 
+	
 	//PLAYER MOVEMENT
-	auto movementComp = std::make_shared<PlayerMovementComponent>();
-	movementComp->SetSpeed(20.0f);
+	auto movementComp = std::make_shared<MovementComponent>();
 	movementComp->SetOwner(newActor);
 	movementComp->Init();
 	newActor->AddComponent(movementComp);
 
+	
 	g_Engine->AddActor(newActor);
 	auto data = std::make_shared<EventActorCreated>();
 	data->m_Actor = newActor;
 
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
 
-	//Animation
-	auto animationComponent = std::make_shared<AnimationComponent>("left_turn_90.dae");
+	auto animationComponent = std::make_shared<AnimationComponent>("Berserker/ch_h_Lancer_Run.fbx");
 	animationComponent->Init();
 	animationComponent->SetOwner(newActor);
 	newActor->AddComponent(animationComponent);

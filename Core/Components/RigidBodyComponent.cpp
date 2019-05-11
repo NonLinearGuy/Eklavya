@@ -29,7 +29,10 @@ RigidBodyComponent::RigidBodyComponent(std::shared_ptr<ICollider> pCollider)
 	//matrices
 	m_InverseTensor(1.0f),
 	m_InverseTensorWorld(1.0f),
-	m_TransformMatrix(1.0f)
+	m_TransformMatrix(1.0f),
+
+	m_Restitution(0.0f), // no bounce by default
+	m_BodyType(DYNAMIC_BODY)
 
 {
 }
@@ -81,12 +84,12 @@ glm::vec3 RigidBodyComponent::GetAxis(int index)
 
 void RigidBodyComponent::Tick(float deltaTime)
 {
-	if (!m_IsAwake) {
+	if (!m_IsAwake || EBodyType::STATIC_BODY == m_BodyType) {
 		UpdateData();
 		return;
 	}
 
-	float delta = .033f;
+	float delta = .033f;;
 
 	glm::vec3 acc = m_LinearAcceleration;
 	acc += m_InverseMass * m_Forces;
@@ -97,7 +100,7 @@ void RigidBodyComponent::Tick(float deltaTime)
 
 	//Damping 
 	m_LinearVelocity *= pow(m_LinearDamping, 2.0f);
-	m_Rotation *= pow(m_AngularDamping,3.0f);
+	//m_Rotation *= pow(m_AngularDamping,2.0f);
 
 	m_Position += m_LinearVelocity * delta;
 
@@ -164,12 +167,12 @@ void RigidBodyComponent::SetTensorForSphere()
 void RigidBodyComponent::SetTensorForCuboid()
 {
 	glm::mat4 tensor(1.0f);
-	float scalar = 0.3f*m_Mass;
+	float scalar = ( 1.0f / 12.0f ) * m_Mass;
 	glm::vec3 halfSize = std::static_pointer_cast<BoxCollider>(m_Collider)->GetHalfSize();
 
-	tensor[0][0] = 20.0f;
-	tensor[1][1] = 20.0f;
-	tensor[2][2] = 20.0f;
+	tensor[0][0] = scalar * (halfSize.y * halfSize.y + halfSize.z * halfSize.z);
+	tensor[1][1] = scalar * (halfSize.x * halfSize.x + halfSize.z * halfSize.z);
+	tensor[2][2] = scalar * (halfSize.x * halfSize.x + halfSize.y * halfSize.y);
 
 	m_InverseTensor = glm::inverse(tensor);
 }

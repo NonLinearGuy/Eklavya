@@ -203,13 +203,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActorFactory.cpp" />
-    <ClCompile Include="Animation\Animation.cpp" />
     <ClCompile Include="Animation\Animator.cpp" />
     <ClCompile Include="Animation\Joint.cpp" />
+    <ClCompile Include="AssetManager\Animation.cpp" />
+    <ClCompile Include="AssetManager\AnimationData.cpp" />
     <ClCompile Include="AssetManager\AssetManager.cpp" />
     <ClCompile Include="AssetManager\Cubemap.cpp" />
     <ClCompile Include="AssetManager\IAsset.cpp" />
-    <ClCompile Include="AssetManager\IAssetFactory.cpp" />
+    <ClCompile Include="AssetManager\AssetFactory.cpp" />
+    <ClCompile Include="AssetManager\Model.cpp" />
     <ClCompile Include="AssetManager\ShaderProgram.cpp" />
     <ClCompile Include="AssetManager\Texture2D.cpp" />
     <ClCompile Include="Components\AnimationComponent.cpp" />
@@ -217,7 +219,7 @@
     <ClCompile Include="Components\BaseRenderComponent.cpp" />
     <ClCompile Include="Components\GameActor.cpp" />
     <ClCompile Include="Components\PawnActor.cpp" />
-    <ClCompile Include="Components\PlayerMovementComponent.cpp" />
+    <ClCompile Include="Components\MovementComponent.cpp" />
     <ClCompile Include="Components\RigidBodyComponent.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
     <ClCompile Include="Debugging\Diagnostics.cpp" />
@@ -228,7 +230,6 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Physics\Collider.cpp" />
     <ClCompile Include="Physics\CollisionDetector.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
@@ -262,13 +263,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorFactory.h" />
-    <ClInclude Include="Animation\Animation.h" />
     <ClInclude Include="Animation\Animator.h" />
     <ClInclude Include="Animation\Joint.h" />
+    <ClInclude Include="AssetManager\Animation.h" />
     <ClInclude Include="AssetManager\AssetManager.h" />
     <ClInclude Include="AssetManager\Cubemap.h" />
     <ClInclude Include="AssetManager\IAsset.h" />
-    <ClInclude Include="AssetManager\IAssetFactory.h" />
+    <ClInclude Include="AssetManager\AssetFactory.h" />
+    <ClInclude Include="AssetManager\Model.h" />
+    <ClInclude Include="AssetManager\AnimationData.h" />
     <ClInclude Include="AssetManager\ShaderProgram.h" />
     <ClInclude Include="AssetManager\Texture2D.h" />
     <ClInclude Include="Components\AnimationComponent.h" />
@@ -276,7 +279,7 @@
     <ClInclude Include="Components\GameActor.h" />
     <ClInclude Include="Components\BaseRenderComponent.h" />
     <ClInclude Include="Components\PawnActor.h" />
-    <ClInclude Include="Components\PlayerMovementComponent.h" />
+    <ClInclude Include="Components\MovementComponent.h" />
     <ClInclude Include="Components\RigidBodyComponent.h" />
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="Debugging\Diagnostics.h" />
@@ -288,8 +291,6 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
     <ClInclude Include="Physics\Collider.h" />
     <ClInclude Include="Physics\Constants.h" />
     <ClInclude Include="Physics\CollisionDetector.h" />

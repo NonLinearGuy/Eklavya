@@ -1,7 +1,7 @@
 #include "ModelNode.h"
 #include "../Components/BaseRenderComponent.h"
 #include <memory>
-#include "../Model.h"
+#include "../AssetManager/Model.h"
 #include "Scene.h"
 #include "../Renderer/GLRenderer.h"
 #include "../Components/AnimationComponent.h"
@@ -22,8 +22,8 @@ ModelNode::~ModelNode()
 bool ModelNode::Init()
 {
 	std::string name =  (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
-	//m_Hands = new Model("Assets/Models/Hands.fbx");
-	m_Shotgun = new Model("Assets/Models/" + name);
+	m_Shotgun = new Model(name);
+	m_Shotgun->Load("Assets/Models/" + name);
 	m_BoundVolume = std::make_shared<BoxBound>(glm::vec3(250.0f,500.0f,100.0f));
 	return true;
 }
@@ -36,6 +36,7 @@ void ModelNode::Destroy()
 void ModelNode::Render(Scene * scene)
 {
 	auto shader = scene->GetRenderer()->GetActiveProgram();
+	shader->SetInt("material.bApplyNormalMap",mApplyNormaMap);
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);
 	std::shared_ptr<AnimationComponent> transform = MakeSharedPtr(gameActor->GetComponent<AnimationComponent>(AnimationComponent::s_ID));
 	if (transform)
@@ -44,6 +45,11 @@ void ModelNode::Render(Scene * scene)
 		for (int i = 0; i < transforms.size(); ++i)
 			shader->SetMat4("gBones[" + std::to_string(i) + "]", transforms[i]);
 	}
-	//m_Hands->Draw(shader);
-	m_Shotgun->Draw(shader);
+	m_Shotgun->Render(shader);
+}
+
+void ModelNode::OnKeyAction(int key, int action)
+{
+	if (action == GLFW_PRESS && key == GLFW_KEY_N)
+		mApplyNormaMap = !mApplyNormaMap;
 }

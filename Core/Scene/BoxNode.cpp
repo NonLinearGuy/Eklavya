@@ -54,7 +54,7 @@ bool BoxNode::Init()
 	if (!m_NormalName.empty())
 	{
 		auto texture = std::make_shared<Texture2D>();
-		texture->CreateTexture("Assets/Textures/" + m_NormalName);
+		texture->CreateTexture("Assets/Textures/" + m_NormalName,true);
 		m_Material->SetNormalMap(texture);
 		m_Material->SetDiffuse(glm::vec3(1.0f));
 		m_Material->SetAmbient(glm::vec3(.5f));

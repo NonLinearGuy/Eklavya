@@ -22,7 +22,7 @@ DebugCamera::DebugCamera(float fov,float ratio,float nearDist, float farDist)
 	m_Pitch(90.0f),
 	m_Yaw(0.0f),
 	m_Position(0.0f,500.0f,500.0f),
-	m_Front(0.0f,-0.5f,-1.0f),
+	m_Front(0.0f,-0.5f,1.0f),
 	m_CursorStartedMoving(true),
 	m_Speed(650),
 	m_LastCursorX(0),m_LastCursorY(0),
@@ -83,7 +83,6 @@ void DebugCamera::UpdateCamera()
 
 void DebugCamera::PollKeyAction()
 {
-	
 	float dt = Timer::GetInstance().GetDeltaTimeInSeconds();
 	
 	if (m_Interpolating) return;
@@ -123,7 +122,7 @@ void DebugCamera::Tick(Scene* scene, float deltaTime)
 	if (m_Interpolating)
 	{
 		m_InterpWeight += m_InterpSpeed * deltaTime;
-		m_Position = glm::mix(m_Position,glm::vec3(0.0f,300.0f,500.0f),m_InterpWeight);
+		m_Position = glm::mix(m_Position,glm::vec3(0.0f,500.0f,800.0f),m_InterpWeight);
 		auto orientation = glm::quat(m_Front);
 		auto result = glm::eulerAngles(glm::slerp(orientation, glm::quat(glm::vec3(0.0f, -.5f, -1.0f)), m_InterpWeight));
 		m_Front.x = result.x;
@@ -131,7 +130,7 @@ void DebugCamera::Tick(Scene* scene, float deltaTime)
 		m_Front.z = result.z;
 		UpdateCamera();
 	
-		float insideSphere = glm::length2(glm::vec3(0.0f, 300.0f, 500.0f) - m_Position) < 10.0f;
+		float insideSphere = glm::length2(glm::vec3(0.0f, 500.0f, 800.0f) - m_Position) < 10.0f;
 
 		if (insideSphere)
 		{
@@ -146,8 +145,16 @@ void DebugCamera::Tick(Scene* scene, float deltaTime)
 
 void DebugCamera::PreRender(Scene* scene)
 {
-	scene->PushMatrix(m_ToWorld);
-	scene->GetRenderer()->GetActiveProgram()->SetVec4("color",glm::vec4(1.0f,1.0f,0.0f,1.0f));
+	if (!m_Target || m_Debug)
+	{
+		scene->PushMatrix(m_ToWorld);
+		scene->GetRenderer()->GetActiveProgram()->SetVec4("color", glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	}
+	if(m_Target && !m_Debug)
+	{
+		m_Position = m_Target->GetPosition() + glm::vec3(50.0f,250.0f,-450.0f);
+		UpdateCamera();
+	}
 }
 
 void DebugCamera::Render(Scene * scene)
@@ -158,11 +165,14 @@ void DebugCamera::Render(Scene * scene)
 
 void DebugCamera::PostRender(Scene* scene)
 {
-	scene->PopMatrix();
+	if(!m_Target || m_Debug)
+		scene->PopMatrix();
 }
 
 void DebugCamera::Move(EDirection direction,float dt)
 {
+	if (m_Target && !m_Debug) return;
+
 	float speed = m_Speed * dt;
 
 	switch (direction)
@@ -181,8 +191,8 @@ void DebugCamera::Move(EDirection direction,float dt)
 		m_Position += speed * -m_Front;
 		break;
 	}
-
-	UpdateCamera();
+	
+		UpdateCamera();
 }
 
 

@@ -63,11 +63,19 @@ std::shared_ptr<IAsset> AssetFactory::CreateCubemap(std::string folderName, std:
 
 std::shared_ptr<IAsset> AssetFactory::CreateModel(std::string assetName, std::string ext, int modelID)
 {
-	
-	return std::shared_ptr<IAsset>();
+	auto newModel = std::make_shared<Model>(assetName,modelID);
+	newModel->Load(s_ModelsDirPath + assetName + ext);
+	return newModel;
 }
 
 std::shared_ptr<IAsset> AssetFactory::CreateAnimation(std::string assetName, std::string ext, int modelID)
 {
-	return std::shared_ptr<IAsset>();
+	Assimp::Importer importer;
+	const aiScene* scene = importer.ReadFile(s_AnimationsDirPath + assetName + ext,aiProcess_Triangulate);
+
+	assert(scene && scene->mRootNode);
+
+	auto newAnimation = std::make_shared<Animation>(assetName,modelID,
+		scene->mAnimations[0], scene);
+	return newAnimation;
 }

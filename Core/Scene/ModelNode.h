@@ -6,7 +6,9 @@
 #include "BaseNode.h"
 #include <glad/glad.h>
 #include "../UserInputListener.h"
+
 class Scene;
+class Model;
 
 class ModelNode : public BaseNode,public UserInputListener
 {
@@ -18,6 +20,6 @@ public:
 	void Render(Scene* scene)override;
 	void OnKeyAction(int key, int action)override;
 private:
-	class Model* m_Shotgun;
+	std::shared_ptr<Model> m_Model;
 	bool mApplyNormaMap = false;
 };

@@ -4,8 +4,13 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../Debugging/Diagnostics.h"
 #include "../Helpers.h"
+#include "AnimationData.h"
 
-Animation::Animation(const aiAnimation * animation,const aiScene* scene)
+Animation::Animation(const std::string& assetName,
+	int modelID,const aiAnimation * animation,const aiScene* scene)
+	:
+	IAsset(EAssetType::ANIMATION,assetName),
+	m_ModelID(modelID)
 {
 	m_Duration = animation->mDuration;
 	m_TicksPerSecond = animation->mTicksPerSecond;
@@ -24,17 +29,25 @@ void Animation::SetupJoints(const aiAnimation* animation)
 {
 	int size = animation->mNumChannels;
 
+	auto& modelDataMap = ModelsBoneData::s_BonesDataMap[m_ModelID];
+	auto& boneInfoMap = modelDataMap.m_BoneInfoMap;
+	int& boneCount = modelDataMap.m_BoneCount;
+
 	for (int i = 0; i < size; i++)
 	{
 		auto channel = animation->mChannels[i];
 		std::string boneName = channel->mNodeName.data;
-		if (Model::m_BoneInfoMap.find(boneName) == Model::m_BoneInfoMap.end())
+	
+		if (boneInfoMap.find(boneName) == boneInfoMap.end())
 		{
-			Model::m_BoneInfoMap[boneName].id = Model::m_BoneCount;
-			Model::m_BoneCount++;
+			boneInfoMap[boneName].id = boneCount;
+			boneCount++;
 		}
-		m_Joints.push_back(Joint(channel->mNodeName.data,Model::m_BoneInfoMap[channel->mNodeName.data].id,channel));
+		m_Joints.push_back(Joint(channel->mNodeName.data,
+			boneInfoMap[channel->mNodeName.data].id,channel));
 	}
+
+	m_BoneInfoMap = boneInfoMap;
 }
 
 void Animation::ReadHeirarchyData(AssimpNodeData& dest,const aiNode* src)

@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "AnimationData.h"
 
 
 using namespace std;
@@ -81,13 +82,11 @@ void Mesh::Render(std::shared_ptr<ShaderProgram> shader)
 
 //===MODEL===//
 
-aiNode* Model::s_RootNode = nullptr;
-std::map<std::string, BoneInfo> Model::m_BoneInfoMap;
-int Model::m_BoneCount = 0;
 
-Model::Model(const std::string &assetName)
+Model::Model(const std::string &assetName, int modelId)
 	:
-	IAsset(EAssetType::MODEL,assetName)
+	IAsset(EAssetType::MODEL,assetName),
+	m_ModelID(modelId)
 {
 }
 
@@ -221,22 +220,26 @@ void SetVertexBoneData(Vertex& vertex, int boneID, float weight)
 
 void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
+	auto& modelDataMap = ModelsBoneData::s_BonesDataMap[m_ModelID];
+	auto& boneInfoMap = modelDataMap.m_BoneInfoMap;
+	int& boneCount = modelDataMap.m_BoneCount;
+
 	for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
 	{
 		int boneID = -1;
 		std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
-		if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
+		if (boneInfoMap.find(boneName) == boneInfoMap.end())
 		{
 			BoneInfo newBoneInfo;
-			newBoneInfo.id = m_BoneCount;
+			newBoneInfo.id = boneCount;
 			newBoneInfo.offset = GetGLMMat(mesh->mBones[boneIndex]->mOffsetMatrix);
-			m_BoneInfoMap[boneName] = newBoneInfo;
-			boneID = m_BoneCount;
-			m_BoneCount++;
+			boneInfoMap[boneName] = newBoneInfo;
+			boneID = boneCount;
+			boneCount++;
 		}
 		else
 		{
-			boneID = m_BoneInfoMap[boneName].id;
+			boneID = boneInfoMap[boneName].id;
 		}
 		assert(boneID != -1);
 		auto weights = mesh->mBones[boneIndex]->mWeights;

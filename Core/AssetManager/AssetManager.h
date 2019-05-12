@@ -21,6 +21,8 @@
 #include "Texture2D.h"
 #include "ShaderProgram.h"
 #include "Cubemap.h"
+#include "Animation.h"
+#include "Model.h"
 #include "AssetFactory.h"
 #include "../Utils/Logger.h"
 
@@ -49,6 +51,11 @@ public:
 			type = SHADER;
 		else if ( std::is_same< Type, Cubemap>::value )
 			type = CUBEMAP;
+		else if (std::is_same< Type, Model>::value)
+			type = MODEL;
+		else if (std::is_same< Type, Animation>::value)
+			type = ANIMATION;
+		
 
 		assert(type != ASSET_TYPE_MAX);
 

@@ -8,6 +8,7 @@
 #include "../Engine.h"
 #include "../Helpers.h"
 #include "BoundingVolume.h"
+#include "../AssetManager/AssetManager.h"
 
 ModelNode::ModelNode(ActorID pActorID, BaseRenderComponent * renderComponent, ERenderGroup renderPass)
 	:
@@ -22,8 +23,7 @@ ModelNode::~ModelNode()
 bool ModelNode::Init()
 {
 	std::string name =  (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
-	m_Shotgun = new Model(name);
-	m_Shotgun->Load("Assets/Models/" + name);
+	m_Model = AssetManager::GetInstance().GetAsset<Model>(name);
 	m_BoundVolume = std::make_shared<BoxBound>(glm::vec3(250.0f,500.0f,100.0f));
 	return true;
 }
@@ -45,7 +45,7 @@ void ModelNode::Render(Scene * scene)
 		for (int i = 0; i < transforms.size(); ++i)
 			shader->SetMat4("gBones[" + std::to_string(i) + "]", transforms[i]);
 	}
-	m_Shotgun->Render(shader);
+	m_Model->Render(shader);
 }
 
 void ModelNode::OnKeyAction(int key, int action)

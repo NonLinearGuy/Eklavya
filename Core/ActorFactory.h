@@ -3,6 +3,7 @@
 #include<glm/glm.hpp>
 #include <memory>
 #include "Globals.h"
+#include<string>
 
 enum EActorType
 {
@@ -28,5 +29,5 @@ public:
 		const glm::vec3& rotation, 
 		glm::vec3 direction,float mass,
 		bool infiniteMass = false,bool texture2 = false);
-	static void CreateModelActor(const glm::vec3& position, const glm::vec3& scale, const glm::vec3& rotation);
+	static void CreateModelActor(const std::string& modelName,const std::string& animName,const glm::vec3& position,const glm::vec3& scale = glm::vec3(1.0f));
 };

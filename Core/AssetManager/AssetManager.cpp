@@ -2,7 +2,6 @@
 
 #include <cassert>
 
-
 AssetManager::AssetManager()
 	:
 	Singleton()

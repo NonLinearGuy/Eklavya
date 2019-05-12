@@ -98,11 +98,11 @@ void Scene::OnActorCreated(std::shared_ptr<IEventData> data)
 	baseNode->Init();
 	AddChild(baseNode);
 
-	if (actor->GetName() == "Player")
-	{
-		m_Camera->SetTarget(baseNode);
-		m_PlayerNode = baseNode;
-	}
+	//if (actor->GetName() == "Player")
+	//{
+		//m_Camera->SetTarget(baseNode);
+	//	m_PlayerNode = baseNode;
+	//}
 
 #ifdef DRAW_TRANSFORM
 	auto transform = MakeSharedPtr(actor->GetComponent<Transform>(Transform::s_ID));
@@ -170,7 +170,7 @@ void Scene::Tick(float deltaTime)
 	for (unsigned int index = 0; index < m_Groups.size(); ++index)
 		m_Groups[index]->Tick(this,deltaTime);
 
-	m_LightSource.m_Position = m_PlayerNode->GetPosition() + glm::vec3(-500.0f, 500.0f, 500.0f);
+	//m_LightSource.m_Position = m_PlayerNode->GetPosition() + glm::vec3(-500.0f, 500.0f, 500.0f);
 
 	
 }

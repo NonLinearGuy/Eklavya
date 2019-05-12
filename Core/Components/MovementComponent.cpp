@@ -61,7 +61,7 @@ void MovementComponent::OnKeyAction(int key,int action)
 	m_Animator = MakeSharedPtr(m_Owner->GetComponent<AnimationComponent>(AnimationComponent::s_ID));
 	if (action == GLFW_PRESS)
 	{
-		m_Animator->PlayRun();
+	//	m_Animator->PlayRun();
 		switch (key)
 		{
 			case GLFW_KEY_SPACE:
@@ -95,14 +95,14 @@ void MovementComponent::OnKeyAction(int key,int action)
 				m_Body->SetAccel(0.0f, m_Body->GetAccel().y,400.0f );
 				break;
 			case GLFW_KEY_X:
-				m_Animator->PlayAttack();
+				//m_Animator->PlayAttack();
 				break;
 		};
 	}
 
 	if (action == GLFW_RELEASE)
 	{
-		m_Animator->PlayIdle();
+		//m_Animator->PlayIdle();
 		switch (key)
 		{
 		case GLFW_KEY_SPACE:

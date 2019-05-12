@@ -23,5 +23,4 @@ private:
 	std::vector< std::shared_ptr<ICollider> > m_Colliders;
 	std::map< std::shared_ptr<ICollider>,std::shared_ptr<BaseNode>> m_BaseNodeMap;
 
-	
 };

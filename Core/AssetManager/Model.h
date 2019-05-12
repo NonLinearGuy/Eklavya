@@ -60,21 +60,6 @@ private:
 };
 
 
-struct BoneInfo
-{
-	/*
-		For uniquely indentifying the bone and
-		for indexing bone transformation in shaders
-	*/
-	int id;
-	/*
-		map from bone name to offset matrix.
-		offset matrix transforms bone from bone space to local space
-	*/
-	glm::mat4 offset;
-
-
-};
 
 
 class Model : public IAsset
@@ -85,17 +70,11 @@ private:
 	std::vector<Mesh> m_Meshes;
 	std::string m_Directory;
 public:
-	const aiScene* m_Scene;
-	Assimp::Importer m_Importer;
-	static aiNode* s_RootNode;
-	//map from bone name to assigned ID to bone
-	static std::map<std::string, BoneInfo> m_BoneInfoMap;
-	static int m_BoneCount;
-
-	int m_ModelID;
+	
+	unsigned m_ModelID;
 
 public:
-	Model(const std::string& assetName);
+	Model(const std::string& assetName,int modelID);
 	~Model();
 	void Load(const std::string &fullPath);
 	void Render(std::shared_ptr<ShaderProgram> shader);

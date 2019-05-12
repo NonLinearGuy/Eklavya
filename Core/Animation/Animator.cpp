@@ -40,7 +40,7 @@ void Animator::CalculateJointTransform(const AssimpNodeData& node, glm::mat4 par
 	{
 		int index = boneInfoMap[nodeName].id;
 		glm::mat4 offset = boneInfoMap[nodeName].offset;
-		m_FinalTransforms[index] = m_CurrentAnimation->GetGlobalInverse() * globalTransformation * offset;
+		m_FinalTransforms[index] = globalTransformation * offset;
 	}
 
 	for (int i = 0; i < node.childrenCount; i++)

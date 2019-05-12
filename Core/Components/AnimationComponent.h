@@ -26,15 +26,12 @@ public:
 	ComponentID GetID()override { return s_ID; }
 	static ComponentID s_ID;
 
-	void PlayIdle();
-	void PlayRun();
-	void PlayAttack();
 
 private:
 
+	std::string m_AnimName;
 	std::vector<glm::mat4> m_Transforms;
 	std::shared_ptr<Animator> m_Animator;
 	std::shared_ptr<Animation> m_Animation;
-	std::vector<std::shared_ptr<Animation>> m_Animations;
 
 };

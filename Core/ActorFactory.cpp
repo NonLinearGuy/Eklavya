@@ -138,27 +138,35 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	return rbComp;
 }
 
-void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 & scale, const glm::vec3 & rotation)
+void ActorFactory::CreateModelActor(const std::string & modelName, 
+	const std::string & animName, 
+	const glm::vec3 & position,
+	const glm::vec3 & scale)
 {
 	std::string name = "Player";
 	ActorID id = s_ActorIDCount;
 	s_ActorIDCount++;
+	glm::vec3 rotation(0.0f);
 
 	auto newActor = std::make_shared<GameActor>(name, id);
 
 	//TRANSFORM
-	auto transformComponent = std::make_shared<Transform>(position, scale,rotation);
+	auto transformComponent = std::make_shared<Transform>(position, scale, rotation);
 	transformComponent->SetOwner(newActor);
 	newActor->AddComponent(transformComponent);
 
 	//RENDER
 	std::shared_ptr<BaseRenderComponent> renderComponent;
-	renderComponent = std::make_shared<MeshRenderComponent>("Berserker/berserker.fbx");
+	renderComponent = std::make_shared<MeshRenderComponent>(modelName);
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
 	newActor->AddComponent(renderComponent);
 
-	
+	auto animationComponent = std::make_shared<AnimationComponent>(animName);
+	animationComponent->Init();
+	animationComponent->SetOwner(newActor);
+	newActor->AddComponent(animationComponent);
+
 	//RIGIDBODY
 	auto collider = std::make_shared<BoxCollider>();
 	collider->SetHalfSize(glm::vec3(5.0f));
@@ -168,29 +176,27 @@ void ActorFactory::CreateModelActor(const glm::vec3 & position, const glm::vec3 
 	rbComp->SetPos(position);
 	rbComp->SetOrientation(rotation);
 	rbComp->SetMass(10.0f);
-	rbComp->SetAccel(glm::vec3(0.0f,-1.0f,0.0f) * 800.0f);
+	rbComp->SetAccel(glm::vec3(0.0f, -1.0f, 0.0f) * 800.0f);
 	//rbComp->SetAngularAcc(glm::vec3(.1f,0.0f,0.0f));
 	rbComp->SetOwner(newActor);
 	rbComp->SetAwake(true);
 	newActor->AddComponent(rbComp);
 
-	
+
 	//PLAYER MOVEMENT
 	auto movementComp = std::make_shared<MovementComponent>();
 	movementComp->SetOwner(newActor);
 	movementComp->Init();
 	newActor->AddComponent(movementComp);
 
-	
+
 	g_Engine->AddActor(newActor);
 	auto data = std::make_shared<EventActorCreated>();
 	data->m_Actor = newActor;
 
 	EventDispatcher::GetInstance().TriggerEvent(EEventType::ACTOR_CREATED, data);
 
-	auto animationComponent = std::make_shared<AnimationComponent>("Berserker/ch_h_Lancer_Run.fbx");
-	animationComponent->Init();
-	animationComponent->SetOwner(newActor);
-	newActor->AddComponent(animationComponent);
-
+	
 }
+
+

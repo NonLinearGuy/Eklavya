@@ -5,7 +5,7 @@
 #include "../AssetManager/AssetManager.h"
 #include "../AssetManager/Model.h"
 #include "../AssetManager/Animation.h"
-#include "../Animation/Animator.h"
+#include "../Animation/Joint.h"
 #include <GLFW/glfw3.h>
 
 ComponentID AnimationComponent::s_ID = 9;
@@ -30,10 +30,10 @@ AnimationComponent::~AnimationComponent()
 
 void AnimationComponent::Init()
 {
-	m_Animation = AssetManager::GetInstance().GetAsset<Animation>(m_AnimName);
-	m_Animator = std::make_shared<Animator>();
-	m_Animator->PlayAnimation(m_Animation);
+	m_CurrentAnimation = AssetManager::GetInstance().GetAsset<Animation>(m_AnimName);
+	m_CurrentTime = 0.0f;
 }
+
 
 void AnimationComponent::Destroy()
 {
@@ -48,12 +48,45 @@ void AnimationComponent::OnKeyAction(int key, int action)
 
 void AnimationComponent::Tick(float dt)
 {
-	m_Animator->Tick(dt);
-
-	m_Transforms.clear();
-	m_Transforms.resize(100);
-	auto jointTransformMap = m_Animator->GetFinalTransform();
-	for (auto pair : jointTransformMap)
-		m_Transforms[pair.first] = pair.second;
+	if (m_CurrentAnimation)
+	{
+		m_CurrentTime += m_CurrentAnimation->GetTicksPerSecond() * dt;
+		m_CurrentTime = fmod(m_CurrentTime, m_CurrentAnimation->GetDuration());
+		CalculateJointTransform(&m_CurrentAnimation->GetRootNode(), glm::mat4(1.0f));
+	}
 }
+
+
+void AnimationComponent::PlayAnimation(std::shared_ptr<Animation> pAnimation)
+{
+	m_CurrentAnimation = pAnimation;
+	m_CurrentTime = 0.0f;
+}
+
+
+void AnimationComponent::CalculateJointTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+{
+	std::string nodeName = node->name;
+	glm::mat4 nodeTransform = node->transformation;
+	Joint* joint = m_CurrentAnimation->FindJoint(nodeName);
+
+	if (joint)
+	{
+		joint->Update(m_CurrentTime);
+		nodeTransform = joint->GetLocalTransform();
+	}
+
+	glm::mat4 globalTransformation = parentTransform * nodeTransform;
+	auto boneInfoMap = m_CurrentAnimation->GetBoneIDMap();
+	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+	{
+		int index = boneInfoMap[nodeName].id;
+		glm::mat4 offset = boneInfoMap[nodeName].offset;
+		m_Transforms[index] = globalTransformation * offset;
+	}
+
+	for (int i = 0; i < node->childrenCount; i++)
+		CalculateJointTransform(&node->children[i], globalTransformation);
+}
+
 

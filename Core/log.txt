@@ -1,1 +1,27 @@
 ============HIP HOP 1.0=============
+ing Shaders...
+Loading Skybox...
+Loading Models...
+Loading Animations...
+Assets Loaded.
+    Destroyed
+Releasing Assets...
+   waterNormalMap Destroyed
+   waterDistortMap Destroyed
+   debug Destroyed
+   water Destroyed
+   solids Destroyed
+   skybox Destroyed
+   shadow_map Destroyed
+   water_pass Destroyed
+   outlined Destroyed
+   unlit_solids Destroyed
+   world_point Destroyed
+   animated_solids Destroyed
+   main_output Destroyed
+   day Destroyed
+   Michelle/Fast Run Destroyed
+   Michelle/Running Destroyed
+    Destroyed
+    Destroyed
+---END--

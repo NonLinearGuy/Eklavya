@@ -72,8 +72,8 @@
 		glShaderSource(shaderID,1,&code,NULL);
 		glCompileShader(shaderID);
 
-		if (ErrorOccured(shaderID,false))
-			return false;
+	//	if (ErrorOccured(shaderID,false))
+		//	return false;
 
 		m_ShaderIDs.push_back(shaderID);
 		return true;
@@ -88,8 +88,8 @@
 
 		glLinkProgram(m_ID);
 
-		if (ErrorOccured(m_ID, true))
-			return false;
+	//	if (ErrorOccured(m_ID, true))
+		//	return false;
 
 		for (GLuint shaderID : m_ShaderIDs)
 			glDeleteShader(shaderID);

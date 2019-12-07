@@ -63,7 +63,7 @@ void main()
     vec3 normal = fragParams.viewSpaceNormal;
 	if(material.bApplyNormalMap)
 	{
-		//normal = texture(material.normalMap,fragParams.texCoords).rgb;
+	//	normal = texture(material.normalMap,fragParams.texCoords).rgb;
 		//normal = normalize(normal*2.0 - 1.0); // [-1,1] ---> [0,1]
 		//normal = normalize(fragParams.TBN * normal);
 	}

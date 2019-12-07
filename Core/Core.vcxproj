@@ -38,7 +38,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Local|Win32'" Label="Configuration">
@@ -50,7 +50,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -203,7 +203,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ActorFactory.cpp" />
-    <ClCompile Include="Animation\Animator.cpp" />
     <ClCompile Include="Animation\Joint.cpp" />
     <ClCompile Include="AssetManager\Animation.cpp" />
     <ClCompile Include="AssetManager\AnimationData.cpp" />
@@ -263,7 +262,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActorFactory.h" />
-    <ClInclude Include="Animation\Animator.h" />
     <ClInclude Include="Animation\Joint.h" />
     <ClInclude Include="AssetManager\Animation.h" />
     <ClInclude Include="AssetManager\AssetManager.h" />

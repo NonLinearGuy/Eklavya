@@ -24,7 +24,7 @@ bool ModelNode::Init()
 {
 	std::string name =  (static_cast<MeshRenderComponent*>(m_WeakRenderComponent))->GetModelName();
 	m_Model = AssetManager::GetInstance().GetAsset<Model>(name);
-	m_BoundVolume = std::make_shared<BoxBound>(glm::vec3(250.0f,500.0f,100.0f));
+	m_BoundVolume = std::make_shared<BoxBound>(glm::vec3(550.0f,900.0f,100.0f));
 	return true;
 }
 
@@ -35,6 +35,7 @@ void ModelNode::Destroy()
 
 void ModelNode::Render(Scene * scene)
 {
+
 	auto shader = scene->GetRenderer()->GetActiveProgram();
 	shader->SetInt("material.bApplyNormalMap",mApplyNormaMap);
 	std::shared_ptr<GameActor> gameActor = scene->GetEngineRef()->GetActor(m_ActorID);

@@ -64,9 +64,8 @@
 	void Engine::PrepareScene()
 	{
 		ActorFactory::CreateSky();
-		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(7000.0f,300.0f,7000.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
-		ActorFactory::CreateModelActor("Berserker/Berserker","Berserker/Attack3",glm::vec3(0.0f,400.0f,0.0f),glm::vec3(100.0f));
-		ActorFactory::CreateModelActor("Malcolm/Malcolm", "Malcolm/Walking", glm::vec3(400.0f, 400.0f, 0.0f), glm::vec3(50.0f));
+		ActorFactory::CreateBoxCollider(glm::vec3(.0f, 10.0f, 0.0f), glm::vec3(1300.0,100.0f,500.0f),glm::vec3(0.0f),glm::vec3(0.0f,0.0f,0.0f),0.0f,true,true);
+		ActorFactory::CreateModelActor("Michelle/Ch03_nonPBR","Michelle/Idle",glm::vec3(0.0f,400.0f,100.0f),glm::vec3(100.0f));
 	}
 
 	void Engine::LoadAssets()
@@ -91,18 +90,18 @@
 		LOG("Loading Skybox...");
 		AssetManager::GetInstance().LoadCubemap( "day","tga");
 
-		LOG("Loading Models");
-		AssetManager::GetInstance().LoadModel("Malcolm/Malcolm", ".dae", 1);
-		AssetManager::GetInstance().LoadModel("Berserker/Berserker",".fbx",0);
+		LOG("Loading Models...");
+		
+		AssetManager::GetInstance().LoadModel("Michelle/Ch03_nonPBR", ".dae", 1);
 		
 
-		LOG("Loading Animations");
-		AssetManager::GetInstance().LoadAnimation("Malcolm/Walking", ".dae", 1);
-		AssetManager::GetInstance().LoadAnimation("Berserker/Attack3",".fbx",0);
+		LOG("Loading Animations...");
+		AssetManager::GetInstance().LoadAnimation("Michelle/Idle", ".dae", 1);
+		AssetManager::GetInstance().LoadAnimation("Michelle/Fast Run", ".dae", 1);
+		AssetManager::GetInstance().LoadAnimation("Michelle/Running", ".dae", 1);
+		
+		LOG("Assets Loaded.");
 
-	
-		
-		
 	}
 
 	void Engine::ReleaseAssets()

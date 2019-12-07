@@ -136,6 +136,7 @@ glm::mat4 Joint::InterpolateRotation(float animationTime)
 
 }
 
+
 glm::mat4 Joint::InterpolateScaling(float animationTime)
 {
 	if (1 == m_NumScalings)

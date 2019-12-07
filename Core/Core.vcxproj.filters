@@ -171,9 +171,6 @@
     <ClCompile Include="Scene\BoxColliderNode.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Animation\Animator.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
     <ClCompile Include="AssetManager\AssetManager.cpp">
       <Filter>AssetManagement</Filter>
     </ClCompile>
@@ -338,9 +335,6 @@
     </ClInclude>
     <ClInclude Include="Scene\BoxColliderNode.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation\Animator.h">
-      <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="AssetManager\AssetManager.h">
       <Filter>AssetManagement</Filter>

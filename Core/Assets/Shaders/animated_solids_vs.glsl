@@ -51,8 +51,8 @@ void main()
 	vec3 localNormal = mat3(gBones[boneIds[i]]) * norm;
 	totalNormal += localNormal * weights[i];
    }
-	//totalPosition = vec4(pos,1.0f);
-    //totalNormal = norm;
+	
+	
     mat4 viewModel = view * model;
     gl_Position =  projection * viewModel * totalPosition;
 	fragParams.lightSpacePos = lightProjectionView * model * totalPosition;

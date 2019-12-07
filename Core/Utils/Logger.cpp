@@ -21,6 +21,7 @@
 	void Logger::Init(const char* pHeader)
 	{
 		m_File = fopen("log.txt","w");
+		
 		if (!m_File)
 		{
 			printf("Failed to create a log m_File");
@@ -28,19 +29,19 @@
 		}
 
 		fprintf(m_File,pHeader);
+	
 		fprintf(m_File,"\n");
 	}
 
 
 	void Logger::LogToFile(const char* pFormat,...)
 	{
-#ifdef _DEBUG
+
 		va_list list;
 		va_start(list,pFormat);
 		vfprintf(m_File,pFormat,list);
 		fprintf(m_File, "\n");
 		va_end(list);
-#endif
 	}
 
 

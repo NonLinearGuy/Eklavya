@@ -94,7 +94,10 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 	renderComponent = std::make_shared<BoxColliderRenderComponent>();
 	renderComponent->SetOwner(newActor);
 	renderComponent->CreateBaseNode();
-	renderComponent->GetBaseNode()->SetAlbedoName("wall_albedo.png");
+	if(texture2)
+		renderComponent->GetBaseNode()->SetAlbedoName("albedo.jpg");
+	else
+		renderComponent->GetBaseNode()->SetAlbedoName("pixar.jpg");
 	newActor->AddComponent(renderComponent);
 
 	//physics component
@@ -122,10 +125,10 @@ std::shared_ptr<RigidBodyComponent> ActorFactory::CreateBoxCollider(const glm::v
 		if (!infiniteMass)
 		{
 			//PLAYER MOVEMENT
-			auto movementComp = std::make_shared<MovementComponent>();
-			movementComp->SetOwner(newActor);
-			movementComp->Init();
-			newActor->AddComponent(movementComp);
+			//auto movementComp = std::make_shared<MovementComponent>();
+			//movementComp->SetOwner(newActor);
+			//movementComp->Init();
+			//newActor->AddComponent(movementComp);
 		}
 
 	g_Engine->AddActor(newActor);
@@ -146,7 +149,7 @@ void ActorFactory::CreateModelActor(const std::string & modelName,
 	std::string name = "Player";
 	ActorID id = s_ActorIDCount;
 	s_ActorIDCount++;
-	glm::vec3 rotation(0.0f);
+	glm::vec3 rotation(glm::radians(0.0f),0.0f,0.0f); 
 
 	auto newActor = std::make_shared<GameActor>(name, id);
 
@@ -183,7 +186,7 @@ void ActorFactory::CreateModelActor(const std::string & modelName,
 	newActor->AddComponent(rbComp);
 
 
-	//PLAYER MOVEMENT
+	
 	auto movementComp = std::make_shared<MovementComponent>();
 	movementComp->SetOwner(newActor);
 	movementComp->Init();

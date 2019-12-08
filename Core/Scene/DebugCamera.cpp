@@ -114,6 +114,11 @@ void DebugCamera::OnKeyAction(int key, int action)
 		m_InterpWeight = 0.0f;
 		m_CursorStartedMoving = false;
 	}
+
+	if (key == GLFW_KEY_X)
+	{
+		
+	}
 }
 
 

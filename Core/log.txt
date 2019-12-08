@@ -20,8 +20,6 @@ Releasing Assets...
    animated_solids Destroyed
    main_output Destroyed
    day Destroyed
-   Michelle/Fast Run Destroyed
-   Michelle/Running Destroyed
     Destroyed
     Destroyed
 ---END--

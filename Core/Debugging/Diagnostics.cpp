@@ -66,7 +66,7 @@ void DiagManager::PostCurrent()
 		break;
 	};
 	m_Stream << "=======================";
-	m_TextRenderer->Text(glm::vec2(20.0f), 1.0f, glm::vec3(0.0f, 0.0f, 0.0f), m_Stream.str().c_str());
+	m_TextRenderer->Text(glm::vec2(200.0f), 2.0f, glm::vec3(0.0f, 0.0f, 0.0f), m_Stream.str().c_str());
 	
 }
 

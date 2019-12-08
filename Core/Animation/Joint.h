@@ -42,10 +42,17 @@ public:
 	inline void SetParent(Joint* parent) { m_Parent = parent; }
 	inline const Joint* GetParent() { return m_Parent; }
 	void PrintHeirarchy();
-private:
+
+	glm::vec3 GetPosAtIndex(int index) { return m_Positions[index].position; }
+	glm::quat GetRotAtIndex(int index) { return m_Rotations[index].orientation; }
+	glm::vec3 GetScaleAtIndex(int index) { return m_Scales[index].scale; }
+
 	int GetPositionIndex(float animationTime);
 	int GetRotationIndex(float animationTime);
 	int GetScaleIndex(float animationTime);
+
+
+private:
 	float GetScaleFactor(float lastTimeStamp,float nextTimeStamp,float animationTime);
 	glm::mat4 InterpolatePosition(float animationTime);
 	glm::mat4 InterpolateRotation(float animationTime);

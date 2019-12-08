@@ -77,7 +77,7 @@ void Scene::Init()
 	m_LightSource.m_Position = glm::vec3(-500.0f, 500.0f, 500.0f);
 
 	float aspectRatio = m_EngineRef->GetCurrentContext()->GetAspectRatio();
-	m_Camera = std::make_shared<DebugCamera>(45.0f, aspectRatio, 0.1f, 10000.0f);
+	m_Camera = std::make_shared<DebugCamera>(46.0f, aspectRatio, 0.1f, 10000.0f);
 	m_Camera->Init();
 	m_WaterNode = std::make_shared<WaterNode>();
 	m_WaterNode->Init();

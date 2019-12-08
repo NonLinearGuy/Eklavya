@@ -31,6 +31,7 @@ void MovementComponent::Init()
 	if (m_Owner)
 	{
 		m_Body = MakeSharedPtr(m_Owner->GetComponent<RigidBodyComponent>(RigidBodyComponent::s_ID));
+		
 	}
 
 	RegisterToEvent<MovementComponent>(this, &MovementComponent::OnCollision, EEventType::ON_COLLISION_ENTER);
@@ -56,7 +57,6 @@ void MovementComponent::OnCollision(std::shared_ptr<IEventData> data)
 
 void MovementComponent::OnKeyAction(int key,int action)
 {
-	
 	if (action == GLFW_PRESS)
 	{
 		switch (key)
@@ -92,6 +92,10 @@ void MovementComponent::OnKeyAction(int key,int action)
 				m_Body->SetAccel(0.0f, m_Body->GetAccel().y,400.0f );
 				break;
 			case GLFW_KEY_X:
+			{
+				auto animator = m_Owner->GetComponent<AnimationComponent>(AnimationComponent::s_ID);
+				MakeSharedPtr(animator)->PlayNextAnimation();
+			}
 				break;
 		};
 	}

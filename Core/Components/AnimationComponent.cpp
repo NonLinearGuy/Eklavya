@@ -24,6 +24,7 @@ AnimationComponent::AnimationComponent(const std::string & animationName)
 	isSwitchingAnimation = false;
 	elapsedSwitchTime = 0;
 	maxSwitchedDuration = 5;
+	switchSpeed = 0.5f;
 	
 }
 
